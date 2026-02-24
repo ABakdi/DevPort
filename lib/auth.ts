@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from "next-auth"
 import EmailProvider from "next-auth/providers/email"
+import { sendMagicLinkEmail } from "@/lib/email"
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -14,7 +15,7 @@ export const authOptions: NextAuthOptions = {
       },
       from: process.env.EMAIL_FROM,
       sendVerificationRequest: async ({ identifier, url, provider }) => {
-        console.log("Magic link URL:", url)
+        await sendMagicLinkEmail(identifier, url)
       },
     }),
   ],
