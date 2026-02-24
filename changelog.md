@@ -21,7 +21,6 @@ For detailed specifications, see: `docs/specs.md`
 
 ## Implementation Log
 
-### [Unreleased]
 
 #### Features
 - **Home Page**: Complete home page implementation matching design spec from `docs/home.html`
@@ -58,7 +57,3 @@ For detailed specifications, see: `docs/specs.md`
 - Utilities: clsx, tailwind-merge, class-variance-authority, date-fns
 
 ---
-
-### v0.1.0 (2024-01-01)
-- Initial project setup with Next.js 16
-- Created specification document and changelog

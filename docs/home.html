@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DevPort - Abderrhmane Bakdi | Full Stack Architect</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#00E5FF",
+                        "background-light": "#F8FAFC",
+                        "background-dark": "#05070A",
+                        "card-dark": "#0D1117",
+                        "border-dark": "#1F2937",
+                        "accent-pink": "#FF2D55",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                        mono: ["Fira+Code", "monospace"],
+                    },
+                    borderRadius: {
+                        'DEFAULT': '12px',
+                        'xl': '24px',
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        .terminal-glow {
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.05);
+        }
+        .cyan-glow:hover {
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-300 font-sans transition-colors duration-300">
+<header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-background-dark/70 border-b border-slate-200 dark:border-border-dark">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-background-dark font-black">D</div>
+<span class="font-bold text-lg dark:text-white">DevPort</span>
+</div>
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<a class="hover:text-primary transition-colors" href="#">Blog</a>
+<a class="hover:text-primary transition-colors" href="#">About</a>
+<a class="hover:text-primary transition-colors" href="#">Work</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" id="theme-toggle">
+<span class="material-icons-round text-xl dark:text-yellow-400">light_mode</span>
+</button>
+<a class="bg-primary hover:scale-105 transition-transform text-black px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2" href="#">
+<span class="material-icons-round text-lg">file_download</span>
+                    CV
+                </a>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-8 space-y-6">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<div class="lg:col-span-4 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark p-8 rounded-xl relative overflow-hidden group">
+<div class="absolute top-4 right-4 flex items-center gap-2 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+<span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+<span class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Ready_For_Hire</span>
+</div>
+<div class="mb-6 relative w-24 h-24">
+<div class="absolute inset-0 bg-primary rounded-full blur-lg opacity-20 animate-pulse"></div>
+<img alt="Profile" class="w-24 h-24 rounded-full border-2 border-primary relative z-10 grayscale hover:grayscale-0 transition-all duration-500 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4o85e2EcvzKUT5hp_u4hMAbynWrkJZWEzSMYCF2ZRXKMWka5rI7NyXigIG31b5IaH4zxnLJSD5yiMzhyfPKTcx7ms1OyBkYs4V2GR8ODUcDtG9WETqx90atVtSYYzeiXyvrwWVtfWQHWON6T8HQOnIDG259Pe_Fr4uXWSgmeT5CA66zPxWENx7mLSDLqc6my8Px6FetMfjmdl5mWHr9yPDrtqIlGeSxH4gFBIVTw9-jWmStiyBrjJrpbj6sJgd05hGpDpbcrakf0G"/>
+</div>
+<div class="space-y-1 mb-6">
+<p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Hi, Welcome!</p>
+<h1 class="text-3xl font-black text-slate-900 dark:text-white leading-tight">Abderrhmane Bakdi</h1>
+<p class="text-primary font-bold">Full Stack Architect</p>
+</div>
+<div class="flex flex-wrap gap-2 mb-8">
+<span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-[10px] font-bold rounded-md border border-slate-200 dark:border-border-dark">Full Stack Dev</span>
+<span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-[10px] font-bold rounded-md border border-slate-200 dark:border-border-dark">System Architect</span>
+<span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-[10px] font-bold rounded-md border border-slate-200 dark:border-border-dark">Product Engineer</span>
+</div>
+<div class="flex items-center gap-4 text-xs text-slate-500 font-medium mb-8">
+<div class="flex items-center gap-1">
+<span class="material-icons-round text-sm">place</span>
+                        Algiers, DZ
+                    </div>
+<div class="flex items-center gap-1">
+<span class="material-icons-round text-sm">schedule</span>
+                        10:00 AM CET
+                    </div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex-1 bg-primary py-3 rounded-lg text-black font-bold flex items-center justify-center gap-2 cyan-glow transition-all">
+<span class="material-icons-round text-sm">mail</span>
+                        CONTACT ME
+                    </button>
+<button class="p-3 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-border-dark hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-icons-round text-sm">more_horiz</span>
+</button>
+</div>
+</div>
+<div class="lg:col-span-8 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark p-10 rounded-xl relative">
+<div class="flex justify-between items-start mb-8">
+<h2 class="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">About Me</h2>
+<div class="flex items-center gap-2 bg-accent-pink/10 px-3 py-1 rounded-full border border-accent-pink/20">
+<span class="w-1.5 h-1.5 bg-accent-pink rounded-full"></span>
+<span class="text-[10px] font-bold text-accent-pink uppercase tracking-widest">Live Feed</span>
+</div>
+</div>
+<div class="space-y-6">
+<p class="text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+                        My passion for engineering goes back to the era of assembly and early web protocols. Today I architect <span class="text-accent-pink font-bold">high-performance</span> SaaS solutions that bridge the gap between user experience and system integrity.
+                    </p>
+<ul class="space-y-4">
+<li class="flex items-start gap-4">
+<span class="material-icons-round text-emerald-500 mt-1">check_circle</span>
+<span class="text-slate-600 dark:text-slate-300">Architected microservices handling 2M+ daily requests.</span>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-icons-round text-emerald-500 mt-1">check_circle</span>
+<span class="text-slate-600 dark:text-slate-300">Reduced infrastructure costs by 40% using serverless patterns.</span>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-icons-round text-emerald-500 mt-1">check_circle</span>
+<span class="text-slate-600 dark:text-slate-300">Leading engineering teams in high-growth startups.</span>
+</li>
+</ul>
+<div class="pt-6 flex items-center gap-6">
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-[10px] font-bold text-white ring-4 ring-white dark:ring-card-dark">RB</div>
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-black ring-4 ring-white dark:ring-card-dark">JS</div>
+<div class="w-10 h-10 rounded-full bg-accent-pink flex items-center justify-center text-[10px] font-bold text-white ring-4 ring-white dark:ring-card-dark">AWS</div>
+</div>
+<p class="text-xs italic text-slate-500">Trusted by technical founders globally.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark p-1 rounded-xl overflow-hidden">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-1">
+<div class="relative min-h-[400px] bg-[#3A5F5F] rounded-lg overflow-hidden flex items-center justify-center">
+<div class="absolute top-4 left-4 bg-black/40 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-2 border border-white/10">
+<span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+<span class="text-[9px] font-bold text-white uppercase tracking-widest">Latest Release</span>
+</div>
+<div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 w-3/4 transform hover:scale-105 transition-transform duration-500 shadow-2xl">
+<img alt="Project Dashboard" class="rounded-lg shadow-inner" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3sULqnz1H02luv5vQPsyCXbBVrs-ffKbBhQMJpUq_U3QdACAAGXIE_TYCiFxT-qdRDPyw7UhJwilmpav3QB3UuqTe8YsyN9Fw-2Yu6EiS6bYOVQ_E3MZTeR9xJkdcfp8HUYA07xMGrr-O5ZBjFiVERNbVlIJG-UJ7wFwRDO_GBAMzEFqSZ2HLeRkF4-MpNdkUGYxxNm9Efq--sIDWFW3iL7KmUcuhCR_IlCH1kqRcIjng6PuXBVJ7x59ldLnxieJRLvGFw8aTfTFm"/>
+</div>
+</div>
+<div class="p-8 lg:p-12 flex flex-col justify-center">
+<div class="mb-4">
+<p class="text-primary font-bold text-xs uppercase tracking-[0.2em] mb-2 flex items-center gap-2">
+                            Case Study <span class="h-px w-12 bg-primary/30"></span>
+</p>
+<h3 class="text-4xl font-black text-slate-900 dark:text-white leading-tight mb-4 tracking-tighter">Enterprise Data Lake Engine</h3>
+<p class="text-slate-600 dark:text-slate-400 text-lg mb-8 leading-relaxed">
+                            A proprietary data ingestion engine designed for high-throughput financial transactions. Features real-time validation and automated schema discovery with 99.9% uptime.
+                        </p>
+</div>
+<div class="flex gap-4 mb-10">
+<div class="flex-1 bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+<p class="text-2xl font-black text-slate-900 dark:text-white">4.2ms</p>
+<p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Avg Latency</p>
+</div>
+<div class="flex-1 bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+<p class="text-2xl font-black text-slate-900 dark:text-white">128TB+</p>
+<p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Processed</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex-1 bg-primary text-black font-bold py-4 rounded-xl flex items-center justify-center gap-2 cyan-glow group">
+                            VIEW CASE STUDY
+                            <span class="material-icons-round transition-transform group-hover:translate-x-1">arrow_right_alt</span>
+</button>
+<button class="p-4 border border-slate-200 dark:border-border-dark rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-icons-round">share</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<div class="lg:col-span-7 bg-slate-900 dark:bg-black rounded-xl border border-slate-800 overflow-hidden font-mono text-sm shadow-2xl terminal-glow">
+<div class="bg-slate-800/50 px-4 py-3 border-b border-slate-700 flex items-center justify-between">
+<div class="flex gap-2">
+<div class="w-3 h-3 rounded-full bg-rose-500"></div>
+<div class="w-3 h-3 rounded-full bg-amber-500"></div>
+<div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+</div>
+<div class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">interactive-shell --bash</div>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+<span class="text-[10px] text-emerald-500/80 font-bold uppercase">System_Idle</span>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div class="space-y-1">
+<p class="flex items-center gap-2">
+<span class="text-emerald-500">bakdi@portfolio:~$</span>
+<span class="text-white">fetch stats --experience</span>
+</p>
+<p class="text-slate-400">[SUCCESS] Experience found: 8+ Years Professional Experience</p>
+<p class="text-slate-400">[SUCCESS] Languages: Node.js, TypeScript, Python, Go, Rust</p>
+<p class="text-slate-400">[SUCCESS] Platforms: AWS, GCP, Azure, Kubernetes</p>
+</div>
+<div class="space-y-2">
+<p class="flex items-center gap-2">
+<span class="text-emerald-500">bakdi@portfolio:~$</span>
+<span class="text-white">tail -f latest_thoughts.log</span>
+</p>
+<div class="bg-slate-800/30 p-4 rounded-lg border border-slate-700/50 space-y-1">
+<p class="text-[10px] text-indigo-400 font-bold">2024-10-12 14:02:00</p>
+<p class="text-slate-300">Exploring temporal database patterns for audit logs.</p>
+</div>
+<div class="bg-slate-800/30 p-4 rounded-lg border border-slate-700/50 space-y-1">
+<p class="text-[10px] text-rose-400 font-bold">2024-10-10 09:15:22</p>
+<p class="text-slate-300">Decoupling monolithic architectures in Fintech.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5 space-y-6">
+<div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark p-6 rounded-xl">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-black dark:text-white tracking-tighter">TOOLBOX</h3>
+<span class="px-2 py-0.5 bg-rose-500/10 text-rose-500 text-[10px] font-black rounded border border-rose-500/20">V2.4</span>
+</div>
+<div class="grid grid-cols-4 gap-4">
+<div class="aspect-square bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center border border-slate-200 dark:border-border-dark hover:border-primary transition-colors cursor-pointer group">
+<img alt="NodeJS" class="w-8 h-8 opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxbz4PpV5oTG7KOPxpsI3WFEpxevFshvaRab6cW2EH9pgSdfaxJCTmVm6xSWwFGFYP3NsiZV3A_yIETB_VBegdc6TQ9eA-WFVVrsOGFQjHEDEXQMK3Cyklo--BZKDApeKjUx8ZbplapZO8HF6_XFXcSXNcEqzgBOwRKagZpUSMoIQCCE41xdnLyh9TGssq_j7UbIXB-BNXTtNTEwEiYDDjaemHN0jALlT2U-XyA5IjA3YjYxeRZpEFFK2YFFGsgnhEG-Vr07_RSsrq"/>
+</div>
+<div class="aspect-square bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center border border-slate-200 dark:border-border-dark hover:border-primary transition-colors cursor-pointer group">
+<img alt="TypeScript" class="w-8 h-8 opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv_YdYaraXoYoElhailw1DaV0Jt2r_0Z2yYSCSuxVpyusCGTI-GF8Ggs1sfGwN5lQxqiz0qnIWZg0EMRLMNZi047UC1skaSrY3yjkFOmquBwhy0Qag6-kTSu0JzEYauBvcPW6F6RJU5X5ToQ3fgxLdeqGshGyDo8P26hPBjrucTTMSzbtpAz_79zEg4axgPRXZwKxSKTRKi8TrXUtGu343YpdVSpAxslJN62pqa99OqSpSiXx3lGmcY9QJWpZxnBwuWxse5nLCUF2O"/>
+</div>
+<div class="aspect-square bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center border border-slate-200 dark:border-border-dark hover:border-primary transition-colors cursor-pointer group">
+<img alt="K8s" class="w-8 h-8 opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC75PZNJ13sqi-5LH53LF8MOcrYSSq_qVZDUkXHnFgjyTZBm-If1w9uoHCVJGKLPPUqyCqSU5HJwShhaPxNm71zvl78akd6_-HuTrCrPwcbYGUPDgS_HL8o2Fnk9nXCdB_WXZaMrJ8PyqNvAI_UmNqJiaoCvlQW25UM2B5RgnqRM4t5sPaogLDz7-RiJXREr7mpVvsotmTluR0GRkGRApfHuaoj-0xsHUDXX7reay-O4zt-2cqHZ4cGoftzUMDGS6XfT4xHZqT3VhF"/>
+</div>
+<div class="aspect-square bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center border border-slate-200 dark:border-border-dark hover:border-primary transition-colors cursor-pointer group">
+<img alt="AWS" class="w-8 h-8 opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZhkEO4DSiZD5-2UwGZKCOC5s_9UGlP5oBv7Tnu_UKIuTVJaha9ENELesgLN-gOgNY3ogr0wASl5aII0fiT_V9CvgWEsHenpQ6AKLBDHkQF7aSzn4mlzs3jnoCnMABi4Wvo0ZHyeAhmyUqPgV0SpEBEdhgqiV5ApeNDIS68FqO4-t3bl3bb8V4_AHakPXCqZHUKGL3vOmHGXrsQfIbK38-hpK3tO88E9eP0s7S1mKIEu9SiIOUmJRbwD8I2wEAQo-Xz0Tj7I1eEhhE"/>
+</div>
+<div class="aspect-square bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center border border-slate-200 dark:border-border-dark hover:border-primary transition-colors cursor-pointer group">
+<img alt="Go" class="w-8 h-8 opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAM19Nq2QiExRB85pOdmOARmqnLTZAEzagUHmD4o_Vn84Azhb3NlYfqwCeOGmct4d1UZKeWMajZp22iRABuLNWxTkl9A2-q6t7zKMcx6DuZJRyINra-OvmWWEpbvpsS0k2WyHHfPqEmDiMCPXYXC2Zusw4Gm1cHzGOs7952enXNpr6ZN2mWa81ZPCL3nN7IM1I3MYlQQUmnhyqPADhPHiVACjx5hJpA0kV_tTg6k60jmM9PoQ8ubIF-VjHsLbhFEPQqT-LBslNHrU3K"/>
+</div>
+<div class="aspect-square bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center border border-slate-200 dark:border-border-dark hover:border-primary transition-colors cursor-pointer group">
+<img alt="React" class="w-8 h-8 opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5v0UWI3LhRXkygv6Zoa_6FoSLm8qQg1OuIO-Gu5Uledq80Jt8mN_kIjL79A8BYNMxXMncwelW1pPm1NnLxkob7BLmG_MK_E12NzTFFB7v5M8tWM_BHMxnDxBlzM5Dqbz7JNUOYfAicJNGyAlIx-ZZCbl-rk1-CVyg0Y0MsUrBmxV_WSMqzz7iU6Ads4rxqADdL1Fn4LkZx6yW5wFSEzbbWQkqJqKyMQmvIiK5KdH6Vwua17yrRkICXL5mf5PEEKvNYYN0Mud7Ot5r"/>
+</div>
+<div class="aspect-square bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center border border-slate-200 dark:border-border-dark hover:border-primary transition-colors cursor-pointer group">
+<img alt="Python" class="w-8 h-8 opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBip--oDKQgyxfstI8FEG5MXmSbyI52Pw6f_e4enPHyyRH4XVFnNyrG5m0YJ-c8Bb5rMPxZdugELGMdDEZzwo52ATf4wjQXV9NDS2ie_akDRbDYyYapQ7mRXvQ2assVRO_1RZCjSxvTPWK5S19jCcwIA_7qE7D5zGkvw15RJ8c5usPB3_RQTbVYzLibXYr71aaVtFMRlcdIi9cRDwo3B8hOM2UDlMCOsgonPd5-dHAZpPEy6MOadAmYJ6btrDKnwwdbvXtUWBgXo73I"/>
+</div>
+<div class="aspect-square bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center border border-slate-200 dark:border-border-dark hover:border-primary transition-colors cursor-pointer group">
+<img alt="Docker" class="w-8 h-8 opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL8IAboycHPrI10RqAGPY66b9eot8uaM34APvlRiB50Wz6xuTzQ_tJ-JtJQDjdVP2dekUn_L5-40Q6rw8wi3O3U4KLH4ANSt4bM-CWZQzxKBfPN0wyRPu1uXxmmbvxXKHdkqBroqKjbcqhKDkqmgY1oWDemN35E19R9gOBDXVH9CbDwoBCklv4O_N7io4aFYLAdaAYogJTNN9v83W5cJ_4ozxACfLqI4MVN8WeTc0xhP2cbfc0fwrS2XsO9WhRr5dzGF2iCY-NOEhJ"/>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark p-6 rounded-xl">
+<h3 class="text-lg font-black dark:text-white tracking-tighter mb-6">RECENT ARTICLES</h3>
+<div class="space-y-4">
+<a class="block p-4 bg-slate-50 dark:bg-slate-900/40 rounded-lg border border-transparent hover:border-primary/50 transition-all group" href="#">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">Designing resilient Event-Driven systems</h4>
+<span class="material-icons-round text-xs text-slate-500">north_east</span>
+</div>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">OCT 12, 2024 • 8 MIN READ</p>
+</a>
+<a class="block p-4 bg-slate-50 dark:bg-slate-900/40 rounded-lg border border-transparent hover:border-primary/50 transition-all group" href="#">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">Why your Microservices are failing at scale</h4>
+<span class="material-icons-round text-xs text-slate-500">north_east</span>
+</div>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">SEP 28, 2024 • 12 MIN READ</p>
+</a>
+<a class="block p-4 bg-slate-50 dark:bg-slate-900/40 rounded-lg border border-transparent hover:border-primary/50 transition-all group" href="#">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">TypeScript 5.x features for Architects</h4>
+<span class="material-icons-round text-xs text-slate-500">north_east</span>
+</div>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">SEP 15, 2024 • 5 MIN READ</p>
+</a>
+</div>
+</div>
+</div>
+</div>
+<footer class="pt-12 pb-8 border-t border-slate-200 dark:border-border-dark flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-lg border border-slate-200 dark:border-border-dark flex items-center justify-center hover:bg-primary hover:text-black transition-all" href="#">
+<span class="font-bold">𝕏</span>
+</a>
+<a class="w-10 h-10 rounded-lg border border-slate-200 dark:border-border-dark flex items-center justify-center hover:bg-primary hover:text-black transition-all" href="#">
+<span class="font-bold">GH</span>
+</a>
+<a class="w-10 h-10 rounded-lg border border-slate-200 dark:border-border-dark flex items-center justify-center hover:bg-primary hover:text-black transition-all" href="#">
+<span class="font-bold">in</span>
+</a>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="relative w-12 h-12">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-slate-200 dark:text-slate-800" cx="24" cy="24" fill="transparent" r="20" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-primary" cx="24" cy="24" fill="transparent" r="20" stroke="currentColor" stroke-dasharray="125.6" stroke-dashoffset="12.5" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center text-[9px] font-black">TOP 1%</div>
+</div>
+<div>
+<p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Site Version</p>
+<p class="text-xs font-mono dark:text-white">v2024.1.0-alpha</p>
+</div>
+</div>
+</div>
+</footer>
+</main>
+<script>
+        // Simple theme toggle logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        // Initial state
+        html.classList.add('dark');
+        toggleBtn.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            toggleBtn.querySelector('span').innerText = isDark ? 'light_mode' : 'dark_mode';
+        });
+        // Add some subtle terminal animation
+        const terminalTexts = document.querySelectorAll('.terminal-text');
+        // This could be expanded with a real typewriter effect
+    </script>
+
+</body></html>
