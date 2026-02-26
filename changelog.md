@@ -21,10 +21,11 @@ For detailed specifications, see: `docs/specs.md`
 
 ## Implementation Log
 
+### [Unreleased]
 
 #### Features
 - **Home Page**: Complete home page implementation matching design spec from `docs/home.html`
-  - Sticky navbar with logo, navigation links, theme toggle, and CV download button
+  - Sticky navbar with logo, navigation links, theme toggle, Login button, and CV download button
   - Profile card with avatar, "Ready_For_Hire" status, skills tags, location, and contact CTA
   - About section with bio, achievements, and team avatars
   - Case study section showcasing Enterprise Data Lake Engine project
@@ -44,6 +45,13 @@ For detailed specifications, see: `docs/specs.md`
   - Tooltip component using Radix UI primitives
   - cn utility for Tailwind class merging
 
+- **Authentication**: Admin login with magic link
+  - Login page at `/admin/login` with email form
+  - NextAuth.js with email provider
+  - Magic link email delivery via Resend API
+  - MongoDB adapter for user/token storage
+  - JWT session strategy with 15-minute expiry
+
 #### Dependencies Added
 - UI: @radix-ui/react-* (dialog, dropdown, tooltip, etc.)
 - Animation: framer-motion
@@ -52,8 +60,13 @@ For detailed specifications, see: `docs/specs.md`
 - Data: @tanstack/react-query
 - Charts: recharts
 - Markdown: @mdx-js/*, remark-gfm, rehype-highlight
-- Auth: next-auth
-- Database: mongoose
+- Auth: next-auth, @auth/mongodb-adapter
+- Email: resend
+- Database: mongoose, mongodb
 - Utilities: clsx, tailwind-merge, class-variance-authority, date-fns
 
 ---
+
+### v0.1.0 (2024-01-01)
+- Initial project setup with Next.js 16
+- Created specification document and changelog
