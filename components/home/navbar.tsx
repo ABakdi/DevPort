@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Menu, X, Sun, Moon, Download } from "lucide-react"
+import { Menu, X, Sun, Moon, Download, LogIn } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "@/lib/theme-provider"
 
@@ -61,7 +61,7 @@ export function Navbar() {
           ))}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
@@ -74,6 +74,12 @@ export function Navbar() {
             ) : (
               <Moon className="h-5 w-5 text-slate-600" />
             )}
+          </Button>
+          <Button variant="ghost" size="sm" asChild className="hidden lg:flex text-slate-700 dark:text-slate-300">
+            <Link href="/admin/login">
+              <LogIn className="h-4 w-4 mr-2" />
+              Login
+            </Link>
           </Button>
           <Button className="gap-2 bg-[#00E5FF] hover:scale-105 transition-transform text-black font-bold text-sm" asChild>
             <Link href="/cv">
