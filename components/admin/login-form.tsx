@@ -3,9 +3,11 @@
 import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { motion } from "framer-motion"
-import { Mail, ArrowLeft, Loader2, AlertCircle, CheckCircle } from "lucide-react"
+import { Mail, ArrowLeft, Loader2, AlertCircle, CheckCircle, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+
+const isDev = process.env.NODE_ENV === "development"
 
 type LoginState = "idle" | "sending" | "success" | "error"
 
@@ -36,6 +38,38 @@ export function LoginForm() {
     } catch (err) {
       setState("error")
       setError(err instanceof Error ? err.message : "Failed to send magic link")
+    }
+  }
+
+  const handleDevLogin = async () => {
+    if (!email) return
+    
+    setState("sending")
+    setError("")
+
+    try {
+      const res = await fetch("/api/auth/dev-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || "Dev login failed")
+      }
+
+      const data = await res.json()
+      
+      await signIn("credentials", {
+        email: data.user.email,
+        userId: data.user._id,
+        redirect: true,
+        callbackUrl: "/admin",
+      })
+    } catch (err) {
+      setState("error")
+      setError(err instanceof Error ? err.message : "Dev login failed")
     }
   }
 
@@ -117,6 +151,19 @@ export function LoginForm() {
           "Send Magic Link"
         )}
       </Button>
+
+      {isDev && (
+        <Button
+          type="button"
+          onClick={handleDevLogin}
+          disabled={state === "sending" || !email}
+          variant="outline"
+          className="w-full h-12 border-[#00E5FF] text-[#00E5FF] hover:bg-[#00E5FF]/10 font-bold rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        >
+          <Zap className="h-5 w-5" />
+          Dev Login (Bypass)
+        </Button>
+      )}
 
       <p className="text-xs text-slate-500 text-center">
         A secure link will be emailed to you and expires in 15 minutes.

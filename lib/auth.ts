@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from "next-auth"
 import EmailProvider from "next-auth/providers/email"
+import CredentialsProvider from "next-auth/providers/credentials"
 import { MongoDBAdapter } from "@auth/mongodb-adapter"
 import { sendMagicLinkEmail } from "@/lib/email"
 import { clientPromise } from "@/lib/mongodb-client"
@@ -12,11 +13,30 @@ export const authOptions: NextAuthOptions = {
         await sendMagicLinkEmail(identifier, url)
       },
     }),
+    ...(process.env.NODE_ENV === "development" ? [
+      CredentialsProvider({
+        name: "Dev Login",
+        credentials: {
+          email: { label: "Email", type: "email" },
+          userId: { label: "User ID", type: "text" },
+        },
+        async authorize(credentials) {
+          if (!credentials?.email || !credentials?.userId) {
+            return null
+          }
+          return {
+            id: credentials.userId,
+            email: credentials.email,
+            name: credentials.email.split("@")[0],
+          }
+        },
+      }),
+    ] : []),
   ],
   pages: {
-    signIn: "/admin/login",
-    verifyRequest: "/admin/login",
-    error: "/admin/login",
+    signIn: "/login",
+    verifyRequest: "/login",
+    error: "/login",
   },
   session: {
     strategy: "jwt",
