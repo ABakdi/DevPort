@@ -1,10 +1,88 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { MapPin, Clock, Mail, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-export function ProfileCard() {
+interface ProfileData {
+  name: string
+  title: string
+  location: string
+  timezone: string
+  email: string
+  skills: string[]
+}
+
+interface ProfileCardProps {
+  profile: ProfileData
+}
+
+function getTimezoneAbbreviation(timezone: string): string {
+  const tzMap: Record<string, string> = {
+    "Africa/Algiers": "CET",
+    "Africa/Cairo": "EET",
+    "Africa/Lagos": "WAT",
+    "Africa/Johannesburg": "SAST",
+    "America/New_York": "EST",
+    "America/Chicago": "CST",
+    "America/Denver": "MST",
+    "America/Los_Angeles": "PST",
+    "America/Sao_Paulo": "BRT",
+    "America/Mexico_City": "CST",
+    "Asia/Dubai": "GST",
+    "Asia/Kolkata": "IST",
+    "Asia/Bangkok": "ICT",
+    "Asia/Singapore": "SGT",
+    "Asia/Hong_Kong": "HKT",
+    "Asia/Tokyo": "JST",
+    "Asia/Seoul": "KST",
+    "Europe/London": "GMT",
+    "Europe/Paris": "CET",
+    "Europe/Berlin": "CET",
+    "Europe/Moscow": "MSK",
+    "Australia/Sydney": "AEST",
+    "Australia/Melbourne": "AEST",
+    "Pacific/Auckland": "NZST",
+    "UTC": "UTC",
+  }
+  return tzMap[timezone] || "UTC"
+}
+
+export function ProfileCard({ profile }: ProfileCardProps) {
+  const [currentTime, setCurrentTime] = useState("")
+  const [tzAbbr, setTzAbbr] = useState("")
+
+  useEffect(() => {
+    const updateTime = () => {
+      try {
+        const tz = profile.timezone || "Africa/Algiers"
+        const formatter = new Intl.DateTimeFormat("en-US", {
+          timeZone: tz,
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+        setCurrentTime(formatter.format(new Date()))
+        setTzAbbr(getTimezoneAbbreviation(tz))
+      } catch {
+        setCurrentTime("--:--")
+        setTzAbbr("UTC")
+      }
+    }
+
+    updateTime()
+    const interval = setInterval(updateTime, 1000)
+    return () => clearInterval(interval)
+  }, [profile.timezone])
+
+  const initials = profile.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2)
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -19,38 +97,37 @@ export function ProfileCard() {
       <div className="mb-6 relative w-24 h-24">
         <div className="absolute inset-0 bg-[#00E5FF] rounded-full blur-lg opacity-20 animate-pulse"></div>
         <div className="w-24 h-24 rounded-full border-2 border-[#00E5FF] relative z-10 grayscale hover:grayscale-0 transition-all duration-500 bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
-          <span className="text-3xl font-bold text-slate-400">AB</span>
+          <span className="text-3xl font-bold text-slate-400">{initials || "AB"}</span>
         </div>
       </div>
 
       <div className="space-y-1 mb-6">
         <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Hi, Welcome!</p>
         <h1 className="text-3xl font-black text-slate-900 dark:text-white leading-tight">
-          Abderrhmane Bakdi
+          {profile.name || "Your Name"}
         </h1>
-        <p className="text-[#00E5FF] font-bold">Full Stack Architect</p>
+        <p className="text-[#00E5FF] font-bold">{profile.title || "Your Title"}</p>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-8">
-        <span className="px-3 py-1 bg-slate-100 dark:bg-[#1F2937] text-slate-700 dark:text-slate-300 text-[10px] font-bold rounded-md border border-slate-200 dark:border-[#1F2937]">
-          Full Stack Dev
-        </span>
-        <span className="px-3 py-1 bg-slate-100 dark:bg-[#1F2937] text-slate-700 dark:text-slate-300 text-[10px] font-bold rounded-md border border-slate-200 dark:border-[#1F2937]">
-          System Architect
-        </span>
-        <span className="px-3 py-1 bg-slate-100 dark:bg-[#1F2937] text-slate-700 dark:text-slate-300 text-[10px] font-bold rounded-md border border-slate-200 dark:border-[#1F2937]">
-          Product Engineer
-        </span>
+        {profile.skills?.map((skill) => (
+          <span
+            key={skill}
+            className="px-3 py-1 bg-slate-100 dark:bg-[#1F2937] text-slate-700 dark:text-slate-300 text-[10px] font-bold rounded-md border border-slate-200 dark:border-[#1F2937]"
+          >
+            {skill}
+          </span>
+        ))}
       </div>
 
       <div className="flex items-center gap-4 text-xs text-slate-500 font-medium mb-8">
         <div className="flex items-center gap-1">
           <MapPin className="h-4 w-4" />
-          Algiers, DZ
+          {profile.location || "Location"}
         </div>
         <div className="flex items-center gap-1">
           <Clock className="h-4 w-4" />
-          10:00 AM CET
+          {currentTime || "--:--"} {tzAbbr}
         </div>
       </div>
 

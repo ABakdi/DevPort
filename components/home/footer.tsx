@@ -2,7 +2,20 @@
 
 import { motion } from "framer-motion"
 
-export function Footer() {
+interface FooterProps {
+  social?: {
+    twitter: string
+    github: string
+    linkedin: string
+  }
+  siteVersion?: string
+}
+
+export function Footer({ social, siteVersion }: FooterProps) {
+  const twitterUrl = social?.twitter ? `https://twitter.com/${social.twitter.replace("@", "")}` : "#"
+  const githubUrl = social?.github ? `https://github.com/${social.github}` : "#"
+  const linkedinUrl = social?.linkedin ? `https://linkedin.com/in/${social.linkedin}` : "#"
+
   return (
     <motion.footer
       initial={{ opacity: 0 }}
@@ -13,7 +26,7 @@ export function Footer() {
       <div className="flex gap-4">
         <a
           className="w-10 h-10 rounded-lg border border-slate-200 dark:border-[#1F2937] flex items-center justify-center hover:bg-[#00E5FF] hover:text-black transition-all font-bold"
-          href="https://twitter.com"
+          href={twitterUrl}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -21,7 +34,7 @@ export function Footer() {
         </a>
         <a
           className="w-10 h-10 rounded-lg border border-slate-200 dark:border-[#1F2937] flex items-center justify-center hover:bg-[#00E5FF] hover:text-black transition-all font-bold"
-          href="https://github.com"
+          href={githubUrl}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -29,7 +42,7 @@ export function Footer() {
         </a>
         <a
           className="w-10 h-10 rounded-lg border border-slate-200 dark:border-[#1F2937] flex items-center justify-center hover:bg-[#00E5FF] hover:text-black transition-all font-bold"
-          href="https://linkedin.com"
+          href={linkedinUrl}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -70,7 +83,7 @@ export function Footer() {
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
               Site Version
             </p>
-            <p className="text-xs font-mono text-slate-700 dark:text-white">v2024.1.0-alpha</p>
+            <p className="text-xs font-mono text-slate-700 dark:text-white">{siteVersion || "v2024.1.0-alpha"}</p>
           </div>
         </div>
       </div>

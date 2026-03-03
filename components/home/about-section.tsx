@@ -2,15 +2,13 @@
 
 import { motion } from "framer-motion"
 import { CheckCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
 
-const achievements = [
-  "Architected microservices handling 2M+ daily requests.",
-  "Reduced infrastructure costs by 40% using serverless patterns.",
-  "Leading engineering teams in high-growth startups.",
-]
+interface AboutSectionProps {
+  bio: string
+  achievements: string[]
+}
 
-export function AboutSection() {
+export function AboutSection({ bio, achievements }: AboutSectionProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -30,7 +28,7 @@ export function AboutSection() {
 
       <div className="space-y-6">
         <p className="text-lg leading-relaxed text-slate-600 dark:text-slate-400">
-          My passion for engineering goes back to the era of assembly and early web protocols. Today I architect <span className="text-[#FF2D55] font-bold">high-performance</span> SaaS solutions that bridge the gap between user experience and system integrity.
+          {bio}
         </p>
 
         <ul className="space-y-4">

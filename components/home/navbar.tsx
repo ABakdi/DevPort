@@ -76,7 +76,7 @@ export function Navbar() {
             )}
           </Button>
           <Button variant="ghost" size="sm" asChild className="hidden lg:flex text-slate-700 dark:text-slate-300">
-            <Link href="/admin/login">
+            <Link href="/login">
               <LogIn className="h-4 w-4 mr-2" />
               Login
             </Link>

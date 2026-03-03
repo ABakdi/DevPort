@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 
-const tools = [
+const defaultTools = [
   { name: "NodeJS", icon: "⬢" },
   { name: "TypeScript", icon: "📘" },
   { name: "K8s", icon: "☸" },
@@ -13,7 +13,26 @@ const tools = [
   { name: "Docker", icon: "🐳" },
 ]
 
-export function Toolbox() {
+interface ToolboxProps {
+  techStack: string[]
+}
+
+const iconMap: Record<string, string> = {
+  NodeJS: "⬢",
+  TypeScript: "📘",
+  K8s: "☸",
+  AWS: "☁",
+  Go: "🐹",
+  React: "⚛",
+  Python: "🐍",
+  Docker: "🐳",
+}
+
+export function Toolbox({ techStack }: ToolboxProps) {
+  const tools = techStack.length > 0 
+    ? techStack.map((name) => ({ name, icon: iconMap[name] || "⚡" }))
+    : defaultTools
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
