@@ -122,17 +122,22 @@ h1, h2, h3, h4, h5, h6 {
 .rounded-3xl { border-radius: var(--theme-card-radius, 20px) !important; }
 .rounded-full { border-radius: 9999px !important; }
 
-/* Apply theme radius to all elements */
+/* Apply theme radius to all elements - use component radius as fallback for unified look */
 button, .btn {
-  border-radius: var(--theme-button-radius, 8px) !important;
+  border-radius: var(--theme-button-radius, var(--theme-component-radius, 8px)) !important;
 }
 
 input, textarea, select {
-  border-radius: var(--theme-input-radius, 8px) !important;
+  border-radius: var(--theme-input-radius, var(--theme-component-radius, 8px)) !important;
 }
 
 .card, article, section {
-  border-radius: var(--theme-card-radius, 12px) !important;
+  border-radius: var(--theme-card-radius, var(--theme-component-radius, 12px)) !important;
+}
+
+/* Ensure all UI elements respect component style - override any rounded utility */
+[class*="rounded-"] {
+  border-radius: var(--theme-component-radius, var(--theme-card-radius, 8px)) !important;
 }
 
 .border-component {

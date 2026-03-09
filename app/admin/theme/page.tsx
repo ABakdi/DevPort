@@ -267,6 +267,12 @@ export default function AdminTheme() {
     }
   }, [contextTheme, contextLoading])
 
+  useEffect(() => {
+    if (!loading) {
+      applyThemeToDocument(theme)
+    }
+  }, [theme, loading, applyThemeToDocument])
+
   const handleSave = async () => {
     setSaving(true)
     try {
@@ -959,7 +965,13 @@ export default function AdminTheme() {
                       key={style.id}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => setTheme({ ...theme, componentStyle: style.id })}
+                      onClick={() => setTheme({ 
+                        ...theme, 
+                        componentStyle: style.id,
+                        buttonStyle: style.id,
+                        cardStyle: style.id,
+                        inputStyle: style.id,
+                      })}
                       className="p-4 rounded-xl border transition-all text-center"
                       style={{ 
                         backgroundColor: theme.componentStyle === style.id ? 'var(--theme-secondary)' : 'var(--theme-surface)',
