@@ -21,7 +21,35 @@
   --border: #e2e8f0;
   --input: #e2e8f0;
   --ring: #00E5FF;
-  --radius: 12px;
+  --radius: 0.75rem;
+  
+  /* Theme Variables - these are set by the ThemeLoader */
+  --theme-primary: #00E5FF;
+  --theme-secondary: #8B5CF6;
+  --theme-accent: #F59E0B;
+  --theme-background: #0D1117;
+  --theme-surface: #1F2937;
+  --theme-text: #ffffff;
+  --theme-font-heading: Inter, system-ui, sans-serif;
+  --theme-font-body: Inter, system-ui, sans-serif;
+  --theme-font-size: 16px;
+  --theme-border-radius: 0.75rem;
+  --theme-border-width: 1px;
+  --theme-icon-style: rounded;
+  --theme-layout: default;
+  /* Style Variables */
+  --theme-page-style: default;
+  --theme-component-style: rounded;
+  --theme-card-style: default;
+  --theme-button-style: default;
+  --theme-input-style: default;
+  --theme-shadow-intensity: medium;
+  --theme-border-style: solid;
+  --theme-component-radius: 8px;
+  --theme-card-radius: 12px;
+  --theme-button-radius: 8px;
+  --theme-input-radius: 8px;
+  --theme-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
 @theme inline {
@@ -42,26 +70,14 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-}
-
-.dark {
-  --background: #05070A;
-  --foreground: #cbd5e1;
-  --card: #0D1117;
-  --card-foreground: #cbd5e1;
-  --primary: #00E5FF;
-  --primary-foreground: #000000;
-  --secondary: #1F2937;
-  --secondary-foreground: #cbd5e1;
-  --muted: #1F2937;
-  --muted-foreground: #94a3b8;
-  --accent: #1F2937;
-  --accent-foreground: #cbd5e1;
-  --destructive: #FF2D55;
-  --destructive-foreground: #ffffff;
-  --border: #1F2937;
-  --input: #1F2937;
-  --ring: #00E5FF;
+  
+  /* Theme colors available to Tailwind */
+  --color-theme-primary: var(--theme-primary);
+  --color-theme-secondary: var(--theme-secondary);
+  --color-theme-accent: var(--theme-accent);
+  --color-theme-background: var(--theme-background);
+  --color-theme-surface: var(--theme-surface);
+  --color-theme-text: var(--theme-text);
 }
 
 * {
@@ -69,11 +85,554 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  background-color: var(--theme-background);
+  color: var(--theme-text);
+  font-family: var(--theme-font-body);
+  font-size: var(--theme-font-size);
 }
 
-.font-mono {
-  font-family: var(--font-mono), monospace;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--theme-font-heading);
+}
+
+.rounded-input {
+  border-radius: var(--theme-input-radius, 8px);
+}
+
+.rounded-button {
+  border-radius: var(--theme-button-radius, 8px);
+}
+
+.rounded-card {
+  border-radius: var(--theme-card-radius, 12px);
+}
+
+.rounded-component {
+  border-radius: var(--theme-component-radius, 8px);
+}
+
+/* Override all Tailwind rounded classes */
+.rounded-none { border-radius: 0 !important; }
+.rounded-sm { border-radius: var(--theme-component-radius, 4px) !important; }
+.rounded { border-radius: var(--theme-component-radius, 8px) !important; }
+.rounded-md { border-radius: var(--theme-component-radius, 8px) !important; }
+.rounded-lg { border-radius: var(--theme-component-radius, 8px) !important; }
+.rounded-xl { border-radius: var(--theme-card-radius, 12px) !important; }
+.rounded-2xl { border-radius: var(--theme-card-radius, 16px) !important; }
+.rounded-3xl { border-radius: var(--theme-card-radius, 20px) !important; }
+.rounded-full { border-radius: 9999px !important; }
+
+/* Apply theme radius to all elements */
+button, .btn {
+  border-radius: var(--theme-button-radius, 8px) !important;
+}
+
+input, textarea, select {
+  border-radius: var(--theme-input-radius, 8px) !important;
+}
+
+.card, article, section {
+  border-radius: var(--theme-card-radius, 12px) !important;
+}
+
+.border-component {
+  border-width: var(--theme-border-width, 1px);
+  border-style: var(--theme-border-style, solid);
+}
+
+.shadow-component {
+  box-shadow: var(--theme-shadow);
+}
+
+/* Base animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 5px var(--theme-primary), 0 0 10px var(--theme-primary);
+  }
+  50% { 
+    box-shadow: 0 0 20px var(--theme-primary), 0 0 30px var(--theme-primary);
+  }
+}
+
+/* No animations class */
+.no-animations * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Terminal typing animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.typing-cursor::after {
+  content: '|';
+  animation: blink 1s infinite;
+}
+
+/* Code block styles */
+pre, code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--theme-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--theme-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-secondary);
+}
+
+/* Focus visible styles */
+:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+}
+
+/* Selection styles */
+::selection {
+  background: var(--theme-primary);
+  color: var(--theme-primary-foreground);
+}
+
+/* Admin styles */
+.admin-text {
+  color: var(--theme-text) !important;
+}
+
+.admin-text-muted {
+  color: var(--theme-text) !important;
+  opacity: 0.6 !important;
+}
+
+.admin-bg {
+  background-color: var(--theme-background) !important;
+}
+
+.admin-bg-surface {
+  background-color: var(--theme-surface) !important;
+}
+
+.admin-input {
+  background-color: var(--theme-surface) !important;
+  border-color: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+}
+
+.admin-input:focus {
+  --tw-ring-color: var(--theme-primary) !important;
+}
+
+/* Page Style: Bento - Grid-based modular (Apple-inspired) */
+[data-page-style="bento"] {
+  --theme-border-radius: 24px;
+  --theme-component-radius: 20px;
+  --theme-card-radius: 28px;
+}
+
+[data-page-style="bento"] .card,
+[data-page-style="bento"] article,
+[data-page-style="bento"] section {
+  border-radius: var(--theme-card-radius, 28px) !important;
+}
+
+/* Page Style: Neo-Brutalist - Bold and raw */
+[data-page-style="neobrutalist"] {
+  --theme-component-radius: 0;
+}
+
+[data-page-style="neobrutalist"] .card,
+[data-page-style="neobrutalist"] article,
+[data-page-style="neobrutalist"] section,
+[data-page-style="neobrutalist"] button,
+[data-page-style="neobrutalist"] input {
+  border-radius: var(--theme-component-radius, 0) !important;
+}
+
+/* Page Style: Glass - Glassmorphism */
+[data-page-style="glass"] {
+  --theme-component-radius: 16px;
+}
+
+[data-page-style="glass"] .card,
+[data-page-style="glass"] article,
+[data-page-style="glass"] section {
+  border-radius: var(--theme-component-radius, 16px) !important;
+}
+
+/* Page Style: Cyberpunk */
+[data-page-style="cyberpunk"] {
+  --theme-component-radius: 0;
+}
+
+[data-page-style="cyberpunk"] .card,
+[data-page-style="cyberpunk"] article,
+[data-page-style="cyberpunk"] section {
+  border-radius: var(--theme-component-radius, 0) !important;
+}
+
+/* Page Style: Soft */
+[data-page-style="soft"] {
+  --theme-component-radius: 24px;
+}
+
+[data-page-style="soft"] .card,
+[data-page-style="soft"] article,
+[data-page-style="soft"] section {
+  border-radius: var(--theme-component-radius, 24px) !important;
+}
+
+/* Page Style: Tech */
+[data-page-style="tech"] {
+  --theme-component-radius: 6px;
+}
+
+[data-page-style="tech"] .card,
+[data-page-style="tech"] article,
+[data-page-style="tech"] section {
+  border-radius: var(--theme-component-radius, 6px) !important;
+}
+
+/* Page Style: Organic */
+[data-page-style="organic"] {
+  --theme-component-radius: 16px;
+}
+
+[data-page-style="organic"] .card,
+[data-page-style="organic"] article,
+[data-page-style="organic"] section {
+  border-radius: var(--theme-component-radius, 16px) !important;
+}
+
+[data-page-style="bento"] .card,
+[data-page-style="bento"] article,
+[data-page-style="bento"] section {
+  border-radius: var(--theme-card-radius, 28px) !important;
+}
+
+[data-page-style="bento"] button {
+  border-radius: var(--theme-component-radius, 20px) !important;
+}
+
+[data-page-style="bento"] input {
+  border-radius: var(--theme-input-radius, 8px) !important;
+}
+
+/* Page Style: Neo-Brutalist - Bold and raw */
+[data-page-style="neobrutalist"] {
+  --theme-component-radius: 0;
+}
+
+[data-page-style="neobrutalist"] .card,
+[data-page-style="neobrutalist"] article,
+[data-page-style="neobrutalist"] section,
+[data-page-style="neobrutalist"] button,
+[data-page-style="neobrutalist"] input {
+  border-radius: var(--theme-component-radius, 0) !important;
+}
+
+/* Page Style: Glass - Glassmorphism */
+[data-page-style="glass"] {
+  --theme-component-radius: 16px;
+}
+
+[data-page-style="glass"] .card,
+[data-page-style="glass"] article,
+[data-page-style="glass"] section {
+  border-radius: var(--theme-component-radius, 16px) !important;
+}
+
+/* Page Style: Cyberpunk */
+[data-page-style="cyberpunk"] {
+  --theme-component-radius: 0;
+}
+
+[data-page-style="cyberpunk"] .card,
+[data-page-style="cyberpunk"] article,
+[data-page-style="cyberpunk"] section {
+  border-radius: var(--theme-component-radius, 0) !important;
+}
+
+/* Page Style: Soft */
+[data-page-style="soft"] {
+  --theme-component-radius: 24px;
+}
+
+[data-page-style="soft"] .card,
+[data-page-style="soft"] article,
+[data-page-style="soft"] section {
+  border-radius: var(--theme-component-radius, 24px) !important;
+}
+
+/* Page Style: Tech */
+[data-page-style="tech"] {
+  --theme-component-radius: 6px;
+}
+
+[data-page-style="tech"] .card,
+[data-page-style="tech"] article,
+[data-page-style="tech"] section {
+  border-radius: var(--theme-component-radius, 6px) !important;
+}
+
+/* Page Style: Organic */
+[data-page-style="organic"] {
+  --theme-component-radius: 16px;
+}
+
+[data-page-style="organic"] .card,
+[data-page-style="organic"] article,
+[data-page-style="organic"] section {
+  border-radius: var(--theme-component-radius, 16px) !important;
+}
+
+[data-page-style="minimalist"] .card,
+[data-page-style="minimalist"] article,
+[data-page-style="minimalist"] section {
+  border-radius: var(--theme-card-radius, 8px) !important;
+}
+
+[data-page-style="minimalist"] body {
+  background: #ffffff !important;
+}
+
+[data-page-style="minimalist"] .card {
+  border: 1px solid #f0f0f0 !important;
+}
+
+/* Page Style: Neo-Brutalist - Bold and raw */
+[data-page-style="neobrutalist"] {
+  --theme-border-radius: 0;
+  --theme-component-radius: 0;
+  --theme-surface: #FF6B35;
+  --theme-primary: #FF6B35;
+  --theme-background: #FFE66D;
+}
+
+[data-page-style="neobrutalist"] .card,
+[data-page-style="neobrutalist"] article,
+[data-page-style="neobrutalist"] section,
+[data-page-style="neobrutalist"] button,
+[data-page-style="neobrutalist"] input {
+  border-radius: 0 !important;
+  border: 3px solid #000 !important;
+  box-shadow: 6px 6px 0 #000 !important;
+  background: #fff !important;
+}
+
+[data-page-style="neobrutalist"] button {
+  background: #FF6B35 !important;
+  color: #000 !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+}
+
+[data-page-style="neobrutalist"] button:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 #000 !important;
+}
+
+[data-page-style="neobrutalist"] body {
+  background: #FFE66D !important;
+  background-image: none !important;
+}
+
+[data-page-style="neobrutalist"] h1,
+[data-page-style="neobrutalist"] h2,
+[data-page-style="neobrutalist"] h3 {
+  color: #000 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Page Style: Glass - Glassmorphism (Apple/Windows 11 style) */
+[data-page-style="glass"] {
+  --theme-surface: rgba(255,255,255,0.12);
+  --theme-component-radius: 16px;
+}
+
+[data-page-style="glass"] .card,
+[data-page-style="glass"] article,
+[data-page-style="glass"] section {
+  border-radius: 16px !important;
+  background: rgba(255,255,255,0.08) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important;
+}
+
+[data-page-style="glass"] body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B8DD6 100%) !important;
+  min-height: 100vh;
+}
+
+/* Page Style: Cyberpunk - Futuristic neon (Blade Runner/Cyberpunk 2077 style) */
+[data-page-style="cyberpunk"] {
+  --theme-surface: #0a0a0f;
+  --theme-primary: #00f0ff;
+  --theme-secondary: #ff00ff;
+  --theme-accent: #ffff00;
+  --theme-component-radius: 0;
+}
+
+[data-page-style="cyberpunk"] .card,
+[data-page-style="cyberpunk"] article,
+[data-page-style="cyberpunk"] section {
+  border-radius: 0 !important;
+  border: 1px solid #00f0ff !important;
+  background: rgba(0,240,255,0.05) !important;
+  box-shadow: 0 0 15px rgba(0,240,255,0.2), inset 0 0 30px rgba(0,240,255,0.05) !important;
+}
+
+[data-page-style="cyberpunk"] body {
+  background: #050505 !important;
+  background-image: 
+    linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px),
+    radial-gradient(ellipse at top, rgba(0,240,255,0.1) 0%, transparent 50%) !important;
+  background-size: 20px 20px, 20px 20px, 100% 100% !important;
+}
+
+[data-page-style="cyberpunk"] h1,
+[data-page-style="cyberpunk"] h2,
+[data-page-style="cyberpunk"] h3 {
+  text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff !important;
+  color: #00f0ff !important;
+}
+
+[data-page-style="cyberpunk"] button {
+  border: 1px solid #00f0ff !important;
+  color: #00f0ff !important;
+  background: transparent !important;
+}
+
+[data-page-style="cyberpunk"] button:hover {
+  background: rgba(0,240,255,0.2) !important;
+  box-shadow: 0 0 20px rgba(0,240,255,0.5) !important;
+}
+
+/* Page Style: Soft - Gentle and smooth */
+[data-page-style="soft"] {
+  --theme-border-radius: 30px;
+  --theme-component-radius: 24px;
+  --theme-card-radius: 32px;
+  --theme-surface: rgba(255,255,255,0.15);
+}
+
+[data-page-style="soft"] .card,
+[data-page-style="soft"] article,
+[data-page-style="soft"] section {
+  border-radius: 30px !important;
+  background: rgba(255,255,255,0.12) !important;
+  backdrop-filter: blur(15px);
+  border: none !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08) !important;
+}
+
+[data-page-style="soft"] body {
+  background: linear-gradient(135deg, #c4b5fd 0%, #f9a8d4 50%, #fcd34d 100%) !important;
+}
+
+[data-page-style="soft"] button {
+  border-radius: 24px !important;
+  background: rgba(255,255,255,0.3) !important;
+  border: none !important;
+}
+
+/* Page Style: Tech - Developer/Tech aesthetic (GitHub/Linear style) */
+[data-page-style="tech"] {
+  --theme-surface: #161b22;
+  --theme-background: #0d1117;
+  --theme-text: #c9d1d9;
+  --theme-primary: #58a6ff;
+  --theme-secondary: #8b949e;
+  --theme-component-radius: 6px;
+}
+
+[data-page-style="tech"] .card,
+[data-page-style="tech"] article,
+[data-page-style="tech"] section {
+  border-radius: 6px !important;
+  border: 1px solid #30363d !important;
+  background: #161b22 !important;
+  box-shadow: none !important;
+}
+
+[data-page-style="tech"] body {
+  background: #0d1117 !important;
+  background-image: none !important;
+}
+
+[data-page-style="tech"] button {
+  border-radius: 6px !important;
+  background: #21262d !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-page-style="tech"] input {
+  border-radius: 6px !important;
+  background: #0d1117 !important;
+  border: 1px solid #30363d !important;
+}
+
+/* Page Style: Organic - Natural and warm */
+[data-page-style="organic"] {
+  --theme-surface: rgba(255,255,255,0.1);
+  --theme-primary: #22c55e;
+  --theme-secondary: #14b8a6;
+  --theme-component-radius: 16px;
+}
+
+[data-page-style="organic"] .card,
+[data-page-style="organic"] article,
+[data-page-style="organic"] section {
+  border-radius: 16px !important;
+  background: rgba(255,255,255,0.1) !important;
+  border: none !important;
+  backdrop-filter: blur(10px);
+}
+
+[data-page-style="organic"] body {
+  background: linear-gradient(135deg, #052e16 0%, #064e3b 50%, #047857 100%) !important;
+}
+
+[data-page-style="organic"] button {
+  border-radius: 16px !important;
+  background: rgba(34,197,94,0.3) !important;
+  border: 1px solid rgba(34,197,94,0.5) !important;
+}
+
+[data-page-style="organic"] h1,
+[data-page-style="organic"] h2,
+[data-page-style="organic"] h3 {
+  color: #d1fae5 !important;
 }
