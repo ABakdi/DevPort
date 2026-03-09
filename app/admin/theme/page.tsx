@@ -267,20 +267,13 @@ export default function AdminTheme() {
     }
   }, [contextTheme, contextLoading])
 
-  useEffect(() => {
-    if (!loading) {
-      applyThemeToDocument(theme)
-    }
-  }, [theme, loading, applyThemeToDocument])
-
   const handleSave = async () => {
     setSaving(true)
     try {
       await updateTheme(theme)
+      applyThemeToDocument(theme)
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
-      // Reload to apply styles
-      window.location.reload()
     } catch {
       console.error("Failed to save theme")
     }
@@ -295,6 +288,7 @@ export default function AdminTheme() {
     }
     resetTheme()
     setTheme(resetThemeConfig as any)
+    applyThemeToDocument(resetThemeConfig as any)
     setSaved(true)
     setTimeout(() => setSaved(false), 3000)
   }
