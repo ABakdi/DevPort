@@ -548,7 +548,7 @@ export default function AdminTheme() {
           animate={{ opacity: 1, x: 0 }}
           className="hidden lg:block lg:w-64 flex-shrink-0"
         >
-          <div className="rounded-2xl p-2 sticky top-8 border" style={{ 
+          <div className="rounded-2xl p-2 sticky top-8 border section-bar" style={{ 
             backgroundColor: 'var(--theme-background)',
             borderColor: 'var(--theme-surface)',
           }}>

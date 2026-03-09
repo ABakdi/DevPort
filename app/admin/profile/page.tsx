@@ -396,7 +396,7 @@ export default function ProfileSettings() {
           animate={{ opacity: 1, x: 0 }}
           className="lg:w-64 flex-shrink-0"
         >
-          <div className="rounded-2xl p-3 sticky top-24 border" style={{ 
+          <div className="rounded-2xl p-3 sticky top-24 border section-bar" style={{ 
             backgroundColor: 'var(--theme-background)',
             borderColor: 'var(--theme-surface)',
           }}>

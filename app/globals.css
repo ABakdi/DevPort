@@ -200,6 +200,16 @@ input, textarea, select {
   box-shadow: none !important;
 }
 
+/* Section bar should never have shadows (except buttons inside) */
+.section-bar, .section-bar * {
+  box-shadow: none !important;
+}
+
+/* But buttons inside section-bar should follow shadow rules */
+.section-bar button, .section-bar .btn {
+  box-shadow: var(--theme-shadow) !important;
+}
+
 /* Base animations */
 @keyframes fade-in {
   from { opacity: 0; }
