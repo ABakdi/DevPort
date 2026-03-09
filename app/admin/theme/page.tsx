@@ -230,12 +230,12 @@ export default function AdminTheme() {
       sharp: '0px',
       square: '4px',
       rounded: '8px',
-      pill: '9999px',
+      pill: '24px',
     }
     root.style.setProperty('--theme-component-radius', radii[themeConfig.componentStyle as keyof typeof radii] || '8px')
     root.style.setProperty('--theme-button-radius', radii[themeConfig.buttonStyle as keyof typeof radii] || '8px')
     root.style.setProperty('--theme-input-radius', radii[themeConfig.inputStyle as keyof typeof radii] || '8px')
-    root.style.setProperty('--theme-card-radius', themeConfig.cardStyle === 'pill' ? '9999px' : themeConfig.cardStyle === 'square' ? '4px' : '12px')
+    root.style.setProperty('--theme-card-radius', themeConfig.cardStyle === 'pill' ? '28px' : themeConfig.cardStyle === 'square' ? '4px' : '12px')
     
     // Apply shadow
     const shadows = {
@@ -414,7 +414,7 @@ export default function AdminTheme() {
     { id: "sharp", name: "Sharp", desc: "No rounding", radius: "0px" },
     { id: "square", name: "Square", desc: "Subtle corners", radius: "4px" },
     { id: "rounded", name: "Rounded", desc: "Smooth curves", radius: "8px" },
-    { id: "pill", name: "Pill", desc: "Fully rounded", radius: "9999px" },
+    { id: "pill", name: "Pill", desc: "Soft curves", radius: "24px" },
   ]
 
   const shadowIntensities = [

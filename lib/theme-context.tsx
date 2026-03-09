@@ -140,7 +140,7 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
       sharp: '0px',
       square: '4px',
       rounded: '8px',
-      pill: '9999px',
+      pill: '24px',
       circle: '50%',
     }
     return radii[style] || '8px'
@@ -152,7 +152,7 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
       sharp: '0px',
       square: '4px',
       rounded: '16px',
-      pill: '9999px',
+      pill: '28px',
       circle: '50%',
     }
     return radii[style] || '12px'
@@ -164,7 +164,7 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
       sharp: '0px',
       square: '4px',
       rounded: '12px',
-      pill: '9999px',
+      pill: '20px',
       circle: '50%',
     }
     return radii[style] || '8px'
@@ -176,7 +176,7 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
       sharp: '0px',
       square: '4px',
       rounded: '12px',
-      pill: '9999px',
+      pill: '16px',
       circle: '50%',
     }
     return radii[style] || '8px'

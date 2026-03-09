@@ -140,6 +140,14 @@ input, textarea, select {
   border-radius: var(--theme-component-radius, var(--theme-card-radius, 8px)) !important;
 }
 
+/* Sidebar should never have rounded corners */
+.admin-sidebar,
+.admin-sidebar *,
+.sidebar,
+.sidebar * {
+  border-radius: 0 !important;
+}
+
 .border-component {
   border-width: var(--theme-border-width, 1px);
   border-style: var(--theme-border-style, solid);
