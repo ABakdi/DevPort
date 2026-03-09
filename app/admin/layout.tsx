@@ -12,7 +12,7 @@ export default function AdminLayout({
 
   return (
     <div 
-      className="min-h-screen theme-component"
+      className="min-h-screen theme-component admin-bg"
       style={{ backgroundColor: 'var(--theme-background)' }}
     >
       <AdminSidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />

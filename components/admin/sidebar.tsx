@@ -180,7 +180,7 @@ export function AdminSidebar({ collapsed = false, onToggle }: AdminSidebarProps)
           </Link>
           <button
             onClick={() => signOut({ callbackUrl: "/admin/login" })}
-            className="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all"
+            className="sidebar-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all"
             style={{ color: 'var(--theme-text)', opacity: 0.7 }}
           >
             <div 
@@ -193,7 +193,7 @@ export function AdminSidebar({ collapsed = false, onToggle }: AdminSidebarProps)
           </button>
           <button
             onClick={onToggle}
-            className="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all"
+            className="sidebar-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all"
             style={{ color: 'var(--theme-text)', opacity: 0.7 }}
           >
             <div 

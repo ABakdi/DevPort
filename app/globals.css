@@ -163,7 +163,7 @@ input, textarea, select {
 }
 
 /* Apply to buttons */
-button, .btn {
+button, .btn:not(.sidebar-btn) {
   box-shadow: var(--theme-shadow) !important;
 }
 
@@ -178,8 +178,26 @@ input, textarea, select {
 }
 
 /* Force shadow on theme-styled surface elements */
-.theme-bg-surface {
+.theme-bg-surface, .theme-bg-background {
   box-shadow: var(--theme-shadow) !important;
+}
+
+/* Apply shadow to any bordered element in admin pages */
+.admin-bg .rounded-2xl,
+.admin-bg .rounded-xl,
+.admin-bg .rounded-lg,
+.rounded-2xl.border,
+.rounded-xl.border,
+.rounded-lg.border {
+  box-shadow: var(--theme-shadow) !important;
+}
+
+/* Sidebar should never have shadows */
+.sidebar, .sidebar *, 
+.admin-sidebar, .admin-sidebar *,
+[class*="sidebar"], [class*="sidebar"] *,
+.sidebar-btn, .sidebar-btn * {
+  box-shadow: none !important;
 }
 
 /* Base animations */
