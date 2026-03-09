@@ -12,14 +12,33 @@ const defaultTheme = {
   background: "#0D1117",
   surface: "#1F2937",
   text: "#ffffff",
+  lightPrimary: "#0891B2",
+  lightSecondary: "#7C3AED",
+  lightAccent: "#D97706",
+  lightBackground: "#F8FAFC",
+  lightSurface: "#FFFFFF",
+  lightText: "#0F172A",
   fontHeading: "Inter",
   fontBody: "Inter",
-  borderRadius: 12,
+  fontSize: 16,
+  borderRadius: "rounded-xl",
+  borderWidth: 1,
+  iconStyle: "rounded",
+  layout: "default",
   animations: true,
   darkMode: "dark",
   logo: "",
   favicon: "",
+  pageStyle: "default",
+  componentStyle: "rounded",
+  cardStyle: "default",
+  buttonStyle: "default",
+  inputStyle: "default",
+  shadowIntensity: "medium",
+  borderStyle: "solid",
   customPalettes: [],
+  customLayouts: [],
+  customStyles: [],
 }
 
 export async function GET() {
@@ -57,8 +76,11 @@ export async function PUT(req: Request) {
     if (theme) {
       const allowedFields = [
         "name", "primary", "secondary", "accent", "background", "surface", "text",
-        "fontHeading", "fontBody", "borderRadius", "animations", "darkMode",
-        "logo", "favicon", "customPalettes"
+        "lightPrimary", "lightSecondary", "lightAccent", "lightBackground", "lightSurface", "lightText",
+        "fontHeading", "fontBody", "fontSize", "borderRadius", "borderWidth",
+        "iconStyle", "layout", "animations", "darkMode", "logo", "favicon",
+        "pageStyle", "componentStyle", "cardStyle", "buttonStyle", "inputStyle", "shadowIntensity", "borderStyle",
+        "customPalettes", "customLayouts", "customStyles"
       ]
       
       const filteredBody: Record<string, unknown> = {}
