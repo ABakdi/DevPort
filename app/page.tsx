@@ -7,6 +7,7 @@ import {
   RecentArticles,
   Footer,
   CaseStudy,
+  ThemeDebug,
 } from "@/components/home"
 import { getProfileData } from "@/lib/profile"
 
@@ -55,6 +56,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen">
+      <ThemeDebug />
       <Navbar />
       {!hasAnySection ? (
         <main className="flex items-center justify-center min-h-[calc(100vh-64px)]">

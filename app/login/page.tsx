@@ -13,11 +13,12 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#05070a] flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--theme-background)' }}>
       <header className="p-6">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-[#00E5FF] transition-colors"
+          className="inline-flex items-center gap-2 text-sm transition-colors"
+          style={{ color: 'var(--theme-text)', opacity: 0.7 }}
         >
           <ArrowLeft className="h-4 w-4" />
           Back to site
@@ -28,24 +29,24 @@ export default async function LoginPage() {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 bg-[#00E5FF] rounded-lg flex items-center justify-center text-black font-black">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center text-black font-black" style={{ background: 'linear-gradient(135deg, var(--theme-primary), var(--theme-secondary))' }}>
                 D
               </div>
-              <span className="font-bold text-xl text-slate-900 dark:text-white">DevPort</span>
+              <span className="font-bold text-xl" style={{ color: 'var(--theme-text)' }}>DevPort</span>
             </Link>
-            <h1 className="text-2xl font-black text-slate-900 dark:text-white mb-2">
+            <h1 className="text-2xl font-black mb-2" style={{ color: 'var(--theme-text)' }}>
               Welcome back
             </h1>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p style={{ color: 'var(--theme-text)', opacity: 0.7 }}>
               Sign in to access your admin dashboard
             </p>
           </div>
 
-          <div className="bg-white dark:bg-[#0D1117] border border-slate-200 dark:border-[#1F2937] rounded-2xl p-8">
+          <div className="border rounded-2xl p-8" style={{ backgroundColor: 'var(--theme-surface)', borderColor: 'var(--theme-surface)' }}>
             <LoginForm />
           </div>
 
-          <p className="text-xs text-slate-500 text-center mt-6">
+          <p className="text-xs text-center mt-6" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>
             Only authorized users can access the admin area.
           </p>
         </div>
