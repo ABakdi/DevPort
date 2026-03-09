@@ -192,21 +192,25 @@ input, textarea, select {
   box-shadow: var(--theme-shadow) !important;
 }
 
-/* Sidebar should never have shadows */
-.sidebar, .sidebar *, 
-.admin-sidebar, .admin-sidebar *,
-[class*="sidebar"], [class*="sidebar"] *,
-.sidebar-btn, .sidebar-btn * {
+/* Sidebar should never have shadows - override ALL shadow styles */
+.sidebar, .sidebar > *, 
+.admin-sidebar, .admin-sidebar > *,
+[class*="sidebar"], [class*="sidebar"] > *,
+.sidebar-btn, .sidebar-btn *,
+.admin-sidebar * {
   box-shadow: none !important;
 }
 
 /* Section bar should never have shadows (except buttons inside) */
-.section-bar, .section-bar * {
+.section-bar, .section-bar > *, 
+.section-bar > * > *, 
+.section-bar > * > * > * {
   box-shadow: none !important;
 }
 
 /* But buttons inside section-bar should follow shadow rules */
-.section-bar button, .section-bar .btn {
+.section-bar button, .section-bar .btn,
+.section-bar button *, .section-bar .btn * {
   box-shadow: var(--theme-shadow) !important;
 }
 

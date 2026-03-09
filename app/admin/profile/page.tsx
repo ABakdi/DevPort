@@ -359,7 +359,7 @@ export default function ProfileSettings() {
             initial={{ opacity: 0, y: -50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -50, scale: 0.9 }}
-            className="fixed top-6 right-6 z-50 px-6 py-3 rounded-2xl flex items-center gap-3 shadow-lg backdrop-blur-xl border"
+            className="fixed top-6 right-6 z-50 px-6 py-3 rounded-2xl flex items-center gap-3 backdrop-blur-xl border"
             style={{ 
               background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))',
               opacity: 0.9,

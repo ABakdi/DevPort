@@ -131,10 +131,9 @@ export default function AdminSettings() {
                   </div>
 
                   <div className="pt-4 border-t" style={{ borderColor: 'var(--theme-surface)' }}>
-                    <button className="px-5 py-2.5 font-bold rounded-xl shadow-lg transition-all flex items-center gap-2" style={{ 
+                    <button className="px-5 py-2.5 font-bold rounded-xl transition-all flex items-center gap-2" style={{ 
                       background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))',
                       color: '#000000',
-                      boxShadow: '0 0 20px color-mix(in srgb, var(--theme-primary) 20%, transparent)',
                     }}>
                       <Save className="h-4 w-4" />
                       Save Changes
@@ -251,10 +250,9 @@ export default function AdminSettings() {
                 </div>
 
                 <div className="pt-4 border-t" style={{ borderColor: 'var(--theme-surface)' }}>
-                  <button className="px-5 py-2.5 font-bold rounded-xl shadow-lg transition-all flex items-center gap-2" style={{ 
+                  <button className="px-5 py-2.5 font-bold rounded-xl transition-all flex items-center gap-2" style={{ 
                     background: 'linear-gradient(90deg, #10B981, var(--theme-primary))',
                     color: '#000000',
-                    boxShadow: '0 0 20px color-mix(in srgb, #10B981 20%, transparent)',
                   }}>
                     <Save className="h-4 w-4" />
                     Save Changes
