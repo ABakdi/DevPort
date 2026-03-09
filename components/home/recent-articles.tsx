@@ -31,9 +31,10 @@ export function RecentArticles() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5 }}
-      className="bg-white dark:bg-[#0D1117] border border-slate-200 dark:border-[#1F2937] p-6 rounded-xl"
+      className="p-6 rounded-xl border theme-bg-background"
+      style={{ borderColor: 'var(--theme-surface)' }}
     >
-      <h3 className="text-lg font-black text-slate-900 dark:text-white tracking-tighter mb-6">RECENT ARTICLES</h3>
+      <h3 className="text-lg font-black tracking-tighter mb-6 theme-text">RECENT ARTICLES</h3>
 
       <div className="space-y-4">
         {articles.map((article, index) => (
@@ -45,15 +46,18 @@ export function RecentArticles() {
           >
             <Link
               href={`/blog/${article.slug}`}
-              className="block p-4 bg-slate-50 dark:bg-[#0a0a0a] rounded-lg border border-transparent hover:border-[#00E5FF]/50 transition-all group"
+              className="block p-4 rounded-lg border border-transparent transition-all group theme-bg-surface"
+              style={{ 
+                borderColor: 'transparent',
+              }}
             >
               <div className="flex justify-between items-start mb-1">
-                <h4 className="font-bold text-slate-900 dark:text-slate-100 group-hover:text-[#00E5FF] transition-colors">
+                <h4 className="font-bold theme-text group-hover:theme-text-primary transition-colors">
                   {article.title}
                 </h4>
-                <ArrowUpRight className="h-4 w-4 text-slate-500 flex-shrink-0" />
+                <ArrowUpRight className="h-4 w-4 flex-shrink-0 theme-text" style={{ opacity: 0.5 }} />
               </div>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+              <p className="text-[10px] font-bold uppercase tracking-widest theme-text" style={{ opacity: 0.5 }}>
                 {article.date} • {article.readTime}
               </p>
             </Link>

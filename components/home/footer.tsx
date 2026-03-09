@@ -3,11 +3,7 @@
 import { motion } from "framer-motion"
 
 interface FooterProps {
-  social?: {
-    twitter: string
-    github: string
-    linkedin: string
-  }
+  social?: { twitter: string; github: string; linkedin: string }
   siteVersion?: string
 }
 
@@ -21,69 +17,28 @@ export function Footer({ social, siteVersion }: FooterProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.7 }}
-      className="pt-12 pb-8 border-t border-slate-200 dark:border-[#1F2937] flex flex-col md:flex-row items-center justify-between gap-6"
+      className="pt-12 pb-8 border-t flex flex-col md:flex-row items-center justify-between gap-6 theme-border-surface"
     >
       <div className="flex gap-4">
-        <a
-          className="w-10 h-10 rounded-lg border border-slate-200 dark:border-[#1F2937] flex items-center justify-center hover:bg-[#00E5FF] hover:text-black transition-all font-bold"
-          href={twitterUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          𝕏
-        </a>
-        <a
-          className="w-10 h-10 rounded-lg border border-slate-200 dark:border-[#1F2937] flex items-center justify-center hover:bg-[#00E5FF] hover:text-black transition-all font-bold"
-          href={githubUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GH
-        </a>
-        <a
-          className="w-10 h-10 rounded-lg border border-slate-200 dark:border-[#1F2937] flex items-center justify-center hover:bg-[#00E5FF] hover:text-black transition-all font-bold"
-          href={linkedinUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          in
-        </a>
+        {[ { label: '𝕏', url: twitterUrl }, { label: 'GH', url: githubUrl }, { label: 'in', url: linkedinUrl }].map((item, i) => (
+          <a key={i} href={item.url} target="_blank" rel="noopener noreferrer"
+            className="w-10 h-10 rounded-lg border flex items-center justify-center font-bold transition-all theme-border-surface theme-text bg-transparent">
+            {item.label}
+          </a>
+        ))}
       </div>
-
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
           <div className="relative w-12 h-12">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 48 48">
-              <circle
-                className="text-slate-200 dark:text-[#1F2937]"
-                cx="24"
-                cy="24"
-                fill="transparent"
-                r="20"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <circle
-                className="text-[#00E5FF]"
-                cx="24"
-                cy="24"
-                fill="transparent"
-                r="20"
-                stroke="currentColor"
-                strokeDasharray="125.6"
-                strokeDashoffset="12.5"
-                strokeWidth="4"
-              ></circle>
+              <circle cx="24" cy="24" fill="transparent" r="20" stroke="var(--theme-surface)" strokeWidth="4" />
+              <circle cx="24" cy="24" fill="transparent" r="20" stroke="var(--theme-primary)" strokeDasharray="125.6" strokeDashoffset="12.5" strokeWidth="4" />
             </svg>
-            <div className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-slate-900 dark:text-white">
-              TOP 1%
-            </div>
+            <div className="absolute inset-0 flex items-center justify-center text-[9px] font-black theme-text">TOP 1%</div>
           </div>
           <div>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-              Site Version
-            </p>
-            <p className="text-xs font-mono text-slate-700 dark:text-white">{siteVersion || "v2024.1.0-alpha"}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest theme-text opacity-60">Site Version</p>
+            <p className="text-xs font-mono theme-text">{siteVersion || "v2024.1.0"}</p>
           </div>
         </div>
       </div>
