@@ -202,7 +202,7 @@ export default function AdminSettings() {
                         backgroundColor: notification.enabled ? 'var(--theme-primary)' : 'var(--theme-surface)',
                       }}
                     >
-                      <div className={`absolute top-1 w-6 h-6 rounded-full shadow-lg transition-all ${
+                      <div className={`absolute top-1 w-6 h-6 rounded-full transition-all ${
                         notification.enabled ? "left-7" : "left-1"
                       }`} style={{ backgroundColor: '#fff' }} />
                     </button>

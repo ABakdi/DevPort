@@ -451,7 +451,6 @@ export default function ProfileSettings() {
                 style={{ 
                   background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))',
                   color: '#000000',
-                  boxShadow: '0 0 20px color-mix(in srgb, var(--theme-primary) 20%, transparent)',
                 }}
               >
                 {saving ? (
@@ -1110,7 +1109,6 @@ export default function ProfileSettings() {
                       backgroundColor: isActive ? 'var(--theme-surface)' : 'var(--theme-background)',
                       borderColor: 'var(--theme-surface)',
                       opacity: isActive ? 1 : 0.6,
-                      boxShadow: isActive ? `0 0 30px ${item.color}15, inset 0 0 30px ${item.color}05` : "none"
                     }}
                   >
                     {isActive && (

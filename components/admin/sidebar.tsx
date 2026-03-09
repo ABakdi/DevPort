@@ -43,7 +43,6 @@ export function AdminSidebar({ collapsed = false, onToggle }: AdminSidebarProps)
       className="fixed left-0 top-0 h-screen z-40 flex flex-col admin-sidebar"
       style={{
         background: "linear-gradient(180deg, var(--theme-background) 0%, var(--theme-surface) 100%)",
-        boxShadow: "var(--theme-shadow, 4px 0 30px rgba(0, 0, 0, 0.3))",
         borderRadius: '0px',
       }}
     >

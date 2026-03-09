@@ -706,3 +706,57 @@ pre, code {
 [data-page-style="organic"] h3 {
   color: #d1fae5 !important;
 }
+
+/* ============================================
+   SHADOW OVERRIDE RULES - ALWAYS LAST
+   These rules must always take precedence
+   ============================================ */
+
+/* Force no shadow on sidebar elements - ALWAYS */
+.admin-sidebar,
+.admin-sidebar div,
+.admin-sidebar button,
+.admin-sidebar a,
+.admin-sidebar span,
+.admin-sidebar ul,
+.admin-sidebar li,
+.admin-sidebar nav,
+.admin-sidebar p,
+.sidebar,
+.sidebar div,
+.sidebar button,
+.sidebar a,
+.sidebar span,
+.sidebar-btn,
+.sidebar-btn div,
+.sidebar-btn button,
+.sidebar-btn a,
+.sidebar-btn span {
+  box-shadow: none !important;
+}
+
+/* Force no shadow on section-bar elements - ALWAYS */
+.section-bar,
+.section-bar div,
+.section-bar button,
+.section-bar a,
+.section-bar span,
+.section-bar ul,
+.section-bar li,
+.section-bar nav,
+.section-bar p,
+.section-bar input,
+.section-bar textarea,
+.section-bar select {
+  box-shadow: none !important;
+}
+
+/* Admin layout main content area can have shadows */
+main .card,
+main article,
+main section,
+main .rounded-2xl,
+main .rounded-xl,
+main .rounded-lg {
+  box-shadow: var(--theme-shadow) !important;
+}
