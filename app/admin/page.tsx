@@ -53,14 +53,6 @@ const topArticles = [
   { title: "GraphQL vs REST: A Complete Comparison", views: 1208, reads: "15 min" },
 ]
 
-const trafficSources = [
-  { name: "Direct", value: 35, color: "#00E5FF" },
-  { name: "Google", value: 30, color: "#8B5CF6" },
-  { name: "Twitter", value: 15, color: "#F59E0B" },
-  { name: "GitHub", value: 12, color: "#10B981" },
-  { name: "Other", value: 8, color: "#6B7280" },
-]
-
 const dateRanges = ["7 Days", "30 Days", "90 Days", "1 Year"]
 
 export default function AdminDashboard() {
@@ -70,12 +62,13 @@ export default function AdminDashboard() {
 
   return (
     <div className="p-6 lg:p-8 space-y-6">
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-black text-white mb-1">
+          <h1 className="text-2xl lg:text-3xl font-black mb-1" style={{ color: 'var(--theme-text)' }}>
             {greeting}, Admin
           </h1>
-          <div className="flex items-center gap-2 text-slate-400">
+          <div className="flex items-center gap-2" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>
             <Calendar className="h-4 w-4" />
             <span className="text-sm">
               {today.toLocaleDateString("en-US", {
@@ -92,11 +85,13 @@ export default function AdminDashboard() {
             <button
               key={range}
               onClick={() => setSelectedRange(range)}
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                selectedRange === range
-                  ? "bg-[#00E5FF] text-black"
-                  : "bg-[#1F2937] text-slate-400 hover:text-white hover:bg-[#2a3544]"
-              }`}
+              className="px-3 py-1.5 text-sm font-medium transition-all"
+              style={{ 
+                backgroundColor: selectedRange === range ? 'var(--theme-primary)' : 'var(--theme-surface)',
+                color: selectedRange === range ? '#000000' : 'var(--theme-text)',
+                borderRadius: 'var(--theme-button-radius)',
+                opacity: selectedRange === range ? 1 : 0.7,
+              }}
             >
               {range}
             </button>
@@ -104,15 +99,32 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="group bg-[#0D1117] border border-[#1F2937] rounded-2xl p-5 lg:p-6 hover:border-[#00E5FF]/30 transition-all duration-300 hover:shadow-lg hover:shadow-[#00E5FF]/5"
+            className="group p-5 lg:p-6 transition-all duration-300"
+            style={{ 
+              backgroundColor: 'var(--theme-background)',
+              border: 'var(--theme-border-width) var(--theme-border-style) var(--theme-surface)',
+              borderRadius: 'var(--theme-card-radius)',
+              boxShadow: 'var(--theme-shadow)',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--theme-primary)'}
+            onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--theme-surface)'}
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="w-11 h-11 bg-gradient-to-br from-[#00E5FF]/20 to-[#00E5FF]/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <stat.icon className="h-5 w-5 text-[#00E5FF]" />
+              <div 
+                className="flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                style={{ 
+                  background: 'linear-gradient(135deg, color-mix(in srgb, var(--theme-primary) 20%, transparent), color-mix(in srgb, var(--theme-primary) 5%, transparent))',
+                  borderRadius: 'var(--theme-component-radius)',
+                  width: '44px',
+                  height: '44px',
+                }}
+              >
+                <stat.icon className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
               </div>
               <div className={`flex items-center gap-1 text-xs font-bold ${
                 stat.trend === "up" ? "text-emerald-400" : "text-red-400"
@@ -125,18 +137,25 @@ export default function AdminDashboard() {
                 {stat.change}
               </div>
             </div>
-            <p className="text-2xl lg:text-3xl font-black text-white mb-1">{stat.value}</p>
-            <p className="text-sm text-slate-400">{stat.label}</p>
+            <p className="text-2xl lg:text-3xl font-black mb-1" style={{ color: 'var(--theme-text)' }}>{stat.value}</p>
+            <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>{stat.label}</p>
           </div>
         ))}
       </div>
 
+      {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6">
+        {/* Traffic Chart */}
+        <div className="lg:col-span-2 p-6" style={{ 
+          backgroundColor: 'var(--theme-background)',
+          border: 'var(--theme-border-width) var(--theme-border-style) var(--theme-surface)',
+          borderRadius: 'var(--theme-card-radius)',
+          boxShadow: 'var(--theme-shadow)',
+        }}>
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-lg font-bold text-white">Traffic Overview</h2>
-              <p className="text-sm text-slate-400">Visitor trends over time</p>
+              <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Traffic Overview</h2>
+              <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Visitor trends over time</p>
             </div>
             <div className="flex items-center gap-2">
               <span className="flex items-center gap-1 text-sm text-emerald-400">
@@ -150,42 +169,44 @@ export default function AdminDashboard() {
               <LineChart data={trafficData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
                 <defs>
                   <linearGradient id="colorVisitors" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00E5FF" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#00E5FF" stopOpacity={0} />
+                    <stop offset="5%" stopColor="var(--theme-primary)" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="var(--theme-primary)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--theme-surface)" vertical={false} />
                 <XAxis
                   dataKey="date"
-                  stroke="#6B7280"
+                  stroke="var(--theme-text)"
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
+                  style={{ opacity: 0.6 }}
                 />
                 <YAxis
-                  stroke="#6B7280"
+                  stroke="var(--theme-text)"
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(value) => `${value / 1000}k`}
+                  style={{ opacity: 0.6 }}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#1F2937",
+                    backgroundColor: 'var(--theme-surface)',
                     border: "none",
                     borderRadius: "12px",
                     boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
                   }}
-                  labelStyle={{ color: "#9CA3AF" }}
-                  itemStyle={{ color: "#00E5FF" }}
+                  labelStyle={{ color: 'var(--theme-text)' }}
+                  itemStyle={{ color: 'var(--theme-primary)' }}
                 />
                 <Line
                   type="monotone"
                   dataKey="visitors"
-                  stroke="#00E5FF"
+                  stroke="var(--theme-primary)"
                   strokeWidth={3}
-                  dot={{ fill: "#00E5FF", strokeWidth: 2, r: 4, stroke: "#0D1117" }}
-                  activeDot={{ r: 6, stroke: "#00E5FF", strokeWidth: 2, fill: "#0D1117" }}
+                  dot={{ fill: 'var(--theme-primary)', strokeWidth: 2, r: 4, stroke: 'var(--theme-background)' }}
+                  activeDot={{ r: 6, stroke: 'var(--theme-primary)', strokeWidth: 2, fill: 'var(--theme-background)' }}
                   fill="url(#colorVisitors)"
                 />
               </LineChart>
@@ -193,16 +214,28 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6">
+        {/* Traffic Sources */}
+        <div className="p-6" style={{ 
+          backgroundColor: 'var(--theme-background)',
+          border: 'var(--theme-border-width) var(--theme-border-style) var(--theme-surface)',
+          borderRadius: 'var(--theme-card-radius)',
+          boxShadow: 'var(--theme-shadow)',
+        }}>
           <div className="mb-6">
-            <h2 className="text-lg font-bold text-white">Traffic Sources</h2>
-            <p className="text-sm text-slate-400">Where your visitors come from</p>
+            <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Traffic Sources</h2>
+            <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Where your visitors come from</p>
           </div>
           <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={trafficSources}
+                  data={[
+                    { name: "Direct", value: 35, color: "var(--theme-primary)" },
+                    { name: "Google", value: 30, color: "var(--theme-secondary)" },
+                    { name: "Twitter", value: 15, color: "var(--theme-accent)" },
+                    { name: "GitHub", value: 12, color: "#10B981" },
+                    { name: "Other", value: 8, color: "#6B7280" },
+                  ]}
                   cx="50%"
                   cy="50%"
                   innerRadius={55}
@@ -210,46 +243,66 @@ export default function AdminDashboard() {
                   paddingAngle={4}
                   dataKey="value"
                 >
-                  {trafficSources.map((entry, index) => (
+                  {[
+                    { name: "Direct", value: 35, color: "var(--theme-primary)" },
+                    { name: "Google", value: 30, color: "var(--theme-secondary)" },
+                    { name: "Twitter", value: 15, color: "var(--theme-accent)" },
+                    { name: "GitHub", value: 12, color: "#10B981" },
+                    { name: "Other", value: 8, color: "#6B7280" },
+                  ].map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#1F2937",
+                    backgroundColor: 'var(--theme-surface)',
                     border: "none",
                     borderRadius: "12px",
                     boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
                   }}
-                  itemStyle={{ color: "#fff" }}
+                  itemStyle={{ color: 'var(--theme-text)' }}
                 />
               </PieChart>
             </ResponsiveContainer>
           </div>
           <div className="space-y-2 mt-2">
-            {trafficSources.map((source) => (
+            {[
+              { name: "Direct", value: 35, color: "var(--theme-primary)" },
+              { name: "Google", value: 30, color: "var(--theme-secondary)" },
+              { name: "Twitter", value: 15, color: "var(--theme-accent)" },
+              { name: "GitHub", value: 12, color: "#10B981" },
+              { name: "Other", value: 8, color: "#6B7280" },
+            ].map((source) => (
               <div key={source.name} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: source.color }} />
-                  <span className="text-sm text-slate-300">{source.name}</span>
+                  <span className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.8 }}>{source.name}</span>
                 </div>
-                <span className="text-sm font-medium text-white">{source.value}%</span>
+                <span className="text-sm font-medium" style={{ color: 'var(--theme-text)' }}>{source.value}%</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
+      {/* Bottom Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6">
+        {/* Top Articles */}
+        <div className="p-6" style={{ 
+          backgroundColor: 'var(--theme-background)',
+          border: 'var(--theme-border-width) var(--theme-border-style) var(--theme-surface)',
+          borderRadius: 'var(--theme-card-radius)',
+          boxShadow: 'var(--theme-shadow)',
+        }}>
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-lg font-bold text-white">Top Articles</h2>
-              <p className="text-sm text-slate-400">Most read this month</p>
+              <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Top Articles</h2>
+              <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Most read this month</p>
             </div>
             <Link
               href="/admin/content"
-              className="text-sm text-[#00E5FF] hover:text-[#00E5FF]/80 flex items-center gap-1 transition-colors"
+              className="text-sm flex items-center gap-1 transition-colors"
+              style={{ color: 'var(--theme-primary)' }}
             >
               View all <ArrowUpRight className="h-4 w-4" />
             </Link>
@@ -258,16 +311,21 @@ export default function AdminDashboard() {
             {topArticles.map((article, index) => (
               <div
                 key={article.title}
-                className="flex items-center gap-4 p-3 rounded-xl hover:bg-[#1F2937]/50 transition-colors group cursor-pointer"
+                className="flex items-center gap-4 p-3 rounded-xl transition-colors group cursor-pointer"
+                style={{ 
+                  backgroundColor: 'transparent',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--theme-surface) 50%, transparent)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
-                <span className="text-lg font-black text-slate-600 group-hover:text-[#00E5FF] transition-colors">
+                <span className="text-lg font-black" style={{ color: 'var(--theme-text)', opacity: 0.3 }}>
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate group-hover:text-[#00E5FF] transition-colors">
+                  <p className="text-sm font-medium truncate transition-colors" style={{ color: 'var(--theme-text)' }}>
                     {article.title}
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>
                     {article.views.toLocaleString()} views · {article.reads} read
                   </p>
                 </div>
@@ -276,58 +334,102 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6">
+        {/* Quick Actions */}
+        <div className="p-6" style={{ 
+          backgroundColor: 'var(--theme-background)',
+          border: 'var(--theme-border-width) var(--theme-border-style) var(--theme-surface)',
+          borderRadius: 'var(--theme-card-radius)',
+          boxShadow: 'var(--theme-shadow)',
+        }}>
           <div className="mb-6">
-            <h2 className="text-lg font-bold text-white">Quick Actions</h2>
-            <p className="text-sm text-slate-400">Frequently used features</p>
+            <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Quick Actions</h2>
+            <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Frequently used features</p>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <Link
               href="/admin/content"
-              className="group p-4 bg-[#1F2937] rounded-xl hover:bg-[#2a3544] hover:border-[#00E5FF]/20 border border-transparent transition-all"
+              className="group p-4 transition-all"
+              style={{ 
+                backgroundColor: 'var(--theme-surface)',
+                borderRadius: 'var(--theme-button-radius)',
+              }}
             >
-              <div className="w-10 h-10 bg-[#00E5FF]/10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                <FileText className="h-5 w-5 text-[#00E5FF]" />
+              <div 
+                className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
+                style={{ background: 'color-mix(in srgb, var(--theme-primary) 10%, transparent)' }}
+              >
+                <FileText className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
               </div>
-              <p className="font-semibold text-white group-hover:text-[#00E5FF] transition-colors">New Article</p>
-              <p className="text-xs text-slate-500 mt-1">Create blog post</p>
+              <p className="font-semibold" style={{ color: 'var(--theme-text)' }}>New Article</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Create blog post</p>
             </Link>
             <Link
               href="/admin/profile"
-              className="group p-4 bg-[#1F2937] rounded-xl hover:bg-[#2a3544] hover:border-[#8B5CF6]/20 border border-transparent transition-all"
+              className="group p-4 transition-all"
+              style={{ 
+                backgroundColor: 'var(--theme-surface)',
+                borderRadius: 'var(--theme-button-radius)',
+              }}
             >
-              <div className="w-10 h-10 bg-[#8B5CF6]/10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                <Users className="h-5 w-5 text-[#8B5CF6]" />
+              <div 
+                className="flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
+                style={{ 
+                  background: 'color-mix(in srgb, var(--theme-secondary) 10%, transparent)',
+                  borderRadius: 'var(--theme-component-radius)',
+                  width: '40px',
+                  height: '40px',
+                }}
+              >
+                <Users className="h-5 w-5" style={{ color: 'var(--theme-secondary)' }} />
               </div>
-              <p className="font-semibold text-white group-hover:text-[#8B5CF6] transition-colors">Edit Profile</p>
-              <p className="text-xs text-slate-500 mt-1">Update your info</p>
+              <p className="font-semibold" style={{ color: 'var(--theme-text)' }}>Edit Profile</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Update your info</p>
             </Link>
             <Link
               href="/admin/theme"
-              className="group p-4 bg-[#1F2937] rounded-xl hover:bg-[#2a3544] hover:border-[#F59E0B]/20 border border-transparent transition-all"
+              className="group p-4 transition-all"
+              style={{ 
+                backgroundColor: 'var(--theme-surface)',
+                borderRadius: 'var(--theme-button-radius)',
+              }}
             >
-              <div className="w-10 h-10 bg-[#F59E0B]/10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                <Folder className="h-5 w-5 text-[#F59E0B]" />
+              <div 
+                className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
+                style={{ background: 'color-mix(in srgb, var(--theme-accent) 10%, transparent)' }}
+              >
+                <Folder className="h-5 w-5" style={{ color: 'var(--theme-accent)' }} />
               </div>
-              <p className="font-semibold text-white group-hover:text-[#F59E0B] transition-colors">Customize Theme</p>
-              <p className="text-xs text-slate-500 mt-1">Colors & fonts</p>
+              <p className="font-semibold" style={{ color: 'var(--theme-text)' }}>Customize Theme</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Colors & fonts</p>
             </Link>
             <Link
               href="/admin/messages"
-              className="group p-4 bg-[#1F2937] rounded-xl hover:bg-[#2a3544] hover:border-[#10B981]/20 border border-transparent transition-all"
+              className="group p-4 transition-all"
+              style={{ 
+                backgroundColor: 'var(--theme-surface)',
+                borderRadius: 'var(--theme-button-radius)',
+              }}
             >
-              <div className="w-10 h-10 bg-[#10B981]/10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                <MessageSquare className="h-5 w-5 text-[#10B981]" />
+              <div 
+                className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
+                style={{ background: 'color-mix(in srgb, #10B981 10%, transparent)' }}
+              >
+                <MessageSquare className="h-5 w-5" style={{ color: '#10B981' }} />
               </div>
-              <p className="font-semibold text-white group-hover:text-[#10B981] transition-colors">View Messages</p>
-              <p className="text-xs text-slate-500 mt-1">Contact inbox</p>
+              <p className="font-semibold" style={{ color: 'var(--theme-text)' }}>View Messages</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Contact inbox</p>
             </Link>
           </div>
 
-          <div className="mt-6 pt-6 border-t border-[#1F2937]">
+          <div className="mt-6 pt-6 border-t" style={{ borderColor: 'var(--theme-surface)' }}>
             <Link
               href="/"
-              className="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-[#00E5FF] to-[#8B5CF6] text-black font-semibold rounded-xl hover:opacity-90 transition-opacity"
+              className="flex items-center justify-center gap-2 py-3 font-semibold transition-opacity hover:opacity-90"
+              style={{ 
+                background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))',
+                color: '#000000',
+                borderRadius: 'var(--theme-button-radius)',
+              }}
             >
               <ArrowUpRight className="h-4 w-4" />
               View Live Site

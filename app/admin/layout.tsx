@@ -11,7 +11,10 @@ export default function AdminLayout({
   const [collapsed, setCollapsed] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#05070a]">
+    <div 
+      className="min-h-screen theme-component"
+      style={{ backgroundColor: 'var(--theme-background)' }}
+    >
       <AdminSidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <main
         className={`transition-all duration-300 ${
@@ -19,8 +22,14 @@ export default function AdminLayout({
         }`}
       >
         <div className="relative">
-          <div className="fixed top-0 left-0 w-[500px] h-[500px] bg-[#00E5FF]/5 rounded-full blur-[120px] pointer-events-none" />
-          <div className="fixed top-1/2 right-0 w-[400px] h-[400px] bg-[#8B5CF6]/5 rounded-full blur-[100px] pointer-events-none" />
+          <div 
+            className="fixed top-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none" 
+            style={{ backgroundColor: 'var(--theme-primary)', opacity: 0.05 }} 
+          />
+          <div 
+            className="fixed top-1/2 right-0 w-[400px] h-[400px] rounded-full blur-[100px] pointer-events-none" 
+            style={{ backgroundColor: 'var(--theme-secondary)', opacity: 0.05 }} 
+          />
           {children}
         </div>
       </main>

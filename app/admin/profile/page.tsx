@@ -340,12 +340,12 @@ export default function ProfileSettings() {
       <div className="p-8 flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
-            <div className="w-16 h-16 border-4 border-[#1F2937] border-t-[#00E5FF] rounded-full animate-spin" />
+            <div className="w-16 h-16 border-4 rounded-full animate-spin" style={{ borderColor: 'var(--theme-surface)', borderTopColor: 'var(--theme-primary)' }} />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Sparkles className="h-6 w-6 text-[#00E5FF] animate-pulse" />
+              <Sparkles className="h-6 w-6 animate-pulse" style={{ color: 'var(--theme-primary)' }} />
             </div>
           </div>
-          <p className="text-slate-400">Loading profile...</p>
+          <p style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Loading profile...</p>
         </div>
       </div>
     )
@@ -359,10 +359,14 @@ export default function ProfileSettings() {
             initial={{ opacity: 0, y: -50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -50, scale: 0.9 }}
-            className="fixed top-6 right-6 z-50 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 border border-emerald-500/50 text-emerald-400 px-6 py-3 rounded-2xl flex items-center gap-3 shadow-lg shadow-emerald-500/20 backdrop-blur-xl"
+            className="fixed top-6 right-6 z-50 px-6 py-3 rounded-2xl flex items-center gap-3 shadow-lg backdrop-blur-xl border"
+            style={{ 
+              background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))',
+              opacity: 0.9,
+            }}
           >
-            <CheckCircle2 className="h-5 w-5" />
-            <span className="font-semibold">Profile saved successfully!</span>
+            <CheckCircle2 className="h-5 w-5" style={{ color: '#000' }} />
+            <span className="font-semibold" style={{ color: '#000' }}>Profile saved successfully!</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -374,12 +378,15 @@ export default function ProfileSettings() {
       >
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <h1 className="text-3xl font-black text-white">Profile Settings</h1>
-            <div className="px-2 py-0.5 bg-gradient-to-r from-[#00E5FF]/20 to-[#8B5CF6]/20 border border-[#00E5FF]/30 rounded-full">
-              <span className="text-xs font-medium text-[#00E5FF]">Admin</span>
+            <h1 className="text-3xl font-black" style={{ color: 'var(--theme-text)' }}>Profile Settings</h1>
+            <div className="px-2 py-0.5 rounded-full" style={{ 
+              background: 'linear-gradient(90deg, color-mix(in srgb, var(--theme-primary) 20%, transparent), color-mix(in srgb, var(--theme-secondary) 20%, transparent))',
+              border: '1px solid var(--theme-primary)',
+            }}>
+              <span className="text-xs font-medium" style={{ color: 'var(--theme-primary)' }}>Admin</span>
             </div>
           </div>
-          <p className="text-slate-400">Manage your public profile and portfolio information</p>
+          <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Manage your public profile and portfolio information</p>
         </div>
       </motion.div>
 
@@ -389,10 +396,10 @@ export default function ProfileSettings() {
           animate={{ opacity: 1, x: 0 }}
           className="lg:w-64 flex-shrink-0"
         >
-          <div className="bg-[#0D1117] border border-[#1F2937] rounded-2xl p-3 sticky top-24">
-            <div className="mb-3 px-3">
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Sections</p>
-            </div>
+          <div className="rounded-2xl p-3 sticky top-24 border" style={{ 
+            backgroundColor: 'var(--theme-background)',
+            borderColor: 'var(--theme-surface)',
+          }}>
             <nav className="space-y-1">
               {sections.map((section) => {
                 const isActive = activeSection === section.id
@@ -402,43 +409,50 @@ export default function ProfileSettings() {
                     onClick={() => scrollToSection(section.id)}
                     whileHover={{ x: 4 }}
                     whileTap={{ scale: 0.98 }}
-                    className={cn(
-                      "w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 relative overflow-hidden",
-                      isActive
-                        ? "bg-gradient-to-r from-[#00E5FF]/10 to-transparent text-[#00E5FF]"
-                        : "text-slate-400 hover:text-white hover:bg-[#1F2937]/50"
-                    )}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-200 relative"
+                    style={{
+                      background: 'transparent',
+                      color: 'var(--theme-text)',
+                    }}
                   >
                     {isActive && (
                       <motion.div
-                        layoutId="activeIndicator"
-                        className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#00E5FF] to-[#8B5CF6] rounded-r-full"
+                        layoutId="profileSidebarIndicator"
+                        transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                        className="absolute left-0 top-2 bottom-2 w-[3px]"
+                        style={{ 
+                          background: 'var(--theme-primary)',
+                          borderRadius: '0 6px 6px 0',
+                        }}
                       />
                     )}
-                    <section.icon className={cn("h-4 w-4", isActive ? "text-[#00E5FF]" : "")} />
-                    <span className={cn("font-medium text-sm", isActive ? "text-white" : "")}>
-                      {section.label}
-                    </span>
+                    <section.icon className="h-4 w-4 relative z-10" style={{ color: isActive ? 'var(--theme-primary)' : 'var(--theme-text)', opacity: isActive ? 1 : 0.6 }} />
+                    <span className="font-medium text-sm relative z-10" style={{ opacity: isActive ? 1 : 0.6 }}>{section.label}</span>
                     {isActive && (
                       <motion.div
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="ml-auto"
+                        className="absolute right-3"
                       >
-                        <Zap className="h-3 w-3 text-[#00E5FF] animate-pulse" />
+                        <Zap className="h-3 w-3" style={{ color: 'var(--theme-primary)' }} />
                       </motion.div>
                     )}
                   </motion.button>
                 )
               })}
             </nav>
-            <div className="mt-4 pt-4 border-t border-[#1F2937] space-y-2">
+            <div className="mt-4 pt-4 border-t space-y-2" style={{ borderColor: 'var(--theme-surface)' }}>
               <motion.button
                 onClick={handleSave}
                 disabled={saving}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full group relative px-4 py-3 bg-gradient-to-r from-[#00E5FF] to-[#8B5CF6] text-black font-bold rounded-xl shadow-lg shadow-[#00E5FF]/20 hover:shadow-[#00E5FF]/40 transition-all disabled:opacity-70 flex items-center justify-center gap-2"
+                className="w-full group relative px-4 py-3 font-bold rounded-xl transition-all disabled:opacity-70 flex items-center justify-center gap-2"
+                style={{ 
+                  background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))',
+                  color: '#000000',
+                  boxShadow: '0 0 20px color-mix(in srgb, var(--theme-primary) 20%, transparent)',
+                }}
               >
                 {saving ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -451,7 +465,8 @@ export default function ProfileSettings() {
               </motion.button>
               <button
                 onClick={() => scrollToSection("sections")}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs text-slate-500 hover:text-white transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs transition-colors"
+                style={{ color: 'var(--theme-text)', opacity: 0.5 }}
               >
                 <ArrowDown className="h-3 w-3" />
                 Scroll to bottom
@@ -464,22 +479,27 @@ export default function ProfileSettings() {
           <motion.div 
             id="basic"
             ref={(el) => { sectionRefs.current["basic"] = el }}
-            className="bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6 relative overflow-hidden"
+            className="rounded-2xl p-6 relative overflow-hidden"
+            style={{ 
+              backgroundColor: 'var(--theme-background)',
+              border: '1px solid var(--theme-surface)',
+            }}
           >
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00E5FF] via-[#8B5CF6] to-[#F59E0B]" />
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#00E5FF]/20 to-[#8B5CF6]/20 rounded-xl flex items-center justify-center">
-                <User className="h-5 w-5 text-[#00E5FF]" />
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
+                  background: 'linear-gradient(135deg, color-mix(in srgb, var(--theme-primary) 20%, transparent), color-mix(in srgb, var(--theme-secondary) 20%, transparent))' 
+                }}>
+                  <User className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Basic Information</h2>
+                  <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Your public identity</p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-lg font-bold text-white">Basic Information</h2>
-                <p className="text-sm text-slate-400">Your public identity</p>
-              </div>
-            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                  <Crown className="h-3 w-3 text-[#F59E0B]" /> Full Name *
+                <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--theme-text)', opacity: 0.7 }}>
+                  <Crown className="h-3 w-3" style={{ color: 'var(--theme-accent)' }} /> Full Name *
                 </label>
                 <input
                   type="text"
@@ -487,12 +507,16 @@ export default function ProfileSettings() {
                   onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                   maxLength={100}
                   className={cn(
-                    "w-full h-12 px-4 rounded-xl bg-[#1F2937] border-2 transition-all focus:outline-none",
+                    "w-full h-12 px-4 border-2 transition-all focus:outline-none",
                     errors.name 
                       ? 'border-red-500 focus:border-red-500' 
-                      : 'border-transparent focus:border-[#00E5FF]',
-                    "text-white placeholder-slate-500"
+                      : 'border-transparent focus:border-[var(--theme-primary)]',
                   )}
+                  style={{ 
+                    backgroundColor: 'var(--theme-surface)',
+                    color: 'var(--theme-text)',
+                    borderRadius: 'var(--theme-input-radius, 8px)',
+                  }}
                   placeholder="John Doe"
                 />
                 {errors.name && (
@@ -506,8 +530,8 @@ export default function ProfileSettings() {
                 )}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                  <Award className="h-3 w-3 text-[#8B5CF6]" /> Title *
+                <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--theme-text)', opacity: 0.7 }}>
+                  <Award className="h-3 w-3" style={{ color: 'var(--theme-secondary)' }} /> Title *
                 </label>
                 <input
                   type="text"
@@ -515,12 +539,15 @@ export default function ProfileSettings() {
                   onChange={(e) => setProfile({ ...profile, title: e.target.value })}
                   maxLength={100}
                   className={cn(
-                    "w-full h-12 px-4 rounded-xl bg-[#1F2937] border-2 transition-all focus:outline-none",
+                    "w-full h-12 px-4 rounded-xl border-2 transition-all focus:outline-none",
                     errors.title 
                       ? 'border-red-500 focus:border-red-500' 
-                      : 'border-transparent focus:border-[#00E5FF]',
-                    "text-white placeholder-slate-500"
+                      : 'border-transparent focus:border-[var(--theme-primary)]',
                   )}
+                  style={{ 
+                    backgroundColor: 'var(--theme-surface)',
+                    color: 'var(--theme-text)',
+                  }}
                   placeholder="Full Stack Developer"
                 />
                 {errors.title && (
@@ -534,36 +561,48 @@ export default function ProfileSettings() {
                 )}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                  <MapPin className="h-3 w-3 text-[#FF2D55]" /> Location
+                <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--theme-text)', opacity: 0.7 }}>
+                  <MapPin className="h-3 w-3" style={{ color: '#FF2D55' }} /> Location
                 </label>
                 <input
                   type="text"
                   value={profile.location}
                   onChange={(e) => setProfile({ ...profile, location: e.target.value })}
                   maxLength={100}
-                  className="w-full h-12 px-4 rounded-xl bg-[#1F2937] border-2 border-transparent focus:border-[#00E5FF] text-white placeholder-slate-500 focus:outline-none transition-all"
+                  className="w-full h-12 px-4 rounded-xl border-2 border-transparent focus:border-[var(--theme-primary)] focus:outline-none transition-all"
+                  style={{ 
+                    backgroundColor: 'var(--theme-surface)',
+                    color: 'var(--theme-text)',
+                  }}
                   placeholder="San Francisco, CA"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                  <Globe className="h-3 w-3 text-[#10B981]" /> Timezone
+                <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--theme-text)', opacity: 0.7 }}>
+                  <Globe className="h-3 w-3" style={{ color: '#10B981' }} /> Timezone
                 </label>
                 <div className="relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 z-10" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 z-10" style={{ color: 'var(--theme-text)', opacity: 0.5 }} />
                   <input
                     type="text"
                     value={timezoneSearch}
                     onChange={(e) => setTimezoneSearch(e.target.value)}
                     placeholder="Search..."
-                    className="w-full h-12 pl-11 pr-4 rounded-xl bg-[#1F2937] border-2 border-transparent focus:border-[#00E5FF] text-white placeholder-slate-500 focus:outline-none transition-all"
+                    className="w-full h-12 pl-11 pr-4 rounded-xl border-2 border-transparent focus:border-[var(--theme-primary)] focus:outline-none transition-all"
+                    style={{ 
+                      backgroundColor: 'var(--theme-surface)',
+                      color: 'var(--theme-text)',
+                    }}
                   />
                 </div>
                 <select
                   value={profile.timezone}
                   onChange={(e) => setProfile({ ...profile, timezone: e.target.value })}
-                  className="w-full h-12 px-4 rounded-xl bg-[#1F2937] border-2 border-transparent focus:border-[#00E5FF] text-white focus:outline-none transition-all"
+                  className="w-full h-12 px-4 rounded-xl border-2 border-transparent focus:border-[var(--theme-primary)] focus:outline-none transition-all"
+                  style={{ 
+                    backgroundColor: 'var(--theme-surface)',
+                    color: 'var(--theme-text)',
+                  }}
                 >
                   {TIMEZONES.filter(tz => 
                     tz.label.toLowerCase().includes(timezoneSearch.toLowerCase()) ||
@@ -574,33 +613,40 @@ export default function ProfileSettings() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                  <Mail className="h-3 w-3 text-[#00E5FF]" /> Email
+                <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--theme-text)', opacity: 0.7 }}>
+                  <Mail className="h-3 w-3" style={{ color: 'var(--theme-primary)' }} /> Email
                 </label>
                 <input
                   type="email"
                   value={profile.email}
                   onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                   className={cn(
-                    "w-full h-12 px-4 rounded-xl bg-[#1F2937] border-2 transition-all focus:outline-none",
+                    "w-full h-12 px-4 rounded-xl border-2 transition-all focus:outline-none",
                     errors.email 
                       ? 'border-red-500 focus:border-red-500' 
-                      : 'border-transparent focus:border-[#00E5FF]',
-                    "text-white placeholder-slate-500"
+                      : 'border-transparent focus:border-[var(--theme-primary)]',
                   )}
+                  style={{ 
+                    backgroundColor: 'var(--theme-surface)',
+                    color: 'var(--theme-text)',
+                  }}
                   placeholder="john@example.com"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                  <Phone className="h-3 w-3 text-[#F59E0B]" /> Phone
+                <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--theme-text)', opacity: 0.7 }}>
+                  <Phone className="h-3 w-3" style={{ color: 'var(--theme-accent)' }} /> Phone
                 </label>
                 <input
                   type="tel"
                   value={profile.phone}
                   onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                   maxLength={20}
-                  className="w-full h-12 px-4 rounded-xl bg-[#1F2937] border-2 border-transparent focus:border-[#00E5FF] text-white placeholder-slate-500 focus:outline-none transition-all"
+                  className="w-full h-12 px-4 rounded-xl border-2 border-transparent focus:border-[var(--theme-primary)] focus:outline-none transition-all"
+                  style={{ 
+                    backgroundColor: 'var(--theme-surface)',
+                    color: 'var(--theme-text)',
+                  }}
                   placeholder="+1 (555) 123-4567"
                 />
               </div>
@@ -610,21 +656,26 @@ export default function ProfileSettings() {
           <motion.div 
             id="bio"
             ref={(el) => { sectionRefs.current["bio"] = el }}
-            className="bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6 relative overflow-hidden"
+            className="rounded-2xl p-6 relative overflow-hidden"
+            style={{ 
+              backgroundColor: 'var(--theme-background)',
+              border: '1px solid var(--theme-surface)',
+            }}
           >
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#10B981] via-[#00E5FF] to-[#8B5CF6]" />
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#10B981]/20 to-[#00E5FF]/20 rounded-xl flex items-center justify-center">
-                  <FileText className="h-5 w-5 text-[#10B981]" />
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
+                  background: 'linear-gradient(135deg, color-mix(in srgb, var(--theme-secondary) 20%, transparent), color-mix(in srgb, var(--theme-primary) 20%, transparent))' 
+                }}>
+                  <FileText className="h-5 w-5" style={{ color: 'var(--theme-secondary)' }} />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-white">Bio & Story</h2>
-                  <p className="text-sm text-slate-400">Tell visitors about yourself</p>
+                  <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Bio & Story</h2>
+                  <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Tell visitors about yourself</p>
                 </div>
               </div>
-              <div className="px-3 py-1.5 bg-[#1F2937] rounded-lg">
-                <span className={`text-sm font-mono ${profile.bio.length > 900 ? 'text-red-400' : 'text-slate-400'}`}>
+              <div className="px-3 py-1.5 rounded-lg" style={{ backgroundColor: 'var(--theme-surface)' }}>
+                <span className="text-sm font-mono" style={{ color: profile.bio.length > 900 ? 'var(--theme-accent)' : 'var(--theme-text)', opacity: 0.6 }}>
                   {profile.bio.length}/1000
                 </span>
               </div>
@@ -635,12 +686,15 @@ export default function ProfileSettings() {
               rows={8}
               maxLength={1000}
               className={cn(
-                "w-full px-5 py-4 rounded-2xl bg-[#1F2937] border-2 transition-all focus:outline-none resize-none",
+                "w-full px-5 py-4 rounded-2xl border-2 transition-all focus:outline-none resize-none",
                 errors.bio 
                   ? 'border-red-500 focus:border-red-500' 
                   : 'border-transparent focus:border-[#10B981]',
-                "text-white placeholder-slate-500"
               )}
+              style={{ 
+                backgroundColor: 'var(--theme-surface)',
+                color: 'var(--theme-text)',
+              }}
               placeholder="Write your bio... Tell visitors who you are, what you do, and what makes you unique."
             />
             {errors.bio && (
@@ -661,7 +715,12 @@ export default function ProfileSettings() {
                       setProfile({ ...profile, bio: profile.bio + (profile.bio ? " " : "") + tag })
                     }
                   }}
-                  className="px-3 py-1.5 text-xs font-medium text-slate-400 bg-[#1F2937] rounded-full hover:bg-[#2a3544] hover:text-white transition-all"
+                  className="px-3 py-1.5 text-xs font-medium rounded-full transition-all"
+                  style={{ 
+                    backgroundColor: 'var(--theme-surface)',
+                    color: 'var(--theme-text)',
+                    opacity: 0.6,
+                  }}
                 >
                   + {tag}
                 </button>
@@ -672,16 +731,21 @@ export default function ProfileSettings() {
           <motion.div 
             id="social"
             ref={(el) => { sectionRefs.current["social"] = el }}
-            className="bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6 relative overflow-hidden"
+            className="rounded-2xl p-6 relative overflow-hidden border"
+            style={{ 
+              backgroundColor: 'var(--theme-background)',
+              borderColor: 'var(--theme-surface)',
+            }}
           >
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00E5FF] via-[#8B5CF6] to-[#FF2D55]" />
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#00E5FF]/20 to-[#8B5CF6]/20 rounded-xl flex items-center justify-center">
-                <Globe className="h-5 w-5 text-[#00E5FF]" />
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
+                background: 'linear-gradient(135deg, color-mix(in srgb, var(--theme-primary) 20%, transparent), color-mix(in srgb, var(--theme-secondary) 20%, transparent))' 
+              }}>
+                <Globe className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-white">Social Links</h2>
-                <p className="text-sm text-slate-400">Connect your social profiles</p>
+                <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Social Links</h2>
+                <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Connect your social profiles</p>
               </div>
             </div>
             <div className="space-y-3">
@@ -695,9 +759,13 @@ export default function ProfileSettings() {
                     className={cn(
                       "flex items-center gap-4 p-4 rounded-xl transition-all",
                       existingLink 
-                        ? "bg-gradient-to-r from-[#1F2937] to-transparent border border-[#1F2937]" 
-                        : "bg-[#0D1117] border border-[#1F2937]/50"
+                        ? "bg-gradient-to-r from-[var(--theme-surface)] to-transparent border" 
+                        : "border"
                     )}
+                    style={{ 
+                      backgroundColor: existingLink ? 'var(--theme-surface)' : 'var(--theme-background)',
+                      borderColor: 'var(--theme-surface)',
+                    }}
                   >
                     {existingLink ? (
                       <>
@@ -708,46 +776,65 @@ export default function ProfileSettings() {
                           <platform.icon className="h-5 w-5" style={{ color: platform.color }} />
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm font-medium text-white mb-2">{platform.label}</p>
+                          <p className="text-sm font-medium mb-2" style={{ color: 'var(--theme-text)' }}>{platform.label}</p>
                           {isCustom ? (
                             <input
                               type="url"
                               value={existingLink.url}
                               onChange={(e) => updateSocialLink(platform.key, "url", e.target.value)}
                               placeholder="https://yourwebsite.com"
-                              className="w-full h-10 px-4 rounded-lg bg-[#0D1117] border border-[#1F2937] text-white text-sm focus:outline-none focus:border-[#00E5FF]"
+                              className="w-full h-10 px-4 rounded-lg border text-sm focus:outline-none"
+                              style={{ 
+                                backgroundColor: 'var(--theme-background)',
+                                borderColor: 'var(--theme-surface)',
+                                color: 'var(--theme-text)',
+                              }}
                             />
                           ) : (
                             <div className="flex items-center gap-2">
-                              <span className="text-slate-500 text-sm">@</span>
+                              <span className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>@</span>
                               <input
                                 type="text"
                                 value={existingLink.username}
                                 onChange={(e) => updateSocialLink(platform.key, "username", e.target.value)}
                                 placeholder={platform.placeholder}
-                                className="flex-1 h-10 px-3 rounded-lg bg-[#0D1117] border border-[#1F2937] text-white text-sm focus:outline-none focus:border-[#00E5FF]"
+                                className="flex-1 h-10 px-3 rounded-lg border text-sm focus:outline-none"
+                                style={{ 
+                                  backgroundColor: 'var(--theme-background)',
+                                  borderColor: 'var(--theme-surface)',
+                                  color: 'var(--theme-text)',
+                                }}
                               />
                             </div>
                           )}
                         </div>
                         <button
                           onClick={() => removeSocialLink(platform.key)}
-                          className="w-10 h-10 rounded-lg flex items-center justify-center bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all"
+                          className="w-10 h-10 rounded-lg flex items-center justify-center transition-all"
+                          style={{ 
+                            backgroundColor: 'var(--theme-accent)',
+                            color: '#fff',
+                            opacity: 0.1,
+                          }}
                         >
                           <X className="h-4 w-4" />
                         </button>
                       </>
                     ) : (
                       <>
-                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[#1F2937]">
-                          <platform.icon className="h-5 w-5 text-slate-500" />
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--theme-surface)' }}>
+                          <platform.icon className="h-5 w-5" style={{ color: 'var(--theme-text)', opacity: 0.5 }} />
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm font-medium text-slate-400">{platform.label}</p>
+                          <p className="text-sm font-medium" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>{platform.label}</p>
                         </div>
                         <button
                           onClick={() => addSocialLink(platform.key)}
-                          className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#00E5FF]/10 text-[#00E5FF] hover:bg-[#00E5FF]/20 transition-all"
+                          className="w-10 h-10 rounded-lg flex items-center justify-center transition-all"
+                          style={{ 
+                            backgroundColor: 'var(--theme-primary)',
+                            color: '#000',
+                          }}
                         >
                           <Plus className="h-4 w-4" />
                         </button>
@@ -762,17 +849,22 @@ export default function ProfileSettings() {
           <motion.div 
             id="skills"
             ref={(el) => { sectionRefs.current["skills"] = el }}
-            className="bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6 relative overflow-hidden"
+            className="rounded-2xl p-6 relative overflow-hidden border"
+            style={{ 
+              backgroundColor: 'var(--theme-background)',
+              borderColor: 'var(--theme-surface)',
+            }}
           >
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#F59E0B] to-[#FF2D55]" />
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#F59E0B]/20 to-[#FF2D55]/20 rounded-xl flex items-center justify-center">
-                  <Wrench className="h-5 w-5 text-[#F59E0B]" />
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
+                  background: 'linear-gradient(135deg, color-mix(in srgb, var(--theme-accent) 20%, transparent), color-mix(in srgb, #FF2D55 20%, transparent))' 
+                }}>
+                  <Wrench className="h-5 w-5" style={{ color: 'var(--theme-accent)' }} />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-white">Skills</h2>
-                  <p className="text-sm text-slate-400">Your professional skills ({profile.skills.length}/20)</p>
+                  <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Skills</h2>
+                  <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Your professional skills ({profile.skills.length}/20)</p>
                 </div>
               </div>
             </div>
@@ -782,11 +874,15 @@ export default function ProfileSettings() {
                   key={skill}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#1F2937] to-[#2a3544] rounded-full text-sm text-white group hover:from-[#F59E0B]/20 hover:to-[#FF2D55]/20 transition-all"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm group transition-all"
+                  style={{ 
+                    backgroundColor: 'var(--theme-surface)',
+                    color: 'var(--theme-text)',
+                  }}
                 >
-                  <span className="w-1.5 h-1.5 bg-[#F59E0B] rounded-full" />
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'var(--theme-accent)' }} />
                   {skill}
-                  <button onClick={() => removeSkill(skill)} className="ml-1 text-slate-500 hover:text-red-400">
+                  <button onClick={() => removeSkill(skill)} className="ml-1 transition-colors hover:opacity-100" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>
                     <X className="h-3 w-3" />
                   </button>
                 </motion.span>
@@ -800,12 +896,20 @@ export default function ProfileSettings() {
                 onKeyDown={(e) => e.key === "Enter" && addSkill()}
                 placeholder="Add a skill... (max 50 chars)"
                 disabled={profile.skills.length >= 20}
-                className="flex-1 h-12 px-4 rounded-xl bg-[#1F2937] border-2 border-transparent focus:border-[#F59E0B] text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50"
+                className="flex-1 h-12 px-4 rounded-xl border-2 border-transparent focus:border-[var(--theme-accent)] focus:outline-none transition-all disabled:opacity-50"
+                style={{ 
+                  backgroundColor: 'var(--theme-surface)',
+                  color: 'var(--theme-text)',
+                }}
               />
               <button
                 onClick={addSkill}
                 disabled={profile.skills.length >= 20 || !newSkill.trim()}
-                className="px-6 h-12 bg-[#F59E0B]/20 text-[#F59E0B] font-semibold rounded-xl hover:bg-[#F59E0B]/30 transition-all disabled:opacity-50 flex items-center gap-2"
+                className="px-6 h-12 font-semibold rounded-xl transition-all disabled:opacity-50 flex items-center gap-2"
+                style={{ 
+                  backgroundColor: 'var(--theme-accent)',
+                  color: '#000',
+                }}
               >
                 <Plus className="h-4 w-4" /> Add
               </button>
@@ -815,17 +919,20 @@ export default function ProfileSettings() {
           <motion.div 
             id="achievements"
             ref={(el) => { sectionRefs.current["achievements"] = el }}
-            className="bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6 relative overflow-hidden"
+            className="rounded-2xl p-6 relative overflow-hidden border"
+            style={{ 
+              backgroundColor: 'var(--theme-background)',
+              borderColor: 'var(--theme-surface)',
+            }}
           >
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#8B5CF6] via-[#F59E0B] to-[#FF2D55]" />
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-[#8B5CF6]/20 to-[#F59E0B]/20 rounded-xl flex items-center justify-center">
-                  <Award className="h-5 w-5 text-[#8B5CF6]" />
+                  <Award className="h-5 w-5" style={{ color: 'var(--theme-secondary)' }} />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-white">Achievements</h2>
-                  <p className="text-sm text-slate-400">Your accomplishments ({profile.achievements.length}/10)</p>
+                  <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Achievements</h2>
+                  <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Your accomplishments ({profile.achievements.length}/10)</p>
                 </div>
               </div>
             </div>
@@ -835,15 +942,27 @@ export default function ProfileSettings() {
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#1F2937]/50 to-transparent rounded-xl border border-[#1F2937]"
+                  className="flex items-center gap-3 p-4 rounded-xl border"
+                  style={{ 
+                    backgroundColor: 'var(--theme-surface)',
+                    opacity: 0.5,
+                    borderColor: 'var(--theme-surface)',
+                  }}
                 >
-                  <div className="w-8 h-8 bg-gradient-to-br from-[#8B5CF6]/20 to-[#FF2D55]/20 rounded-lg flex items-center justify-center text-[#8B5CF6] font-bold text-sm">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm" style={{ 
+                    backgroundColor: 'var(--theme-secondary)',
+                    color: '#fff',
+                  }}>
                     {index + 1}
                   </div>
-                  <p className="flex-1 text-slate-300 text-sm">{achievement}</p>
+                  <p className="flex-1 text-sm" style={{ color: 'var(--theme-text)' }}>{achievement}</p>
                   <button 
                     onClick={() => removeAchievement(achievement)} 
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-red-400 hover:bg-red-400/10 transition-all"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:opacity-100"
+                    style={{ 
+                      color: 'var(--theme-text)',
+                      opacity: 0.6,
+                    }}
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -858,12 +977,20 @@ export default function ProfileSettings() {
                 onKeyDown={(e) => e.key === "Enter" && addAchievement()}
                 placeholder="Add an achievement... (max 300 chars)"
                 disabled={profile.achievements.length >= 10}
-                className="flex-1 h-12 px-4 rounded-xl bg-[#1F2937] border-2 border-transparent focus:border-[#8B5CF6] text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50"
+                className="flex-1 h-12 px-4 rounded-xl border-2 border-transparent focus:border-[var(--theme-secondary)] focus:outline-none transition-all disabled:opacity-50"
+                style={{ 
+                  backgroundColor: 'var(--theme-surface)',
+                  color: 'var(--theme-text)',
+                }}
               />
               <button
                 onClick={addAchievement}
                 disabled={profile.achievements.length >= 10 || !newAchievement.trim()}
-                className="px-6 h-12 bg-[#8B5CF6]/20 text-[#8B5CF6] font-semibold rounded-xl hover:bg-[#8B5CF6]/30 transition-all disabled:opacity-50 flex items-center gap-2"
+                className="px-6 h-12 font-semibold rounded-xl transition-all disabled:opacity-50 flex items-center gap-2"
+                style={{ 
+                  backgroundColor: 'var(--theme-secondary)',
+                  color: '#fff',
+                }}
               >
                 <Plus className="h-4 w-4" /> Add
               </button>
@@ -873,17 +1000,22 @@ export default function ProfileSettings() {
           <motion.div 
             id="techstack"
             ref={(el) => { sectionRefs.current["techstack"] = el }}
-            className="bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6 relative overflow-hidden"
+            className="rounded-2xl p-6 relative overflow-hidden border"
+            style={{ 
+              backgroundColor: 'var(--theme-background)',
+              borderColor: 'var(--theme-surface)',
+            }}
           >
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#8B5CF6] to-[#00E5FF]" />
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#8B5CF6]/20 to-[#00E5FF]/20 rounded-xl flex items-center justify-center">
-                  <Code className="h-5 w-5 text-[#8B5CF6]" />
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
+                  background: 'linear-gradient(135deg, color-mix(in srgb, var(--theme-secondary) 20%, transparent), color-mix(in srgb, var(--theme-primary) 20%, transparent))' 
+                }}>
+                  <Code className="h-5 w-5" style={{ color: 'var(--theme-secondary)' }} />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-white">Tech Stack</h2>
-                  <p className="text-sm text-slate-400">Technologies you work with ({profile.techStack.length}/30)</p>
+                  <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Tech Stack</h2>
+                  <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Technologies you work with ({profile.techStack.length}/30)</p>
                 </div>
               </div>
             </div>
@@ -893,11 +1025,15 @@ export default function ProfileSettings() {
                   key={tech}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#1F2937] to-[#2a3544] rounded-full text-sm text-white group hover:from-[#8B5CF6]/20 hover:to-[#00E5FF]/20 transition-all"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm group transition-all"
+                  style={{ 
+                    backgroundColor: 'var(--theme-surface)',
+                    color: 'var(--theme-text)',
+                  }}
                 >
-                  <Zap className="h-3 w-3 text-[#8B5CF6]" />
+                  <Zap className="h-3 w-3" style={{ color: 'var(--theme-secondary)' }} />
                   {tech}
-                  <button onClick={() => removeTech(tech)} className="ml-1 text-slate-500 hover:text-red-400">
+                  <button onClick={() => removeTech(tech)} className="ml-1 transition-colors hover:opacity-100" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>
                     <X className="h-3 w-3" />
                   </button>
                 </motion.span>
@@ -911,12 +1047,20 @@ export default function ProfileSettings() {
                 onKeyDown={(e) => e.key === "Enter" && addTech()}
                 placeholder="Add a technology... (max 30 chars)"
                 disabled={profile.techStack.length >= 30}
-                className="flex-1 h-12 px-4 rounded-xl bg-[#1F2937] border-2 border-transparent focus:border-[#8B5CF6] text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50"
+                className="flex-1 h-12 px-4 rounded-xl border-2 border-transparent focus:border-[var(--theme-secondary)] focus:outline-none transition-all disabled:opacity-50"
+                style={{ 
+                  backgroundColor: 'var(--theme-surface)',
+                  color: 'var(--theme-text)',
+                }}
               />
               <button
                 onClick={addTech}
                 disabled={profile.techStack.length >= 30 || !newTech.trim()}
-                className="px-6 h-12 bg-[#8B5CF6]/20 text-[#8B5CF6] font-semibold rounded-xl hover:bg-[#8B5CF6]/30 transition-all disabled:opacity-50 flex items-center gap-2"
+                className="px-6 h-12 font-semibold rounded-xl transition-all disabled:opacity-50 flex items-center gap-2"
+                style={{ 
+                  backgroundColor: 'var(--theme-secondary)',
+                  color: '#fff',
+                }}
               >
                 <Plus className="h-4 w-4" /> Add
               </button>
@@ -926,16 +1070,19 @@ export default function ProfileSettings() {
           <motion.div 
             id="sections"
             ref={(el) => { sectionRefs.current["sections"] = el }}
-            className="bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6 relative overflow-hidden"
+            className="rounded-2xl p-6 relative overflow-hidden border"
+            style={{ 
+              backgroundColor: 'var(--theme-background)',
+              borderColor: 'var(--theme-surface)',
+            }}
           >
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF2D55] via-[#8B5CF6] to-[#00E5FF]" />
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 bg-gradient-to-br from-[#FF2D55]/20 to-[#8B5CF6]/20 rounded-xl flex items-center justify-center">
-                <Layout className="h-5 w-5 text-[#FF2D55]" />
+                <Layout className="h-5 w-5" style={{ color: '#FF2D55' }} />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-white">Home Page Sections</h2>
-                <p className="text-sm text-slate-400">Toggle which sections to display</p>
+                <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Home Page Sections</h2>
+                <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Toggle which sections to display</p>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -958,11 +1105,11 @@ export default function ProfileSettings() {
                     whileTap={{ scale: 0.98 }}
                     className={cn(
                       "relative p-5 rounded-2xl border-2 transition-all duration-300 text-left",
-                      isActive
-                        ? "border-transparent bg-gradient-to-br from-[#1F2937] to-[#0D1117]"
-                        : "border-[#1F2937] bg-[#0D1117] opacity-60"
                     )}
                     style={{
+                      backgroundColor: isActive ? 'var(--theme-surface)' : 'var(--theme-background)',
+                      borderColor: 'var(--theme-surface)',
+                      opacity: isActive ? 1 : 0.6,
                       boxShadow: isActive ? `0 0 30px ${item.color}15, inset 0 0 30px ${item.color}05` : "none"
                     }}
                   >
@@ -980,10 +1127,10 @@ export default function ProfileSettings() {
                     >
                       <item.icon className="h-5 w-5" style={{ color: item.color }} />
                     </div>
-                    <p className={cn("font-semibold mb-1", isActive ? "text-white" : "text-slate-400")}>
+                    <p className={cn("font-semibold mb-1")} style={{ color: 'var(--theme-text)' }}>
                       {item.label}
                     </p>
-                    <p className="text-xs text-slate-500">{item.desc}</p>
+                    <p className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>{item.desc}</p>
                   </motion.button>
                 )
               })}
