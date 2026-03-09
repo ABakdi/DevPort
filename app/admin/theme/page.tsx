@@ -238,11 +238,12 @@ export default function AdminTheme() {
     root.style.setProperty('--theme-card-radius', themeConfig.cardStyle === 'pill' ? '28px' : themeConfig.cardStyle === 'square' ? '4px' : '12px')
     
     // Apply shadow
+    const isDark = themeConfig.darkMode === 'dark'
     const shadows = {
       none: 'none',
-      light: '0 1px 2px rgba(0,0,0,0.1)',
-      medium: '0 4px 6px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1)',
-      heavy: '0 10px 15px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.15)',
+      light: isDark ? '0 2px 4px rgba(0,0,0,0.4)' : '0 1px 3px rgba(0,0,0,0.12)',
+      medium: isDark ? '0 4px 12px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3)' : '0 4px 6px rgba(0,0,0,0.15)',
+      heavy: isDark ? '0 10px 25px rgba(0,0,0,0.6), 0 5px 10px rgba(0,0,0,0.4)' : '0 10px 20px rgba(0,0,0,0.2)',
     }
     root.style.setProperty('--theme-shadow', shadows[themeConfig.shadowIntensity as keyof typeof shadows] || shadows.medium)
     
