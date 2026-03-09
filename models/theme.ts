@@ -5,6 +5,7 @@ const ThemeSchema = new Schema({
     type: String,
     default: "Custom Theme",
   },
+  // Dark mode colors (default)
   primary: {
     type: String,
     default: "#00E5FF",
@@ -29,6 +30,31 @@ const ThemeSchema = new Schema({
     type: String,
     default: "#ffffff",
   },
+  // Light mode colors
+  lightPrimary: {
+    type: String,
+    default: "#0891B2",
+  },
+  lightSecondary: {
+    type: String,
+    default: "#7C3AED",
+  },
+  lightAccent: {
+    type: String,
+    default: "#D97706",
+  },
+  lightBackground: {
+    type: String,
+    default: "#F8FAFC",
+  },
+  lightSurface: {
+    type: String,
+    default: "#FFFFFF",
+  },
+  lightText: {
+    type: String,
+    default: "#0F172A",
+  },
   fontHeading: {
     type: String,
     default: "Inter",
@@ -37,9 +63,25 @@ const ThemeSchema = new Schema({
     type: String,
     default: "Inter",
   },
-  borderRadius: {
+  fontSize: {
     type: Number,
-    default: 12,
+    default: 16,
+  },
+  borderRadius: {
+    type: String,
+    default: "rounded-xl",
+  },
+  borderWidth: {
+    type: Number,
+    default: 1,
+  },
+  iconStyle: {
+    type: String,
+    default: "rounded",
+  },
+  layout: {
+    type: String,
+    default: "default",
   },
   animations: {
     type: Boolean,
@@ -58,6 +100,41 @@ const ThemeSchema = new Schema({
     type: String,
     default: "",
   },
+  // Page Style Presets (Material, Bento, Minimalist, Neo-Brutalist, etc.)
+  pageStyle: {
+    type: String,
+    default: "default",
+  },
+  // Component Style (for buttons, cards, inputs)
+  componentStyle: {
+    type: String,
+    default: "rounded",
+  },
+  // Card style
+  cardStyle: {
+    type: String,
+    default: "default",
+  },
+  // Button style
+  buttonStyle: {
+    type: String,
+    default: "default",
+  },
+  // Input style
+  inputStyle: {
+    type: String,
+    default: "default",
+  },
+  // Shadow intensity (none, light, medium, heavy)
+  shadowIntensity: {
+    type: String,
+    default: "medium",
+  },
+  // Border style (none, solid, dashed, dotted)
+  borderStyle: {
+    type: String,
+    default: "solid",
+  },
   customPalettes: {
     type: [{
       name: { type: String, required: true },
@@ -65,6 +142,40 @@ const ThemeSchema = new Schema({
       secondary: { type: String, required: true },
       accent: { type: String, required: true },
       background: { type: String, required: true },
+      surface: { type: String, required: true },
+      text: { type: String, required: true },
+      lightPrimary: { type: String },
+      lightSecondary: { type: String },
+      lightAccent: { type: String },
+      lightBackground: { type: String },
+      lightSurface: { type: String },
+      lightText: { type: String },
+    }],
+    default: [],
+  },
+  customLayouts: {
+    type: [{
+      name: { type: String, required: true },
+      borderRadius: { type: String, required: true },
+      borderWidth: { type: Number, required: true },
+      iconStyle: { type: String, required: true },
+      layout: { type: String, required: true },
+    }],
+    default: [],
+  },
+  // Custom style presets created by user
+  customStyles: {
+    type: [{
+      name: { type: String, required: true },
+      pageStyle: { type: String },
+      componentStyle: { type: String },
+      cardStyle: { type: String },
+      buttonStyle: { type: String },
+      inputStyle: { type: String },
+      borderRadius: { type: String },
+      borderWidth: { type: Number },
+      borderStyle: { type: String },
+      shadowIntensity: { type: String },
     }],
     default: [],
   },
