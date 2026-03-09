@@ -19,10 +19,10 @@ export function TerminalSection() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className="rounded-xl border overflow-hidden font-mono text-sm shadow-2xl theme-bg-background"
+      className="rounded-xl border overflow-hidden font-mono text-sm theme-bg-background"
       style={{ 
         borderColor: 'var(--theme-surface)',
-        boxShadow: `0 0 20px color-mix(in srgb, var(--theme-primary) 5%, transparent)`,
+        boxShadow: 'var(--theme-shadow)',
       }}
     >
       <div className="px-4 py-3 border-b flex items-center justify-between theme-bg-surface" style={{ borderColor: 'var(--theme-surface)' }}>

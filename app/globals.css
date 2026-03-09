@@ -154,20 +154,31 @@ input, textarea, select {
 }
 
 .shadow-component {
-  box-shadow: var(--theme-shadow);
-}
-
-/* Apply theme shadow to cards, buttons, and inputs */
-.card, article, section, .card-box {
   box-shadow: var(--theme-shadow) !important;
 }
 
+/* Apply theme shadow to cards and containers */
+.card, article, section, .card-box, .bg-card {
+  box-shadow: var(--theme-shadow) !important;
+}
+
+/* Apply to buttons */
 button, .btn {
   box-shadow: var(--theme-shadow) !important;
 }
 
-/* Inputs get lighter shadow */
+/* Apply to inputs */
 input, textarea, select {
+  box-shadow: var(--theme-shadow) !important;
+}
+
+/* Override ALL Tailwind shadow utilities with theme shadow */
+.shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
+  box-shadow: var(--theme-shadow) !important;
+}
+
+/* Force shadow on theme-styled surface elements */
+.theme-bg-surface {
   box-shadow: var(--theme-shadow) !important;
 }
 

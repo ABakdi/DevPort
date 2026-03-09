@@ -59,7 +59,7 @@ export function AdminSidebar({ collapsed = false, onToggle }: AdminSidebarProps)
             >
               <div className="relative">
                 <div 
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-black font-black text-lg shadow-lg"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-black font-black text-lg"
                   style={{ background: 'linear-gradient(135deg, var(--theme-primary), var(--theme-secondary))' }}
                 >
                   D
@@ -75,7 +75,7 @@ export function AdminSidebar({ collapsed = false, onToggle }: AdminSidebarProps)
         </AnimatePresence>
         {collapsed && (
           <div 
-            className="w-10 h-10 mx-auto rounded-xl flex items-center justify-center text-black font-black shadow-lg"
+            className="w-10 h-10 mx-auto rounded-xl flex items-center justify-center text-black font-black"
             style={{ background: 'linear-gradient(135deg, var(--theme-primary), var(--theme-secondary))' }}
           >
             D
