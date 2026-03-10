@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { MapPin, Clock, Mail, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useCardAnimation } from "@/lib/use-animations"
 
 interface ProfileData {
   name: string
@@ -30,6 +31,7 @@ export function ProfileCard({ profile }: ProfileCardProps) {
   const [currentTime, setCurrentTime] = useState("")
   const [tzAbbr, setTzAbbr] = useState("")
   const [mounted, setMounted] = useState(false)
+  const { hoverAnimation, glowHoverStyle, cardGlow } = useCardAnimation()
 
   useEffect(() => {
     setMounted(true)
@@ -60,7 +62,10 @@ export function ProfileCard({ profile }: ProfileCardProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      whileHover={hoverAnimation}
+      transition={{ duration: 0.4, ease: "easeInOut" }}
       className="p-8 rounded-xl relative overflow-hidden theme-bg-surface theme-border-surface"
+      style={cardGlow ? glowHoverStyle : {}}
     >
       <div className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1 rounded-full theme-bg-primary opacity-10">
         <span className="w-2 h-2 rounded-full animate-pulse theme-bg-primary"></span>

@@ -4,12 +4,14 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowRight, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useCardAnimation } from "@/lib/use-animations"
 
 interface CaseStudyProps {
   caseStudy?: { title: string; description: string; stats: { latency: string; processed: string }; link: string }
 }
 
 export function CaseStudy({ caseStudy }: CaseStudyProps) {
+  const { hoverAnimation, glowHoverStyle, cardGlow } = useCardAnimation()
   const title = caseStudy?.title || "Enterprise Data Lake Engine"
   const description = caseStudy?.description || "A proprietary data ingestion engine designed for high-throughput financial transactions."
   const latency = caseStudy?.stats?.latency || "4.2ms"
@@ -17,8 +19,14 @@ export function CaseStudy({ caseStudy }: CaseStudyProps) {
   const link = caseStudy?.link || "#"
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-      className="rounded-xl overflow-hidden theme-bg-surface theme-border-surface border">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ delay: 0.2 }}
+      whileHover={hoverAnimation}
+      className="rounded-xl overflow-hidden theme-bg-surface theme-border-surface border"
+      style={cardGlow ? glowHoverStyle : {}}
+    >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="relative min-h-[300px] lg:min-h-[400px] flex items-center justify-center theme-bg-primary opacity-15">
           <div className="absolute top-4 left-4 px-3 py-1 rounded-full flex items-center gap-2 bg-black/40 border-theme-primary border">

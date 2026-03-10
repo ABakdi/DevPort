@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
+import { useCardAnimation, useTextAnimation } from "@/lib/use-animations"
 
 const articles = [
   {
@@ -26,13 +27,20 @@ const articles = [
 ]
 
 export function RecentArticles() {
+  const { hoverAnimation, glowHoverStyle, cardGlow } = useCardAnimation()
+  const { textGlowStyle } = useTextAnimation()
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5 }}
+      whileHover={hoverAnimation}
       className="p-6 rounded-xl border theme-bg-background"
-      style={{ borderColor: 'var(--theme-surface)' }}
+      style={{ 
+        borderColor: 'var(--theme-surface)',
+        ...(cardGlow ? glowHoverStyle : {})
+      }}
     >
       <h3 className="text-lg font-black tracking-tighter mb-6 theme-text">RECENT ARTICLES</h3>
 
@@ -52,7 +60,10 @@ export function RecentArticles() {
               }}
             >
               <div className="flex justify-between items-start mb-1">
-                <h4 className="font-bold theme-text group-hover:theme-text-primary transition-colors">
+                <h4 
+                  className="font-bold theme-text group-hover:theme-text-primary transition-colors"
+                  style={textGlowStyle}
+                >
                   {article.title}
                 </h4>
                 <ArrowUpRight className="h-4 w-4 flex-shrink-0 theme-text" style={{ opacity: 0.5 }} />
