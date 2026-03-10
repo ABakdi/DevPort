@@ -20,7 +20,6 @@ interface ThemeConfig {
   fontBody: string
   fontSize: number
   borderRadius: string
-  borderWidth: number
   iconStyle: string
   animations: boolean
   darkMode: string
@@ -52,7 +51,6 @@ const defaultTheme: ThemeConfig = {
   fontBody: "Inter",
   fontSize: 16,
   borderRadius: "0.75rem",
-  borderWidth: 1,
   iconStyle: "rounded",
   animations: true,
   darkMode: "dark",
@@ -63,7 +61,7 @@ const defaultTheme: ThemeConfig = {
   buttonStyle: "default",
   inputStyle: "default",
   shadowIntensity: "medium",
-  borderStyle: "solid",
+  borderStyle: "medium",
 }
 
 interface ThemeContextType {
@@ -111,7 +109,6 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
             fontBody: data.fontBody || "Inter",
             fontSize: data.fontSize || 16,
             borderRadius: data.borderRadius || "0.75rem",
-            borderWidth: data.borderWidth || 1,
             iconStyle: data.iconStyle || "rounded",
             animations: data.animations !== false,
             darkMode: data.darkMode || "dark",
@@ -121,7 +118,7 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
             buttonStyle: data.buttonStyle || "default",
             inputStyle: data.inputStyle || "default",
             shadowIntensity: data.shadowIntensity || "medium",
-            borderStyle: data.borderStyle || "solid",
+            borderStyle: data.borderStyle || "medium",
           }
           setTheme(loadedTheme)
           localStorage.setItem('theme-current', JSON.stringify(loadedTheme))
@@ -236,7 +233,6 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
       root.style.setProperty('--theme-font-body', themeConfig.fontBody || 'Inter')
       root.style.setProperty('--theme-font-size', `${themeConfig.fontSize || 16}px`)
       root.style.setProperty('--theme-border-radius', themeConfig.borderRadius || '0.75rem')
-      root.style.setProperty('--theme-border-width', `${themeConfig.borderWidth || 1}px`)
       root.style.setProperty('--theme-icon-style', themeConfig.iconStyle || 'rounded')
       root.style.setProperty('--theme-page-style', themeConfig.pageStyle || 'default')
       root.style.setProperty('--theme-component-style', themeConfig.componentStyle || 'rounded')
@@ -244,7 +240,16 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
       root.style.setProperty('--theme-button-style', themeConfig.buttonStyle || 'default')
       root.style.setProperty('--theme-input-style', themeConfig.inputStyle || 'default')
       root.style.setProperty('--theme-shadow-intensity', themeConfig.shadowIntensity || 'medium')
-      root.style.setProperty('--theme-border-style', themeConfig.borderStyle || 'solid')
+      
+      // Apply border width based on border style selection
+      const borderWidths: Record<string, string> = {
+        none: '0px',
+        thin: '1px',
+        light: '2px',
+        medium: '3px',
+      }
+      const borderWidth = borderWidths[themeConfig.borderStyle || 'medium'] || '3px'
+      root.style.setProperty('--theme-border-width', borderWidth)
 
       // Apply style-specific CSS variables
       const componentRadius = getComponentRadius(themeConfig.componentStyle || 'rounded')

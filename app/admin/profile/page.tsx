@@ -447,10 +447,11 @@ export default function ProfileSettings() {
                 disabled={saving}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full group relative px-4 py-3 font-bold rounded-xl transition-all disabled:opacity-70 flex items-center justify-center gap-2"
+                className="save-button w-full group relative px-4 py-3 font-bold rounded-xl transition-all disabled:opacity-70 flex items-center justify-center gap-2"
                 style={{ 
                   background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))',
                   color: '#000000',
+                  boxShadow: 'var(--theme-shadow)',
                 }}
               >
                 {saving ? (

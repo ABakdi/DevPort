@@ -26,7 +26,6 @@ const defaultThemeConfig = {
   fontBody: "Inter",
   fontSize: 16,
   borderRadius: "0.75rem",
-  borderWidth: 1,
   iconStyle: "rounded",
   animations: true,
   darkMode: "dark",
@@ -36,7 +35,7 @@ const defaultThemeConfig = {
   buttonStyle: "default",
   inputStyle: "default",
   shadowIntensity: "medium",
-  borderStyle: "solid",
+  borderStyle: "medium",
 }
 
 const colorPresets = [
@@ -212,7 +211,17 @@ export default function AdminTheme() {
     root.style.setProperty('--theme-font-body', themeConfig.fontBody)
     root.style.setProperty('--theme-font-size', `${themeConfig.fontSize}px`)
     root.style.setProperty('--theme-border-radius', themeConfig.borderRadius)
-    root.style.setProperty('--theme-border-width', `${themeConfig.borderWidth}px`)
+    
+    // Apply border width based on border style selection
+    const borderWidths: Record<string, string> = {
+      none: '0px',
+      thin: '1px',
+      light: '2px',
+      medium: '3px',
+    }
+    const borderWidth = borderWidths[themeConfig.borderStyle || 'medium'] || '3px'
+    root.style.setProperty('--theme-border-width', borderWidth)
+    
     root.style.setProperty('--theme-icon-style', themeConfig.iconStyle)
     root.style.setProperty('--theme-layout', themeConfig.layout)
     
@@ -223,7 +232,6 @@ export default function AdminTheme() {
     root.style.setProperty('--theme-button-style', themeConfig.buttonStyle || 'default')
     root.style.setProperty('--theme-input-style', themeConfig.inputStyle || 'default')
     root.style.setProperty('--theme-shadow-intensity', themeConfig.shadowIntensity || 'medium')
-    root.style.setProperty('--theme-border-style', themeConfig.borderStyle || 'solid')
     
     // Apply component radius values
     const radii = {
@@ -421,9 +429,9 @@ export default function AdminTheme() {
 
   const borderStyles = [
     { id: "none", name: "None", desc: "No borders" },
-    { id: "solid", name: "Solid", desc: "Regular borders" },
-    { id: "dashed", name: "Dashed", desc: "Dashed lines" },
-    { id: "dotted", name: "Dotted", desc: "Dotted lines" },
+    { id: "thin", name: "Very Light", desc: "Subtle borders" },
+    { id: "light", name: "Light", desc: "Light borders" },
+    { id: "medium", name: "Medium", desc: "Balanced borders" },
   ]
 
   if (loading) {
@@ -528,11 +536,11 @@ export default function AdminTheme() {
           <button 
             onClick={handleSave}
             disabled={saving}
-            className="w-full py-3 font-bold rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+            className="save-button w-full py-3 font-bold rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70"
             style={{ 
               background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))',
               color: '#000000',
-              boxShadow: '0 0 20px color-mix(in srgb, var(--theme-primary) 30%, transparent)',
+              boxShadow: 'var(--theme-shadow)',
             }}
           >
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
@@ -588,11 +596,11 @@ export default function AdminTheme() {
               <button 
                 onClick={handleSave}
                 disabled={saving}
-                className="w-full py-3 font-bold rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                className="save-button w-full py-3 font-bold rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70"
                 style={{ 
                   background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))',
                   color: '#000000',
-                  boxShadow: '0 0 20px color-mix(in srgb, var(--theme-primary) 30%, transparent)',
+                  boxShadow: 'var(--theme-shadow)',
                 }}
               >
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
@@ -1066,8 +1074,8 @@ export default function AdminTheme() {
                         className="w-12 h-12 mx-auto mb-2" 
                         style={{ 
                           backgroundColor: 'var(--theme-surface)',
-                          borderWidth: '2px',
-                          borderStyle: style.id === 'none' ? 'none' : style.id,
+                          borderWidth: style.id === 'none' ? '0px' : style.id === 'thin' ? '1px' : style.id === 'light' ? '2px' : '3px',
+                          borderStyle: 'solid',
                           borderColor: 'var(--theme-text)',
                         }} 
                       />

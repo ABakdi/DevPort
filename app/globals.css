@@ -142,15 +142,25 @@ input, textarea, select {
 
 /* Sidebar should never have rounded corners */
 .admin-sidebar,
-.admin-sidebar *,
-.sidebar,
-.sidebar * {
+.sidebar {
   border-radius: 0 !important;
+}
+
+/* ============================================
+   SIDEBAR SHADOW RULES
+   Sidebar itself follows theme shadow, contents get no shadow
+   ============================================ */
+.admin-sidebar {
+  box-shadow: var(--theme-shadow) !important;
+}
+
+.admin-sidebar * {
+  box-shadow: none !important;
 }
 
 .border-component {
   border-width: var(--theme-border-width, 1px);
-  border-style: var(--theme-border-style, solid);
+  border-style: solid;
 }
 
 .shadow-component {
@@ -163,13 +173,19 @@ input, textarea, select {
 }
 
 /* Apply to buttons */
-button, .btn:not(.sidebar-btn) {
+button, .btn {
   box-shadow: var(--theme-shadow) !important;
+  border-width: var(--theme-border-width, 1px);
+  border-style: solid;
+  border-color: var(--theme-surface);
 }
 
 /* Apply to inputs */
 input, textarea, select {
   box-shadow: var(--theme-shadow) !important;
+  border-width: var(--theme-border-width, 1px);
+  border-style: solid;
+  border-color: var(--theme-surface);
 }
 
 /* Override ALL Tailwind shadow utilities with theme shadow */
@@ -182,36 +198,127 @@ input, textarea, select {
   box-shadow: var(--theme-shadow) !important;
 }
 
-/* Apply shadow to any bordered element in admin pages */
-.admin-bg .rounded-2xl,
-.admin-bg .rounded-xl,
-.admin-bg .rounded-lg,
-.rounded-2xl.border,
-.rounded-xl.border,
-.rounded-lg.border {
+/* Apply shadow and border to bordered elements */
+.rounded-2xl.border, .rounded-xl.border, .rounded-lg.border {
   box-shadow: var(--theme-shadow) !important;
+  border-width: var(--theme-border-width, 1px);
+  border-style: solid;
+  border-color: var(--theme-surface);
 }
 
-/* Sidebar should never have shadows - override ALL shadow styles */
-.sidebar, .sidebar > *, 
-.admin-sidebar, .admin-sidebar > *,
-[class*="sidebar"], [class*="sidebar"] > *,
-.sidebar-btn, .sidebar-btn *,
-.admin-sidebar * {
+/* Section bar should never have shadows */
+.section-bar,
+.section-bar * {
   box-shadow: none !important;
 }
 
-/* Section bar should never have shadows (except buttons inside) */
-.section-bar, .section-bar > *, 
-.section-bar > * > *, 
-.section-bar > * > * > * {
+.border-component {
+  border-width: var(--theme-border-width, 1px);
+  border-style: var(--theme-border-style, solid);
+}
+
+.shadow-component {
+  box-shadow: var(--theme-shadow) !important;
+}
+
+/* Apply theme shadow to cards and containers - EXCEPT in sidebar and section-bar */
+.card:not(.admin-sidebar *):not(.section-bar *), 
+article:not(.admin-sidebar *):not(.section-bar *), 
+section:not(.admin-sidebar *):not(.section-bar *), 
+.card-box:not(.admin-sidebar *):not(.section-bar *), 
+.bg-card:not(.admin-sidebar *):not(.section-bar *) {
+  box-shadow: var(--theme-shadow) !important;
+}
+
+/* Apply to buttons - EXCEPT in sidebar and section-bar */
+button:not(.admin-sidebar *):not(.section-bar *), 
+.btn:not(.sidebar-btn):not(.admin-sidebar *):not(.section-bar *) {
+  box-shadow: var(--theme-shadow) !important;
+  border-width: var(--theme-border-width, 1px);
+  border-style: solid;
+  border-color: var(--theme-surface);
+}
+
+/* Apply to inputs - EXCEPT in sidebar and section-bar */
+input:not(.admin-sidebar *):not(.section-bar *), 
+textarea:not(.admin-sidebar *):not(.section-bar *), 
+select:not(.admin-sidebar *):not(.section-bar *) {
+  box-shadow: var(--theme-shadow) !important;
+  border-width: var(--theme-border-width, 1px);
+  border-style: solid;
+  border-color: var(--theme-surface);
+}
+
+/* Override ALL Tailwind shadow utilities with theme shadow - EXCEPT sidebar/section-bar */
+.shadow-sm:not(.admin-sidebar *):not(.section-bar *), 
+.shadow:not(.admin-sidebar *):not(.section-bar *), 
+.shadow-md:not(.admin-sidebar *):not(.section-bar *), 
+.shadow-lg:not(.admin-sidebar *):not(.section-bar *), 
+.shadow-xl:not(.admin-sidebar *):not(.section-bar *), 
+.shadow-2xl:not(.admin-sidebar *):not(.section-bar *) {
+  box-shadow: var(--theme-shadow) !important;
+}
+
+/* Force shadow on theme-styled surface elements - EXCEPT sidebar/section-bar */
+.theme-bg-surface:not(.admin-sidebar *):not(.section-bar *), 
+.theme-bg-background:not(.admin-sidebar *):not(.section-bar *) {
+  box-shadow: var(--theme-shadow) !important;
+}
+
+/* Apply shadow and border to any bordered element in admin pages - EXCEPT sidebar/section-bar */
+.admin-bg .rounded-2xl:not(.admin-sidebar *):not(.section-bar *),
+.admin-bg .rounded-xl:not(.admin-sidebar *):not(.section-bar *),
+.admin-bg .rounded-lg:not(.admin-sidebar *):not(.section-bar *),
+.rounded-2xl.border:not(.admin-sidebar *):not(.section-bar *),
+.rounded-xl.border:not(.admin-sidebar *):not(.section-bar *),
+.rounded-lg.border:not(.admin-sidebar *):not(.section-bar *) {
+  box-shadow: var(--theme-shadow) !important;
+  border-width: var(--theme-border-width, 1px);
+  border-style: solid;
+  border-color: var(--theme-surface);
+}
+
+/* Sidebar should never have shadows - ALWAYS */
+/* Removed .admin-sidebar from here to allow sidebar itself to have shadow */
+.admin-sidebar div,
+.admin-sidebar button,
+.admin-sidebar a,
+.admin-sidebar span,
+.admin-sidebar ul,
+.admin-sidebar li,
+.admin-sidebar nav,
+.admin-sidebar p,
+.admin-sidebar input,
+.admin-sidebar textarea,
+.admin-sidebar select,
+.admin-sidebar section,
+.admin-sidebar article,
+.admin-sidebar .card,
+.admin-sidebar .rounded {
   box-shadow: none !important;
 }
 
-/* But buttons inside section-bar should follow shadow rules */
-.section-bar button, .section-bar .btn,
-.section-bar button *, .section-bar .btn * {
-  box-shadow: var(--theme-shadow) !important;
+/* Section bar should never have shadows */
+.section-bar,
+.section-bar div,
+.section-bar a,
+.section-bar span,
+.section-bar ul,
+.section-bar li,
+.section-bar nav,
+.section-bar section,
+.section-bar p,
+.section-bar article,
+.section-bar .card,
+.section-bar .rounded {
+  box-shadow: none !important;
+}
+
+/* Save button in section-bar should follow shadow settings */
+.section-bar div .save-button,
+.section-bar nav + div .save-button,
+.section-bar .mt-4 .save-button {
+  box-shadow: var(--theme-shadow, 0 4px 6px rgba(0,0,0,0.3)) !important;
 }
 
 /* Base animations */
@@ -708,12 +815,10 @@ pre, code {
 }
 
 /* ============================================
-   SHADOW OVERRIDE RULES - ALWAYS LAST
-   These rules must always take precedence
+   FINAL SHADOW OVERRIDE - ALWAYS LAST
+   Everything inside sidebar gets NO shadow
+   NO MATTER WHAT page style or other rules say
    ============================================ */
-
-/* Force no shadow on sidebar elements - ALWAYS */
-.admin-sidebar,
 .admin-sidebar div,
 .admin-sidebar button,
 .admin-sidebar a,
@@ -722,41 +827,15 @@ pre, code {
 .admin-sidebar li,
 .admin-sidebar nav,
 .admin-sidebar p,
-.sidebar,
-.sidebar div,
-.sidebar button,
-.sidebar a,
-.sidebar span,
-.sidebar-btn,
-.sidebar-btn div,
-.sidebar-btn button,
-.sidebar-btn a,
-.sidebar-btn span {
+.admin-sidebar section,
+.admin-sidebar article,
+.admin-sidebar .card,
+.admin-sidebar .rounded,
+.admin-sidebar [class*="rounded"] {
   box-shadow: none !important;
 }
 
-/* Force no shadow on section-bar elements - ALWAYS */
-.section-bar,
-.section-bar div,
-.section-bar button,
-.section-bar a,
-.section-bar span,
-.section-bar ul,
-.section-bar li,
-.section-bar nav,
-.section-bar p,
-.section-bar input,
-.section-bar textarea,
-.section-bar select {
+/* Override page style shadows for content inside sidebar */
+[data-page-style] .admin-sidebar * {
   box-shadow: none !important;
-}
-
-/* Admin layout main content area can have shadows */
-main .card,
-main article,
-main section,
-main .rounded-2xl,
-main .rounded-xl,
-main .rounded-lg {
-  box-shadow: var(--theme-shadow) !important;
 }
