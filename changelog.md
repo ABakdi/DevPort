@@ -52,6 +52,17 @@ For detailed specifications, see: `docs/specs.md`
   - MongoDB adapter for user/token storage
   - JWT session strategy with 15-minute expiry
 
+#### Bug Fixes
+- **Section Bar Shadow**: Fixed shadow intensity not applying to section bar elements
+  - Elements inside section bars (profile and theme pages) now ignore shadow settings
+  - Save buttons in section bars now follow shadow intensity settings
+  - Added inline boxShadow style to ensure save buttons respect theme shadow
+
+- **Border Style Options**: Updated border style to use thickness-based options
+  - Replaced dashed/dotted options with thickness levels (None, Very Light, Light, Medium)
+  - Border width now applied to buttons, inputs, and bordered elements
+  - Updated theme context and CSS to handle border width dynamically
+
 #### Dependencies Added
 - UI: @radix-ui/react-* (dialog, dropdown, tooltip, etc.)
 - Animation: framer-motion
