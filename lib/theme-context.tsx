@@ -31,6 +31,13 @@ interface ThemeConfig {
   inputStyle: string
   shadowIntensity: string
   borderStyle: string
+  animationStyle: string
+  backgroundStyle: string
+  backgroundImage?: string
+  backgroundVideo?: string
+  textAnimationStyle?: string
+  cardGlow?: number
+  textGlow?: number
 }
 
 const defaultTheme: ThemeConfig = {
@@ -62,6 +69,10 @@ const defaultTheme: ThemeConfig = {
   inputStyle: "default",
   shadowIntensity: "medium",
   borderStyle: "medium",
+  animationStyle: "rattle",
+  backgroundStyle: "gradient",
+  cardGlow: 0,
+  textGlow: 0,
 }
 
 interface ThemeContextType {
@@ -119,6 +130,10 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
             inputStyle: data.inputStyle || "default",
             shadowIntensity: data.shadowIntensity || "medium",
             borderStyle: data.borderStyle || "medium",
+            animationStyle: data.animationStyle || "rattle",
+            backgroundStyle: data.backgroundStyle || "gradient",
+            cardGlow: data.cardGlow || 0,
+            textGlow: data.textGlow || 0,
           }
           setTheme(loadedTheme)
           localStorage.setItem('theme-current', JSON.stringify(loadedTheme))
