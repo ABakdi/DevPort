@@ -4,7 +4,8 @@ import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
   Palette, Type, Layout, Sparkles, Download, RotateCcw, Check, Moon, Sun, Monitor,
-  Palette as PaletteIcon, Layers, Eye, Plus, X, Save, Loader2, Trash2, Undo2
+  Palette as PaletteIcon, Layers, Eye, Plus, X, Save, Loader2, Trash2, Undo2,
+  Zap, Image, Video, Upload, XCircle
 } from "lucide-react"
 import { useThemeConfig } from "@/lib/theme-context"
 import { cn } from "@/lib/utils"
@@ -36,6 +37,10 @@ const defaultThemeConfig = {
   inputStyle: "default",
   shadowIntensity: "medium",
   borderStyle: "medium",
+  animationStyle: "rattle",
+  backgroundStyle: "gradient",
+  cardGlow: 0,
+  textGlow: 0,
 }
 
 const colorPresets = [
@@ -129,6 +134,10 @@ interface ThemeData {
   inputStyle?: string
   shadowIntensity?: string
   borderStyle?: string
+  animationStyle?: string
+  textAnimationStyle?: string
+  cardGlow?: number
+  textGlow?: number
 }
 
 const defaultTheme: ThemeData = {
@@ -152,6 +161,10 @@ const defaultTheme: ThemeData = {
   favicon: "",
   customPalettes: [],
   customLayouts: [],
+  animationStyle: "rattle",
+  textAnimationStyle: "none",
+  cardGlow: 0,
+  textGlow: 0,
 }
 
 export default function AdminTheme() {
@@ -397,6 +410,8 @@ export default function AdminTheme() {
   const tabs = [
     { id: "styles", label: "Styles", icon: Sparkles },
     { id: "colors", label: "Colors", icon: PaletteIcon },
+    { id: "animation", label: "Animation", icon: Zap },
+    { id: "background", label: "Background", icon: Image },
     { id: "typography", label: "Typography", icon: Type },
   ]
 
@@ -418,6 +433,28 @@ export default function AdminTheme() {
     { id: "square", name: "Square", desc: "Subtle corners", radius: "4px" },
     { id: "rounded", name: "Rounded", desc: "Smooth curves", radius: "8px" },
     { id: "pill", name: "Pill", desc: "Soft curves", radius: "24px" },
+  ]
+
+  const animationStyles = [
+    { id: "none", name: "None", desc: "No animations", icon: "⚪" },
+    { id: "pop", name: "Pop Off", desc: "Scale up on hover", icon: "🎈" },
+    { id: "rattle", name: "Rattle", desc: "Shake side to side", icon: "🔔" },
+    { id: "rattle-diag", name: "Rattle Diag", desc: "Diagonal shake", icon: "↗️" },
+    { id: "pulse", name: "Pulse", desc: "Gentle pulse", icon: "💫" },
+    { id: "slide-up", name: "Slide Up", desc: "Rise on hover", icon: "⬆️" },
+  ]
+
+  const backgroundStyles = [
+    { id: "none", name: "None", desc: "Solid color", preview: "bg-slate-900" },
+    { id: "gradient", name: "Gradient", desc: "Colorful gradient", preview: "bg-gradient-to-br from-purple-900 via-slate-900 to-blue-900" },
+    { id: "grid", name: "Grid", desc: "Tech grid pattern", preview: "bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" },
+    { id: "network", name: "Network", desc: "Connected nodes", preview: "bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" },
+    { id: "particles", name: "Particles", desc: "Floating particles", preview: "bg-[radial-gradient(ellipse_at_top,rgba(0,150,255,0.15),transparent_50%)]" },
+    { id: "space", name: "Space Time", desc: "Stars & nebula", preview: "bg-[radial-gradient(ellipse_at_bottom_right,rgba(120,0,255,0.2),transparent_50%),radial-gradient(ellipse_at_top_left,rgba(0,200,255,0.15),transparent_50%)]" },
+    { id: "retro", name: "Retro", desc: "Retro wave", preview: "bg-gradient-to-b from-slate-900 via-purple-900/20 to-slate-900" },
+    { id: "waves", name: "Waves", desc: "Sine wave pattern", preview: "bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(99,102,241,0.05)_10px,rgba(99,102,241,0.05)_20px)]" },
+    { id: "aurora", name: "Aurora", desc: "Northern lights", preview: "bg-[conic-gradient(from_180deg_at_50%_50%,rgba(0,255,150,0.1),transparent_50%),conic-gradient(from_0deg_at_50%_50%,rgba(100,0,255,0.1),transparent_50%)]" },
+    { id: "mesh", name: "Mesh", desc: "Gradient mesh", preview: "bg-[radial-gradient(at_40%_20%,rgba(56,189,248,0.2),transparent_50%),radial-gradient(at_80%_0%,rgba(168,85,247,0.15),transparent_50%),radial-gradient(at_0%_50%,rgba(236,72,153,0.15),transparent_50%),radial-gradient(at_80%_50%,rgba(34,211,238,0.15),transparent_50%),radial-gradient(at_0%_100%,rgba(249,115,22,0.15),transparent_50%)]" },
   ]
 
   const shadowIntensities = [
@@ -1083,6 +1120,309 @@ export default function AdminTheme() {
                       <p className="text-xs" style={{ color: theme.borderStyle === style.id ? '#000' : 'var(--theme-text)', opacity: 0.6 }}>{style.desc}</p>
                     </motion.button>
                   ))}
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {activeTab === "animation" && (
+            <div className="space-y-6">
+              {/* Card Animation */}
+              <motion.div className="rounded-2xl p-6 border" style={{ 
+                backgroundColor: 'var(--theme-background)',
+                borderColor: 'var(--theme-surface)',
+              }}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
+                    backgroundColor: 'var(--theme-surface)'
+                  }}>
+                    <Sparkles className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Card Animation</h2>
+                    <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Hover effects for cards</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {animationStyles.map((style) => (
+                    <motion.button
+                      key={style.id}
+                      whileHover={style.id === "rattle" ? { x: [0, -3, 3, -3, 3, 0] } : style.id === "rattle-diag" ? { x: [0, -2, 2, -2, 2, 0], y: [0, -2, 2, -2, 2, 0], rotate: [0, -1, 1, -1, 1, 0] } : style.id === "pop" ? { scale: 1.05 } : style.id === "pulse" ? { scale: [1, 1.05, 1] } : style.id === "slide-up" ? { y: -5 } : {}}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setTheme({ ...theme, animationStyle: style.id })}
+                      className="p-4 rounded-xl border transition-all text-center"
+                      style={{ 
+                        backgroundColor: theme.animationStyle === style.id ? 'var(--theme-primary)' : 'var(--theme-surface)',
+                        borderColor: theme.animationStyle === style.id ? 'var(--theme-primary)' : 'var(--theme-surface)',
+                      }}
+                    >
+                      <span className="text-2xl mb-2 block">{style.icon}</span>
+                      <p className="text-sm font-medium" style={{ color: theme.animationStyle === style.id ? '#000' : 'var(--theme-text)' }}>{style.name}</p>
+                      <p className="text-xs" style={{ color: theme.animationStyle === style.id ? '#000' : 'var(--theme-text)', opacity: 0.6 }}>{style.desc}</p>
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* Card Glow Slider */}
+                <div className="mt-6 pt-6 border-t" style={{ borderColor: 'var(--theme-surface)' }}>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <Sparkles className="h-4 w-4" style={{ color: 'var(--theme-accent)' }} />
+                      <span className="text-sm font-medium" style={{ color: 'var(--theme-text)' }}>Glow Intensity</span>
+                    </div>
+                    <span className="text-xs px-2 py-1 rounded" style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}>
+                      {theme.cardGlow || 0}%
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={theme.cardGlow || 0}
+                    onChange={(e) => setTheme({ ...theme, cardGlow: parseInt(e.target.value) })}
+                    className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+                    style={{ backgroundColor: 'var(--theme-surface)' }}
+                  />
+                  <div className="flex justify-between mt-1">
+                    <span className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Off</span>
+                    <span className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Max</span>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Text Animation */}
+              <motion.div className="rounded-2xl p-6 border" style={{ 
+                backgroundColor: 'var(--theme-background)',
+                borderColor: 'var(--theme-surface)',
+              }}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
+                    backgroundColor: 'var(--theme-surface)'
+                  }}>
+                    <Type className="h-5 w-5" style={{ color: 'var(--theme-secondary)' }} />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Text Animation</h2>
+                    <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Effects for text elements</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    { id: "none", name: "None", desc: "No text animation", icon: "⚪" },
+                    { id: "typewriter", name: "Typewriter", desc: "Typing effect", icon: "⌨️" },
+                    { id: "fade", name: "Fade In", desc: "Fade in on scroll", icon: "🌅" },
+                    { id: "slide", name: "Slide In", desc: "Slide in from side", icon: "➡️" },
+                  ].map((style) => (
+                    <motion.button
+                      key={style.id}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setTheme({ ...theme, textAnimationStyle: style.id })}
+                      className="p-4 rounded-xl border transition-all text-center"
+                      style={{ 
+                        backgroundColor: (theme as any).textAnimationStyle === style.id ? 'var(--theme-secondary)' : 'var(--theme-surface)',
+                        borderColor: (theme as any).textAnimationStyle === style.id ? 'var(--theme-secondary)' : 'var(--theme-surface)',
+                      }}
+                    >
+                      <span className="text-2xl mb-2 block">{style.icon}</span>
+                      <p className="text-sm font-medium" style={{ color: (theme as any).textAnimationStyle === style.id ? '#fff' : 'var(--theme-text)' }}>{style.name}</p>
+                      <p className="text-xs" style={{ color: (theme as any).textAnimationStyle === style.id ? '#fff' : 'var(--theme-text)', opacity: 0.6 }}>{style.desc}</p>
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* Text Glow Slider */}
+                <div className="mt-6 pt-6 border-t" style={{ borderColor: 'var(--theme-surface)' }}>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <Sparkles className="h-4 w-4" style={{ color: 'var(--theme-secondary)' }} />
+                      <span className="text-sm font-medium" style={{ color: 'var(--theme-text)' }}>Text Glow</span>
+                    </div>
+                    <span className="text-xs px-2 py-1 rounded" style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}>
+                      {theme.textGlow || 0}%
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={theme.textGlow || 0}
+                    onChange={(e) => setTheme({ ...theme, textGlow: parseInt(e.target.value) })}
+                    className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+                    style={{ backgroundColor: 'var(--theme-surface)' }}
+                  />
+                  <div className="flex justify-between mt-1">
+                    <span className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Off</span>
+                    <span className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Max</span>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {activeTab === "background" && (
+            <div className="space-y-6">
+              {/* Background Style */}
+              <motion.div className="rounded-2xl p-6 border" style={{ 
+                backgroundColor: 'var(--theme-background)',
+                borderColor: 'var(--theme-surface)',
+              }}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
+                    backgroundColor: 'var(--theme-surface)'
+                  }}>
+                    <Layers className="h-5 w-5" style={{ color: 'var(--theme-secondary)' }} />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Background Style</h2>
+                    <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Dynamic backgrounds</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  {backgroundStyles.map((style) => (
+                    <motion.button
+                      key={style.id}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setTheme({ ...theme, backgroundStyle: style.id, backgroundImage: '', backgroundVideo: '' })}
+                      className="p-3 rounded-xl border transition-all text-center"
+                      style={{ 
+                        backgroundColor: theme.backgroundStyle === style.id ? 'var(--theme-secondary)' : 'var(--theme-surface)',
+                        borderColor: theme.backgroundStyle === style.id ? 'var(--theme-secondary)' : 'var(--theme-surface)',
+                      }}
+                    >
+                      <div 
+                        className={`w-full h-16 rounded-lg mb-2 ${style.preview}`}
+                      />
+                      <p className="text-sm font-medium" style={{ color: theme.backgroundStyle === style.id ? '#fff' : 'var(--theme-text)' }}>{style.name}</p>
+                      <p className="text-xs" style={{ color: theme.backgroundStyle === style.id ? '#fff' : 'var(--theme-text)', opacity: 0.6 }}>{style.desc}</p>
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Custom Background Image */}
+              <motion.div className="rounded-2xl p-6 border" style={{ 
+                backgroundColor: 'var(--theme-background)',
+                borderColor: 'var(--theme-surface)',
+              }}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
+                    backgroundColor: 'var(--theme-surface)'
+                  }}>
+                    <Image className="h-5 w-5" style={{ color: 'var(--theme-accent)' }} />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Custom Background Image</h2>
+                    <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Upload your own image</p>
+                  </div>
+                </div>
+
+                <div className="border-2 border-dashed rounded-xl p-8 text-center transition-colors hover:border-[var(--theme-primary)]"
+                  style={{ borderColor: 'var(--theme-surface)' }}
+                >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    id="bg-image-upload"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) {
+                        const reader = new FileReader()
+                        reader.onloadend = () => {
+                          setTheme({ ...theme, backgroundStyle: 'custom-image', backgroundImage: reader.result as string, backgroundVideo: '' })
+                        }
+                        reader.readAsDataURL(file)
+                      }
+                    }}
+                  />
+                  <label htmlFor="bg-image-upload" className="cursor-pointer">
+                    {theme.backgroundStyle === 'custom-image' && theme.backgroundImage ? (
+                      <div className="relative">
+                        <img src={theme.backgroundImage} alt="Custom background" className="w-full h-32 object-cover rounded-lg" />
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault()
+                            setTheme({ ...theme, backgroundStyle: 'none', backgroundImage: '' })
+                          }}
+                          className="absolute top-2 right-2 p-1 rounded-full bg-red-500 text-white"
+                        >
+                          <XCircle className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <Upload className="h-10 w-10 mx-auto mb-3" style={{ color: 'var(--theme-text)', opacity: 0.4 }} />
+                        <p className="text-sm font-medium" style={{ color: 'var(--theme-text)' }}>Click to upload image</p>
+                        <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>PNG, JPG, GIF up to 10MB</p>
+                      </>
+                    )}
+                  </label>
+                </div>
+              </motion.div>
+
+              {/* Custom Background Video */}
+              <motion.div className="rounded-2xl p-6 border" style={{ 
+                backgroundColor: 'var(--theme-background)',
+                borderColor: 'var(--theme-surface)',
+              }}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
+                    backgroundColor: 'var(--theme-surface)'
+                  }}>
+                    <Video className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Custom Background Video</h2>
+                    <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Upload a video background</p>
+                  </div>
+                </div>
+
+                <div className="border-2 border-dashed rounded-xl p-8 text-center transition-colors hover:border-[var(--theme-primary)]"
+                  style={{ borderColor: 'var(--theme-surface)' }}
+                >
+                  <input
+                    type="file"
+                    accept="video/*"
+                    className="hidden"
+                    id="bg-video-upload"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) {
+                        const reader = new FileReader()
+                        reader.onloadend = () => {
+                          setTheme({ ...theme, backgroundStyle: 'custom-video', backgroundVideo: reader.result as string, backgroundImage: '' })
+                        }
+                        reader.readAsDataURL(file)
+                      }
+                    }}
+                  />
+                  <label htmlFor="bg-video-upload" className="cursor-pointer">
+                    {theme.backgroundStyle === 'custom-video' && theme.backgroundVideo ? (
+                      <div className="relative">
+                        <video src={theme.backgroundVideo} className="w-full h-32 object-cover rounded-lg" autoPlay loop muted playsInline />
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault()
+                            setTheme({ ...theme, backgroundStyle: 'none', backgroundVideo: '' })
+                          }}
+                          className="absolute top-2 right-2 p-1 rounded-full bg-red-500 text-white"
+                        >
+                          <XCircle className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <Upload className="h-10 w-10 mx-auto mb-3" style={{ color: 'var(--theme-text)', opacity: 0.4 }} />
+                        <p className="text-sm font-medium" style={{ color: 'var(--theme-text)' }}>Click to upload video</p>
+                        <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>MP4, WebM up to 50MB</p>
+                      </>
+                    )}
+                  </label>
                 </div>
               </motion.div>
             </div>
