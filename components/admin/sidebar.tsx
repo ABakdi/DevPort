@@ -44,6 +44,7 @@ export function AdminSidebar({ collapsed = false, onToggle }: AdminSidebarProps)
       style={{
         background: "linear-gradient(180deg, var(--theme-background) 0%, var(--theme-surface) 100%)",
         borderRadius: '0px',
+        boxShadow: '4px 0 24px rgba(0,0,0,0.15)',
       }}
     >
       {/* Logo Section */}
