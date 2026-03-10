@@ -24,6 +24,26 @@ For detailed specifications, see: `docs/specs.md`
 ### [Unreleased]
 
 #### Features
+- **Theme Animation System**: Complete animation customization in admin panel
+  - Card Animation section with hover effects: None, Pop Off, Rattle, Rattle Diagonal, Pulse, Slide Up
+  - Card Glow slider (0-100%) for edge glow effect on hover
+  - Text Animation section: None, Typewriter, Fade In, Slide In
+  - Text Glow slider (0-100%) for text glow effect
+  - Glow effects are independent and can be combined with other animations
+  - Created `useAnimations` hook for consistent theme-driven animations
+
+- **Home Page Animations**: Applied theme animations to all home page components
+  - Hero section: card hover animations and typewriter text effect on name/title
+  - Featured Work: project cards with hover animations and glow effects
+  - Profile Card: animated card with glow on hover
+  - Case Study: card animations with glow effects
+  - Recent Articles: card hover animations and text glow on titles
+  - Toolbox: tech stack grid with card animations
+
+- **Admin Dashboard Animations**: Applied theme animations to dashboard
+  - Stat cards with hover animations and glow effects
+  - Quick action cards with animations
+
 - **Home Page**: Complete home page implementation matching design spec from `docs/home.html`
   - Sticky navbar with logo, navigation links, theme toggle, Login button, and CV download button
   - Profile card with avatar, "Ready_For_Hire" status, skills tags, location, and contact CTA
