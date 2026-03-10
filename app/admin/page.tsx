@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import {
   FileText,
   Folder,
@@ -27,6 +28,7 @@ import {
   Pie,
   Cell,
 } from "recharts"
+import { useCardAnimation } from "@/lib/use-animations"
 
 const stats = [
   { label: "Total Visitors", value: "12,458", change: "+12.5%", trend: "up", icon: Eye },
@@ -59,6 +61,7 @@ export default function AdminDashboard() {
   const [selectedRange, setSelectedRange] = useState("7 Days")
   const today = new Date()
   const greeting = today.getHours() < 12 ? "Good morning" : today.getHours() < 18 ? "Good afternoon" : "Good evening"
+  const { hoverAnimation, glowHoverStyle, glowStyle, cardGlow } = useCardAnimation()
 
   return (
     <div className="p-6 lg:p-8 space-y-6">
@@ -102,17 +105,17 @@ export default function AdminDashboard() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         {stats.map((stat) => (
-          <div
+          <motion.div
             key={stat.label}
+            whileHover={hoverAnimation}
             className="group p-5 lg:p-6 transition-all duration-300"
             style={{ 
               backgroundColor: 'var(--theme-background)',
               border: 'var(--theme-border-width) var(--theme-border-style) var(--theme-surface)',
               borderRadius: 'var(--theme-card-radius)',
               boxShadow: 'var(--theme-shadow)',
+              ...(cardGlow ? glowStyle : {})
             }}
-            onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--theme-primary)'}
-            onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--theme-surface)'}
           >
             <div className="flex items-center justify-between mb-4">
               <div 
@@ -139,7 +142,7 @@ export default function AdminDashboard() {
             </div>
             <p className="text-2xl lg:text-3xl font-black mb-1" style={{ color: 'var(--theme-text)' }}>{stat.value}</p>
             <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>{stat.label}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
 
@@ -346,79 +349,99 @@ export default function AdminDashboard() {
             <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Frequently used features</p>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <Link
-              href="/admin/content"
-              className="group p-4 transition-all"
-              style={{ 
-                backgroundColor: 'var(--theme-surface)',
-                borderRadius: 'var(--theme-button-radius)',
-              }}
+            <motion.div
+              whileHover={hoverAnimation}
+              style={cardGlow ? glowHoverStyle : {}}
             >
-              <div 
-                className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
-                style={{ background: 'color-mix(in srgb, var(--theme-primary) 10%, transparent)' }}
-              >
-                <FileText className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
-              </div>
-              <p className="font-semibold" style={{ color: 'var(--theme-text)' }}>New Article</p>
-              <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Create blog post</p>
-            </Link>
-            <Link
-              href="/admin/profile"
-              className="group p-4 transition-all"
-              style={{ 
-                backgroundColor: 'var(--theme-surface)',
-                borderRadius: 'var(--theme-button-radius)',
-              }}
-            >
-              <div 
-                className="flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
+              <Link
+                href="/admin/content"
+                className="group p-4 transition-all block"
                 style={{ 
-                  background: 'color-mix(in srgb, var(--theme-secondary) 10%, transparent)',
-                  borderRadius: 'var(--theme-component-radius)',
-                  width: '40px',
-                  height: '40px',
+                  backgroundColor: 'var(--theme-surface)',
+                  borderRadius: 'var(--theme-button-radius)',
                 }}
               >
-                <Users className="h-5 w-5" style={{ color: 'var(--theme-secondary)' }} />
-              </div>
-              <p className="font-semibold" style={{ color: 'var(--theme-text)' }}>Edit Profile</p>
-              <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Update your info</p>
-            </Link>
-            <Link
-              href="/admin/theme"
-              className="group p-4 transition-all"
-              style={{ 
-                backgroundColor: 'var(--theme-surface)',
-                borderRadius: 'var(--theme-button-radius)',
-              }}
+                <div 
+                  className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
+                  style={{ background: 'color-mix(in srgb, var(--theme-primary) 10%, transparent)' }}
+                >
+                  <FileText className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
+                </div>
+                <p className="font-semibold" style={{ color: 'var(--theme-text)' }}>New Article</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Create blog post</p>
+              </Link>
+            </motion.div>
+            <motion.div
+              whileHover={hoverAnimation}
+              style={cardGlow ? glowHoverStyle : {}}
             >
-              <div 
-                className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
-                style={{ background: 'color-mix(in srgb, var(--theme-accent) 10%, transparent)' }}
+              <Link
+                href="/admin/profile"
+                className="group p-4 transition-all block"
+                style={{ 
+                  backgroundColor: 'var(--theme-surface)',
+                  borderRadius: 'var(--theme-button-radius)',
+                }}
               >
-                <Folder className="h-5 w-5" style={{ color: 'var(--theme-accent)' }} />
-              </div>
-              <p className="font-semibold" style={{ color: 'var(--theme-text)' }}>Customize Theme</p>
-              <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Colors & fonts</p>
-            </Link>
-            <Link
-              href="/admin/messages"
-              className="group p-4 transition-all"
-              style={{ 
-                backgroundColor: 'var(--theme-surface)',
-                borderRadius: 'var(--theme-button-radius)',
-              }}
+                <div 
+                  className="flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
+                  style={{ 
+                    background: 'color-mix(in srgb, var(--theme-secondary) 10%, transparent)',
+                    borderRadius: 'var(--theme-component-radius)',
+                    width: '40px',
+                    height: '40px',
+                  }}
+                >
+                  <Users className="h-5 w-5" style={{ color: 'var(--theme-secondary)' }} />
+                </div>
+                <p className="font-semibold" style={{ color: 'var(--theme-text)' }}>Edit Profile</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Update your info</p>
+              </Link>
+            </motion.div>
+            <motion.div
+              whileHover={hoverAnimation}
+              style={cardGlow ? glowHoverStyle : {}}
             >
-              <div 
-                className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
-                style={{ background: 'color-mix(in srgb, #10B981 10%, transparent)' }}
+              <Link
+                href="/admin/theme"
+                className="group p-4 transition-all block"
+                style={{ 
+                  backgroundColor: 'var(--theme-surface)',
+                  borderRadius: 'var(--theme-button-radius)',
+                }}
               >
-                <MessageSquare className="h-5 w-5" style={{ color: '#10B981' }} />
-              </div>
-              <p className="font-semibold" style={{ color: 'var(--theme-text)' }}>View Messages</p>
-              <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Contact inbox</p>
-            </Link>
+                <div 
+                  className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
+                  style={{ background: 'color-mix(in srgb, var(--theme-accent) 10%, transparent)' }}
+                >
+                  <Folder className="h-5 w-5" style={{ color: 'var(--theme-accent)' }} />
+                </div>
+                <p className="font-semibold" style={{ color: 'var(--theme-text)' }}>Customize Theme</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Colors & fonts</p>
+              </Link>
+            </motion.div>
+            <motion.div
+              whileHover={hoverAnimation}
+              style={cardGlow ? glowHoverStyle : {}}
+            >
+              <Link
+                href="/admin/messages"
+                className="group p-4 transition-all block"
+                style={{ 
+                  backgroundColor: 'var(--theme-surface)',
+                  borderRadius: 'var(--theme-button-radius)',
+                }}
+              >
+                <div 
+                  className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
+                  style={{ background: 'color-mix(in srgb, #10B981 10%, transparent)' }}
+                >
+                  <MessageSquare className="h-5 w-5" style={{ color: '#10B981' }} />
+                </div>
+                <p className="font-semibold" style={{ color: 'var(--theme-text)' }}>View Messages</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Contact inbox</p>
+              </Link>
+            </motion.div>
           </div>
 
           <div className="mt-6 pt-6 border-t" style={{ borderColor: 'var(--theme-surface)' }}>
