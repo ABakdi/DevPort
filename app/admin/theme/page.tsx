@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { 
   Palette, Type, Layout, Sparkles, Download, RotateCcw, Check, Moon, Sun, Monitor,
   Palette as PaletteIcon, Layers, Eye, Plus, X, Save, Loader2, Trash2, Undo2,
-  Zap, Image, Video, Upload, XCircle
+  Zap, Image, Video, Upload, XCircle, CheckCircle
 } from "lucide-react"
 import { useThemeConfig } from "@/lib/theme-context"
 import { cn } from "@/lib/utils"
@@ -311,9 +311,16 @@ export default function AdminTheme() {
     fetchFiles()
   }, [])
 
+  useEffect(() => {
+    if (!contextLoading && contextTheme) {
+      console.log("Context theme backgroundImage:", (contextTheme as any).backgroundImage)
+    }
+  }, [contextTheme, contextLoading])
+
   const handleSave = async () => {
     setSaving(true)
     try {
+      console.log("Saving theme with backgroundImage:", theme.backgroundImage)
       await updateTheme(theme)
       applyThemeToDocument(theme)
       setSaved(true)
@@ -1399,7 +1406,7 @@ export default function AdminTheme() {
                             key={file._id}
                             className="relative group cursor-pointer rounded-lg overflow-hidden border-2 transition-all"
                             style={{ 
-                              borderColor: theme.backgroundImage === file.url ? 'var(--theme-primary)' : 'transparent'
+                              borderColor: theme.backgroundImage === file.url ? 'var(--theme-primary)' : 'var(--theme-surface)'
                             }}
                             onClick={() => {
                               setTheme({ 
@@ -1411,6 +1418,11 @@ export default function AdminTheme() {
                             }}
                           >
                             <img src={file.url} alt={file.filename} className="w-full h-20 object-cover" />
+                            {theme.backgroundImage === file.url && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                                <CheckCircle className="h-8 w-8 text-white" />
+                              </div>
+                            )}
                             <button
                               onClick={async (e) => {
                                 e.stopPropagation()
@@ -1424,7 +1436,7 @@ export default function AdminTheme() {
                                   console.error('Failed to delete file:', error)
                                 }
                               }}
-                              className="absolute top-1 right-1 p-1 rounded-full bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                              className={`absolute top-1 right-1 p-1 rounded-full bg-red-500 text-white transition-opacity ${theme.backgroundImage === file.url ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
                             >
                               <XCircle className="h-3 w-3" />
                             </button>
@@ -1509,7 +1521,7 @@ export default function AdminTheme() {
                             key={file._id}
                             className="relative group cursor-pointer rounded-lg overflow-hidden border-2 transition-all"
                             style={{ 
-                              borderColor: theme.backgroundVideo === file.url ? 'var(--theme-primary)' : 'transparent'
+                              borderColor: theme.backgroundVideo === file.url ? 'var(--theme-primary)' : 'var(--theme-surface)'
                             }}
                             onClick={() => {
                               setTheme({ 
@@ -1521,6 +1533,11 @@ export default function AdminTheme() {
                             }}
                           >
                             <video src={file.url} className="w-full h-20 object-cover" muted />
+                            {theme.backgroundVideo === file.url && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                                <CheckCircle className="h-8 w-8 text-white" />
+                              </div>
+                            )}
                             <button
                               onClick={async (e) => {
                                 e.stopPropagation()
@@ -1534,7 +1551,7 @@ export default function AdminTheme() {
                                   console.error('Failed to delete file:', error)
                                 }
                               }}
-                              className="absolute top-1 right-1 p-1 rounded-full bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                              className={`absolute top-1 right-1 p-1 rounded-full bg-red-500 text-white transition-opacity ${theme.backgroundVideo === file.url ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
                             >
                               <XCircle className="h-3 w-3" />
                             </button>
