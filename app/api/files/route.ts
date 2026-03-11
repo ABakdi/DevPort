@@ -1,18 +1,11 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import path from "path"
-import fs from "fs"
+import { connectToDatabase } from "@/lib/mongodb"
+import { UploadedFile, uploadToGridFS, deleteFromGridFS } from "@/models/uploaded-file"
+import mongoose from "mongoose"
 
 export const dynamic = 'force-dynamic'
-
-const UPLOAD_DIR = path.join(process.cwd(), "public", "files")
-
-function ensureDir(dir: string) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true })
-  }
-}
 
 export async function POST(req: Request) {
   try {
@@ -33,28 +26,42 @@ export async function POST(req: Request) {
     const allowedFolders = ["theme", "avatars", "projects", "posts", "general"]
     const targetFolder = allowedFolders.includes(folder || "") ? folder! : "general"
 
-    const targetDir = path.join(UPLOAD_DIR, targetFolder)
-    ensureDir(targetDir)
+    const allowedTypes = {
+      image: ["image/jpeg", "image/png", "image/gif", "image/webp"],
+      video: ["video/mp4", "video/webm"],
+      general: ["image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/webm", "application/pdf"],
+    }
+
+    const fileType = targetFolder === "theme" || targetFolder === "avatars" || targetFolder === "projects" ? "image" : "general"
+    if (!allowedTypes[fileType as keyof typeof allowedTypes].includes(file.type)) {
+      return NextResponse.json({ error: "Invalid file type" }, { status: 400 })
+    }
 
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    const timestamp = Date.now()
-    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_")
-    const filename = `${timestamp}-${originalName}`
-    const filepath = path.join(targetDir, filename)
+    const { db } = await connectToDatabase()
+    const { id, url } = await uploadToGridFS(db, buffer, file.name, file.type)
 
-    fs.writeFileSync(filepath, buffer)
-
-    const fileUrl = `/files/${targetFolder}/${filename}`
+    const uploadedFile = await UploadedFile.create({
+      filename: file.name,
+      originalName: file.name,
+      mimeType: file.type,
+      size: file.size,
+      folder: targetFolder,
+      gridFSId: id,
+      url,
+    })
 
     return NextResponse.json({
       success: true,
-      filename,
-      folder: targetFolder,
-      url: fileUrl,
-      size: file.size,
-      type: file.type,
+      _id: uploadedFile._id,
+      filename: uploadedFile.filename,
+      folder: uploadedFile.folder,
+      url: uploadedFile.url,
+      size: uploadedFile.size,
+      mimeType: uploadedFile.mimeType,
+      createdAt: uploadedFile.createdAt,
     })
   } catch (error) {
     console.error("Error uploading file:", error)
@@ -71,32 +78,16 @@ export async function GET(req: Request) {
     }
 
     const { searchParams } = new URL(req.url)
-    const folder = searchParams.get("folder") || "general"
+    const folder = searchParams.get("folder")
 
-    const allowedFolders = ["theme", "avatars", "projects", "posts", "general"]
-    if (!allowedFolders.includes(folder)) {
-      return NextResponse.json({ error: "Invalid folder" }, { status: 400 })
+    const query: Record<string, unknown> = {}
+    if (folder && ["theme", "avatars", "projects", "posts", "general"].includes(folder)) {
+      query.folder = folder
     }
 
-    const targetDir = path.join(UPLOAD_DIR, folder)
-    
-    if (!fs.existsSync(targetDir)) {
-      return NextResponse.json({ files: [] })
-    }
+    const files = await UploadedFile.find(query).sort({ createdAt: -1 }).lean()
 
-    const files = fs.readdirSync(targetDir)
-    const fileList = files.map(filename => {
-      const filepath = path.join(targetDir, filename)
-      const stats = fs.statSync(filepath)
-      return {
-        filename,
-        url: `/files/${folder}/${filename}`,
-        size: stats.size,
-        created: stats.birthtime,
-      }
-    })
-
-    return NextResponse.json({ files: fileList })
+    return NextResponse.json({ files })
   } catch (error) {
     console.error("Error listing files:", error)
     return NextResponse.json({ error: "Failed to list files" }, { status: 500 })
@@ -112,25 +103,22 @@ export async function DELETE(req: Request) {
     }
 
     const { searchParams } = new URL(req.url)
-    const filename = searchParams.get("filename")
-    const folder = searchParams.get("folder") || "general"
+    const fileId = searchParams.get("id")
 
-    if (!filename) {
-      return NextResponse.json({ error: "Missing filename" }, { status: 400 })
+    if (!fileId) {
+      return NextResponse.json({ error: "Missing file ID" }, { status: 400 })
     }
 
-    const allowedFolders = ["theme", "avatars", "projects", "posts", "general"]
-    if (!allowedFolders.includes(folder)) {
-      return NextResponse.json({ error: "Invalid folder" }, { status: 400 })
-    }
-
-    const filepath = path.join(UPLOAD_DIR, folder, filename)
-
-    if (!fs.existsSync(filepath)) {
+    const file = await UploadedFile.findById(fileId)
+    
+    if (!file) {
       return NextResponse.json({ error: "File not found" }, { status: 404 })
     }
 
-    fs.unlinkSync(filepath)
+    const { db } = await connectToDatabase()
+    await deleteFromGridFS(db, file.gridFSId as mongoose.Types.ObjectId)
+    
+    await UploadedFile.findByIdAndDelete(fileId)
 
     return NextResponse.json({ success: true })
   } catch (error) {

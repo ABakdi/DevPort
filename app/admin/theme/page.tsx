@@ -177,6 +177,13 @@ export default function AdminTheme() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [uploadedFiles, setUploadedFiles] = useState<{
+    _id: string
+    filename: string
+    url: string
+    mimeType: string
+    createdAt: string
+  }[]>([])
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('themeActiveTab')
@@ -288,6 +295,21 @@ export default function AdminTheme() {
       setLoading(false)
     }
   }, [contextTheme, contextLoading])
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const res = await fetch('/api/files?folder=theme')
+        const data = await res.json()
+        if (data.files) {
+          setUploadedFiles(data.files)
+        }
+      } catch (error) {
+        console.error('Failed to fetch files:', error)
+      }
+    }
+    fetchFiles()
+  }, [])
 
   const handleSave = async () => {
     setSaving(true)
@@ -1321,71 +1343,96 @@ export default function AdminTheme() {
                   </div>
                 </div>
 
-                <div className="border-2 border-dashed rounded-xl p-8 text-center transition-colors hover:border-[var(--theme-primary)]"
-                  style={{ borderColor: 'var(--theme-surface)' }}
-                >
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    id="bg-image-upload"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0]
-                      if (file) {
-                        try {
-                          const formData = new FormData()
-                          formData.append('file', file)
-                          formData.append('folder', 'theme')
-                          
-                          const res = await fetch('/api/files', {
-                            method: 'POST',
-                            body: formData,
-                          })
-                          const data = await res.json()
-                          if (data.success) {
-                            setTheme({ 
-                              ...theme, 
-                              backgroundStyle: 'custom-image', 
-                              backgroundImage: data.url, 
-                              backgroundVideo: '' 
-                            })
-                          }
-                        } catch (error) {
-                          console.error('Failed to upload image:', error)
-                        }
-                      }
-                    }}
-                  />
-                  <label htmlFor="bg-image-upload" className="cursor-pointer">
-                    {theme.backgroundStyle === 'custom-image' && theme.backgroundImage ? (
-                      <div className="relative">
-                        <img src={theme.backgroundImage} alt="Custom background" className="w-full h-32 object-cover rounded-lg" />
-                        <button
-                          onClick={async (e) => {
-                            e.preventDefault()
-                            try {
-                              const filename = theme.backgroundImage?.split('/files/theme/')[1]
-                              if (filename) {
-                                await fetch(`/api/files?filename=${encodeURIComponent(filename)}&folder=theme`, { method: 'DELETE' })
-                              }
-                              setTheme({ ...theme, backgroundStyle: 'gradient', backgroundImage: '' })
-                            } catch (error) {
-                              console.error('Failed to delete image:', error)
-                            }
-                          }}
-                          className="absolute top-2 right-2 p-1 rounded-full bg-red-500 text-white"
-                        >
-                          <XCircle className="h-4 w-4" />
-                        </button>
+                <div className="space-y-4">
+                  <label htmlFor="bg-image-upload" className="cursor-pointer block">
+                    <div className="border-2 border-dashed rounded-xl p-4 transition-colors hover:border-[var(--theme-primary)]"
+                      style={{ borderColor: 'var(--theme-surface)' }}
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        <Upload className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
+                        <span className="text-sm font-medium" style={{ color: 'var(--theme-text)' }}>Upload New Image</span>
                       </div>
-                    ) : (
-                      <>
-                        <Upload className="h-10 w-10 mx-auto mb-3" style={{ color: 'var(--theme-text)', opacity: 0.4 }} />
-                        <p className="text-sm font-medium" style={{ color: 'var(--theme-text)' }}>Click to upload image</p>
-                        <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>PNG, JPG, GIF up to 10MB</p>
-                      </>
-                    )}
+                      <p className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Click to upload image (PNG, JPG, GIF)</p>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      id="bg-image-upload"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0]
+                        if (file) {
+                          try {
+                            const formData = new FormData()
+                            formData.append('file', file)
+                            formData.append('folder', 'theme')
+                            
+                            const res = await fetch('/api/files', {
+                              method: 'POST',
+                              body: formData,
+                            })
+                            const data = await res.json()
+                            if (data.success) {
+                              setUploadedFiles(prev => [data, ...prev])
+                              setTheme({ 
+                                ...theme, 
+                                backgroundStyle: 'custom-image', 
+                                backgroundImage: data.url, 
+                                backgroundVideo: '' 
+                              })
+                            }
+                          } catch (error) {
+                            console.error('Failed to upload image:', error)
+                          }
+                        }
+                      }}
+                    />
                   </label>
+
+                  {/* Uploaded Files Grid */}
+                  {uploadedFiles.length > 0 && (
+                    <div className="mt-4">
+                      <p className="text-sm font-medium mb-2" style={{ color: 'var(--theme-text)' }}>Your Uploads</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {uploadedFiles.filter(f => f.mimeType?.startsWith('image/')).map((file) => (
+                          <div 
+                            key={file._id}
+                            className="relative group cursor-pointer rounded-lg overflow-hidden border-2 transition-all"
+                            style={{ 
+                              borderColor: theme.backgroundImage === file.url ? 'var(--theme-primary)' : 'transparent'
+                            }}
+                            onClick={() => {
+                              setTheme({ 
+                                ...theme, 
+                                backgroundStyle: 'custom-image', 
+                                backgroundImage: file.url, 
+                                backgroundVideo: '' 
+                              })
+                            }}
+                          >
+                            <img src={file.url} alt={file.filename} className="w-full h-20 object-cover" />
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation()
+                                try {
+                                  await fetch(`/api/files?id=${file._id}`, { method: 'DELETE' })
+                                  setUploadedFiles(prev => prev.filter(f => f._id !== file._id))
+                                  if (theme.backgroundImage === file.url) {
+                                    setTheme({ ...theme, backgroundStyle: 'gradient', backgroundImage: '' })
+                                  }
+                                } catch (error) {
+                                  console.error('Failed to delete file:', error)
+                                }
+                              }}
+                              className="absolute top-1 right-1 p-1 rounded-full bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <XCircle className="h-3 w-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
 
@@ -1406,71 +1453,96 @@ export default function AdminTheme() {
                   </div>
                 </div>
 
-                <div className="border-2 border-dashed rounded-xl p-8 text-center transition-colors hover:border-[var(--theme-primary)]"
-                  style={{ borderColor: 'var(--theme-surface)' }}
-                >
-                  <input
-                    type="file"
-                    accept="video/*"
-                    className="hidden"
-                    id="bg-video-upload"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0]
-                      if (file) {
-                        try {
-                          const formData = new FormData()
-                          formData.append('file', file)
-                          formData.append('folder', 'theme')
-                          
-                          const res = await fetch('/api/files', {
-                            method: 'POST',
-                            body: formData,
-                          })
-                          const data = await res.json()
-                          if (data.success) {
-                            setTheme({ 
-                              ...theme, 
-                              backgroundStyle: 'custom-video', 
-                              backgroundVideo: data.url, 
-                              backgroundImage: '' 
-                            })
-                          }
-                        } catch (error) {
-                          console.error('Failed to upload video:', error)
-                        }
-                      }
-                    }}
-                  />
-                  <label htmlFor="bg-video-upload" className="cursor-pointer">
-                    {theme.backgroundStyle === 'custom-video' && theme.backgroundVideo ? (
-                      <div className="relative">
-                        <video src={theme.backgroundVideo} className="w-full h-32 object-cover rounded-lg" autoPlay loop muted playsInline />
-                        <button
-                          onClick={async (e) => {
-                            e.preventDefault()
-                            try {
-                              const filename = theme.backgroundVideo?.split('/files/theme/')[1]
-                              if (filename) {
-                                await fetch(`/api/files?filename=${encodeURIComponent(filename)}&folder=theme`, { method: 'DELETE' })
-                              }
-                              setTheme({ ...theme, backgroundStyle: 'gradient', backgroundVideo: '' })
-                            } catch (error) {
-                              console.error('Failed to delete video:', error)
-                            }
-                          }}
-                          className="absolute top-2 right-2 p-1 rounded-full bg-red-500 text-white"
-                        >
-                          <XCircle className="h-4 w-4" />
-                        </button>
+                <div className="space-y-4">
+                  <label htmlFor="bg-video-upload" className="cursor-pointer block">
+                    <div className="border-2 border-dashed rounded-xl p-4 transition-colors hover:border-[var(--theme-primary)]"
+                      style={{ borderColor: 'var(--theme-surface)' }}
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        <Video className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
+                        <span className="text-sm font-medium" style={{ color: 'var(--theme-text)' }}>Upload New Video</span>
                       </div>
-                    ) : (
-                      <>
-                        <Upload className="h-10 w-10 mx-auto mb-3" style={{ color: 'var(--theme-text)', opacity: 0.4 }} />
-                        <p className="text-sm font-medium" style={{ color: 'var(--theme-text)' }}>Click to upload video</p>
-                        <p className="text-xs mt-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>MP4, WebM up to 50MB</p>
-                      </>
-                    )}
+                      <p className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Click to upload video (MP4, WebM)</p>
+                    </div>
+                    <input
+                      type="file"
+                      accept="video/*"
+                      className="hidden"
+                      id="bg-video-upload"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0]
+                        if (file) {
+                          try {
+                            const formData = new FormData()
+                            formData.append('file', file)
+                            formData.append('folder', 'theme')
+                            
+                            const res = await fetch('/api/files', {
+                              method: 'POST',
+                              body: formData,
+                            })
+                            const data = await res.json()
+                            if (data.success) {
+                              setUploadedFiles(prev => [data, ...prev])
+                              setTheme({ 
+                                ...theme, 
+                                backgroundStyle: 'custom-video', 
+                                backgroundVideo: data.url, 
+                                backgroundImage: '' 
+                              })
+                            }
+                          } catch (error) {
+                            console.error('Failed to upload video:', error)
+                          }
+                        }
+                      }}
+                    />
                   </label>
+
+                  {/* Video Uploads */}
+                  {uploadedFiles.filter(f => f.mimeType?.startsWith('video/')).length > 0 && (
+                    <div className="mt-4">
+                      <p className="text-sm font-medium mb-2" style={{ color: 'var(--theme-text)' }}>Your Videos</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {uploadedFiles.filter(f => f.mimeType?.startsWith('video/')).map((file) => (
+                          <div 
+                            key={file._id}
+                            className="relative group cursor-pointer rounded-lg overflow-hidden border-2 transition-all"
+                            style={{ 
+                              borderColor: theme.backgroundVideo === file.url ? 'var(--theme-primary)' : 'transparent'
+                            }}
+                            onClick={() => {
+                              setTheme({ 
+                                ...theme, 
+                                backgroundStyle: 'custom-video', 
+                                backgroundVideo: file.url, 
+                                backgroundImage: '' 
+                              })
+                            }}
+                          >
+                            <video src={file.url} className="w-full h-20 object-cover" muted />
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation()
+                                try {
+                                  await fetch(`/api/files?id=${file._id}`, { method: 'DELETE' })
+                                  setUploadedFiles(prev => prev.filter(f => f._id !== file._id))
+                                  if (theme.backgroundVideo === file.url) {
+                                    setTheme({ ...theme, backgroundStyle: 'gradient', backgroundVideo: '' })
+                                  }
+                                } catch (error) {
+                                  console.error('Failed to delete file:', error)
+                                }
+                              }}
+                              className="absolute top-1 right-1 p-1 rounded-full bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <XCircle className="h-3 w-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </div>
