@@ -1,4 +1,4 @@
-# DevPort - Prompt History
+# DevPort - Changelog
 
 This file tracks all changes, features, and fixes implemented in the DevPort project.
 
@@ -24,6 +24,14 @@ For detailed specifications, see: `docs/specs.md`
 ### [Unreleased]
 
 #### Features
+- **Theme Background System**: Background styles applied to home and admin pages
+  - Background styles: None, Gradient, Grid, Network, Particles, Space, Retro, Waves, Aurora, Mesh
+  - Custom image upload support
+  - Custom video background support
+  - Created useBackground hook for consistent theme-driven backgrounds
+  - Applied to AnimatedBackground component on home page
+  - Applied to admin layout
+
 - **Theme Animation System**: Complete animation customization in admin panel
   - Card Animation section with hover effects: None, Pop Off, Rattle, Rattle Diagonal, Pulse, Slide Up
   - Card Glow slider (0-100%) for edge glow effect on hover
