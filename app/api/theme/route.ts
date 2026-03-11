@@ -80,10 +80,14 @@ export async function PUT(req: Request) {
 export async function GET() {
   try {
     await connectToDatabase()
-    let theme = await Theme.findOne()
+    
+    // Get the first theme or create a default one
+    let theme = await Theme.findOne().sort({ createdAt: 1 })
 
     console.log("GET /api/theme - found theme:", !!theme)
+    console.log("GET /api/theme - theme _id:", theme?._id?.toString())
     console.log("GET /api/theme - backgroundImage:", theme?.backgroundImage)
+    console.log("GET /api/theme - backgroundVideo:", theme?.backgroundVideo)
     console.log("GET /api/theme - backgroundStyle:", theme?.backgroundStyle)
 
     if (!theme) {
