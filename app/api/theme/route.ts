@@ -28,7 +28,7 @@ export async function PUT(req: Request) {
         "fontHeading", "fontBody", "fontSize", "borderRadius", "borderWidth",
         "iconStyle", "layout", "animations", "darkMode", "logo", "favicon",
         "pageStyle", "componentStyle", "cardStyle", "buttonStyle", "inputStyle", "shadowIntensity", "borderStyle",
-        "backgroundStyle",
+        "backgroundStyle", "backgroundImage", "backgroundVideo",
         "animationStyle", "textAnimationStyle", "cardGlow", "textGlow",
         "customPalettes", "customLayouts", "customStyles"
       ]
