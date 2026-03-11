@@ -1335,9 +1335,9 @@ export default function AdminTheme() {
                         try {
                           const formData = new FormData()
                           formData.append('file', file)
-                          formData.append('type', 'image')
+                          formData.append('folder', 'theme')
                           
-                          const res = await fetch('/api/theme/upload', {
+                          const res = await fetch('/api/files', {
                             method: 'POST',
                             body: formData,
                           })
@@ -1345,8 +1345,8 @@ export default function AdminTheme() {
                           if (data.success) {
                             setTheme({ 
                               ...theme, 
-                              backgroundStyle: data.backgroundStyle, 
-                              backgroundImage: data.backgroundImage, 
+                              backgroundStyle: 'custom-image', 
+                              backgroundImage: data.url, 
                               backgroundVideo: '' 
                             })
                           }
@@ -1364,7 +1364,10 @@ export default function AdminTheme() {
                           onClick={async (e) => {
                             e.preventDefault()
                             try {
-                              await fetch('/api/theme/upload?type=image', { method: 'DELETE' })
+                              const filename = theme.backgroundImage?.split('/files/theme/')[1]
+                              if (filename) {
+                                await fetch(`/api/files?filename=${encodeURIComponent(filename)}&folder=theme`, { method: 'DELETE' })
+                              }
                               setTheme({ ...theme, backgroundStyle: 'gradient', backgroundImage: '' })
                             } catch (error) {
                               console.error('Failed to delete image:', error)
@@ -1417,9 +1420,9 @@ export default function AdminTheme() {
                         try {
                           const formData = new FormData()
                           formData.append('file', file)
-                          formData.append('type', 'video')
+                          formData.append('folder', 'theme')
                           
-                          const res = await fetch('/api/theme/upload', {
+                          const res = await fetch('/api/files', {
                             method: 'POST',
                             body: formData,
                           })
@@ -1427,8 +1430,8 @@ export default function AdminTheme() {
                           if (data.success) {
                             setTheme({ 
                               ...theme, 
-                              backgroundStyle: data.backgroundStyle, 
-                              backgroundVideo: data.backgroundVideo, 
+                              backgroundStyle: 'custom-video', 
+                              backgroundVideo: data.url, 
                               backgroundImage: '' 
                             })
                           }
@@ -1446,7 +1449,10 @@ export default function AdminTheme() {
                           onClick={async (e) => {
                             e.preventDefault()
                             try {
-                              await fetch('/api/theme/upload?type=video', { method: 'DELETE' })
+                              const filename = theme.backgroundVideo?.split('/files/theme/')[1]
+                              if (filename) {
+                                await fetch(`/api/files?filename=${encodeURIComponent(filename)}&folder=theme`, { method: 'DELETE' })
+                              }
                               setTheme({ ...theme, backgroundStyle: 'gradient', backgroundVideo: '' })
                             } catch (error) {
                               console.error('Failed to delete video:', error)
