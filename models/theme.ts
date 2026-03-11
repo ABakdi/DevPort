@@ -135,6 +135,36 @@ const ThemeSchema = new Schema({
     type: String,
     default: "solid",
   },
+  // Background settings
+  backgroundStyle: {
+    type: String,
+    default: "gradient",
+  },
+  backgroundImage: {
+    type: String,
+    default: "",
+  },
+  backgroundVideo: {
+    type: String,
+    default: "",
+  },
+  // Animation settings
+  animationStyle: {
+    type: String,
+    default: "rattle",
+  },
+  textAnimationStyle: {
+    type: String,
+    default: "none",
+  },
+  cardGlow: {
+    type: Number,
+    default: 0,
+  },
+  textGlow: {
+    type: Number,
+    default: 0,
+  },
   customPalettes: {
     type: [{
       name: { type: String, required: true },

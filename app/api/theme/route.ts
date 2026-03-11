@@ -36,6 +36,13 @@ const defaultTheme = {
   inputStyle: "default",
   shadowIntensity: "medium",
   borderStyle: "solid",
+  backgroundStyle: "gradient",
+  backgroundImage: "",
+  backgroundVideo: "",
+  animationStyle: "rattle",
+  textAnimationStyle: "none",
+  cardGlow: 0,
+  textGlow: 0,
   customPalettes: [],
   customLayouts: [],
   customStyles: [],
@@ -80,6 +87,8 @@ export async function PUT(req: Request) {
         "fontHeading", "fontBody", "fontSize", "borderRadius", "borderWidth",
         "iconStyle", "layout", "animations", "darkMode", "logo", "favicon",
         "pageStyle", "componentStyle", "cardStyle", "buttonStyle", "inputStyle", "shadowIntensity", "borderStyle",
+        "backgroundStyle", "backgroundImage", "backgroundVideo",
+        "animationStyle", "textAnimationStyle", "cardGlow", "textGlow",
         "customPalettes", "customLayouts", "customStyles"
       ]
       

@@ -132,6 +132,8 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
             borderStyle: data.borderStyle || "medium",
             animationStyle: data.animationStyle || "rattle",
             backgroundStyle: data.backgroundStyle || "gradient",
+            backgroundImage: data.backgroundImage || "",
+            backgroundVideo: data.backgroundVideo || "",
             cardGlow: data.cardGlow || 0,
             textGlow: data.textGlow || 0,
           }

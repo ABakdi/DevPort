@@ -1329,14 +1329,30 @@ export default function AdminTheme() {
                     accept="image/*"
                     className="hidden"
                     id="bg-image-upload"
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       const file = e.target.files?.[0]
                       if (file) {
-                        const reader = new FileReader()
-                        reader.onloadend = () => {
-                          setTheme({ ...theme, backgroundStyle: 'custom-image', backgroundImage: reader.result as string, backgroundVideo: '' })
+                        try {
+                          const formData = new FormData()
+                          formData.append('file', file)
+                          formData.append('type', 'image')
+                          
+                          const res = await fetch('/api/theme/upload', {
+                            method: 'POST',
+                            body: formData,
+                          })
+                          const data = await res.json()
+                          if (data.success) {
+                            setTheme({ 
+                              ...theme, 
+                              backgroundStyle: data.backgroundStyle, 
+                              backgroundImage: data.backgroundImage, 
+                              backgroundVideo: '' 
+                            })
+                          }
+                        } catch (error) {
+                          console.error('Failed to upload image:', error)
                         }
-                        reader.readAsDataURL(file)
                       }
                     }}
                   />
@@ -1345,9 +1361,14 @@ export default function AdminTheme() {
                       <div className="relative">
                         <img src={theme.backgroundImage} alt="Custom background" className="w-full h-32 object-cover rounded-lg" />
                         <button
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.preventDefault()
-                            setTheme({ ...theme, backgroundStyle: 'none', backgroundImage: '' })
+                            try {
+                              await fetch('/api/theme/upload?type=image', { method: 'DELETE' })
+                              setTheme({ ...theme, backgroundStyle: 'gradient', backgroundImage: '' })
+                            } catch (error) {
+                              console.error('Failed to delete image:', error)
+                            }
                           }}
                           className="absolute top-2 right-2 p-1 rounded-full bg-red-500 text-white"
                         >
@@ -1390,14 +1411,30 @@ export default function AdminTheme() {
                     accept="video/*"
                     className="hidden"
                     id="bg-video-upload"
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       const file = e.target.files?.[0]
                       if (file) {
-                        const reader = new FileReader()
-                        reader.onloadend = () => {
-                          setTheme({ ...theme, backgroundStyle: 'custom-video', backgroundVideo: reader.result as string, backgroundImage: '' })
+                        try {
+                          const formData = new FormData()
+                          formData.append('file', file)
+                          formData.append('type', 'video')
+                          
+                          const res = await fetch('/api/theme/upload', {
+                            method: 'POST',
+                            body: formData,
+                          })
+                          const data = await res.json()
+                          if (data.success) {
+                            setTheme({ 
+                              ...theme, 
+                              backgroundStyle: data.backgroundStyle, 
+                              backgroundVideo: data.backgroundVideo, 
+                              backgroundImage: '' 
+                            })
+                          }
+                        } catch (error) {
+                          console.error('Failed to upload video:', error)
                         }
-                        reader.readAsDataURL(file)
                       }
                     }}
                   />
@@ -1406,9 +1443,14 @@ export default function AdminTheme() {
                       <div className="relative">
                         <video src={theme.backgroundVideo} className="w-full h-32 object-cover rounded-lg" autoPlay loop muted playsInline />
                         <button
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.preventDefault()
-                            setTheme({ ...theme, backgroundStyle: 'none', backgroundVideo: '' })
+                            try {
+                              await fetch('/api/theme/upload?type=video', { method: 'DELETE' })
+                              setTheme({ ...theme, backgroundStyle: 'gradient', backgroundVideo: '' })
+                            } catch (error) {
+                              console.error('Failed to delete video:', error)
+                            }
                           }}
                           className="absolute top-2 right-2 p-1 rounded-full bg-red-500 text-white"
                         >
