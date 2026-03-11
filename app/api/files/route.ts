@@ -40,8 +40,8 @@ export async function POST(req: Request) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    const { db } = await connectToDatabase()
-    const { id, url } = await uploadToGridFS(db, buffer, file.name, file.type)
+    const connection = await connectToDatabase()
+    const { id, url } = await uploadToGridFS(connection, buffer, file.name, file.type)
 
     const uploadedFile = await UploadedFile.create({
       filename: file.name,
@@ -115,8 +115,8 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "File not found" }, { status: 404 })
     }
 
-    const { db } = await connectToDatabase()
-    await deleteFromGridFS(db, file.gridFSId as mongoose.Types.ObjectId)
+    const connection = await connectToDatabase()
+    await deleteFromGridFS(connection, file.gridFSId as mongoose.Types.ObjectId)
     
     await UploadedFile.findByIdAndDelete(fileId)
 

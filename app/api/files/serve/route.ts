@@ -14,8 +14,8 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Missing file ID" }, { status: 400 })
     }
 
-    const { db } = await connectToDatabase()
-    const bucket = getGridFSBucket(db)
+    const connection = await connectToDatabase()
+    const bucket = getGridFSBucket(connection)
 
     if (!bucket) {
       return NextResponse.json({ error: "Storage not available" }, { status: 500 })

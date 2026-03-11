@@ -42,9 +42,10 @@ export const UploadedFile = models.UploadedFile || model("UploadedFile", Uploade
 
 let gridFSBucket: GridFSBucket | null = null
 
-export function getGridFSBucket(db: mongoose.Connection) {
-  if (!gridFSBucket && db.db) {
-    gridFSBucket = new GridFSBucket(db.db as any, {
+export function getGridFSBucket(connection: mongoose.Mongoose | mongoose.Connection) {
+  const db = (connection as any).db || (connection as any).connection?.db
+  if (!gridFSBucket && db) {
+    gridFSBucket = new GridFSBucket(db, {
       bucketName: "files",
     })
   }
@@ -52,12 +53,12 @@ export function getGridFSBucket(db: mongoose.Connection) {
 }
 
 export async function uploadToGridFS(
-  db: mongoose.Connection,
+  connection: mongoose.Mongoose | mongoose.Connection,
   buffer: Buffer,
   filename: string,
   mimeType: string
 ): Promise<{ id: mongoose.Types.ObjectId; url: string }> {
-  const bucket = getGridFSBucket(db)
+  const bucket = getGridFSBucket(connection)
   
   if (!bucket) {
     throw new Error("GridFS bucket not initialized")
@@ -86,10 +87,10 @@ export async function uploadToGridFS(
 }
 
 export async function deleteFromGridFS(
-  db: mongoose.Connection,
+  connection: mongoose.Mongoose | mongoose.Connection,
   fileId: mongoose.Types.ObjectId
 ): Promise<void> {
-  const bucket = getGridFSBucket(db)
+  const bucket = getGridFSBucket(connection)
   if (bucket) {
     await bucket.delete(fileId as any)
   }
