@@ -10,11 +10,12 @@ export async function PUT(req: Request) {
   try {
     const session = await getServerSession(authOptions)
     
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    console.log("PUT /api/theme - session:", session ? "authenticated" : "not authenticated")
 
     const body = await req.json()
+    console.log("PUT /api/theme - backgroundImage:", body.backgroundImage)
+    console.log("PUT /api/theme - backgroundStyle:", body.backgroundStyle)
+
     const { backgroundStyle, backgroundImage, backgroundVideo, ...rest } = body
 
     await connectToDatabase()
@@ -78,6 +79,10 @@ export async function GET() {
   try {
     await connectToDatabase()
     let theme = await Theme.findOne()
+
+    console.log("GET /api/theme - found theme:", !!theme)
+    console.log("GET /api/theme - backgroundImage:", theme?.backgroundImage)
+    console.log("GET /api/theme - backgroundStyle:", theme?.backgroundStyle)
 
     if (!theme) {
       theme = await Theme.create({

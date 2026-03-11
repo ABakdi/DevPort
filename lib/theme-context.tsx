@@ -348,11 +348,13 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
     
     // Save to API
     try {
-      await fetch('/api/theme', {
+      const res = await fetch('/api/theme', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newTheme),
       })
+      const data = await res.json()
+      console.log("Save theme response:", data)
     } catch (e) {
       console.error('Failed to save theme:', e)
     }
