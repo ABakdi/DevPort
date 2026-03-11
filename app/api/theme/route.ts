@@ -10,11 +10,11 @@ export async function PUT(req: Request) {
   try {
     const session = await getServerSession(authOptions)
     
-    console.log("PUT /api/theme - session:", session ? "authenticated" : "not authenticated")
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
 
     const body = await req.json()
-    console.log("PUT /api/theme - backgroundImage:", body.backgroundImage)
-    console.log("PUT /api/theme - backgroundStyle:", body.backgroundStyle)
 
     const { backgroundStyle, backgroundImage, backgroundVideo, ...rest } = body
 
@@ -56,7 +56,7 @@ export async function PUT(req: Request) {
       theme = await Theme.findByIdAndUpdate(
         theme._id,
         { ...filteredBody, updatedAt: new Date() },
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
       )
       console.log("Updated theme:", theme?.backgroundStyle, theme?.backgroundImage)
     } else {
@@ -83,12 +83,6 @@ export async function GET() {
     
     // Get the first theme or create a default one
     let theme = await Theme.findOne().sort({ createdAt: 1 })
-
-    console.log("GET /api/theme - found theme:", !!theme)
-    console.log("GET /api/theme - theme _id:", theme?._id?.toString())
-    console.log("GET /api/theme - backgroundImage:", theme?.backgroundImage)
-    console.log("GET /api/theme - backgroundVideo:", theme?.backgroundVideo)
-    console.log("GET /api/theme - backgroundStyle:", theme?.backgroundStyle)
 
     if (!theme) {
       theme = await Theme.create({
@@ -126,11 +120,6 @@ export async function GET() {
     }
 
     const themeObj = JSON.parse(JSON.stringify(theme))
-
-    console.log("Returning themeObj:", {
-      backgroundStyle: themeObj.backgroundStyle,
-      backgroundImage: themeObj.backgroundImage ? "has value" : "empty",
-    })
 
     return NextResponse.json(themeObj, {
       headers: {

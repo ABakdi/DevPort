@@ -94,12 +94,6 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
         const res = await fetch(`/api/theme?t=${Date.now()}`)
         const data = await res.json()
         
-        console.log("API theme data:", {
-          backgroundStyle: data.backgroundStyle,
-          backgroundImage: data.backgroundImage,
-          backgroundVideo: data.backgroundVideo
-        })
-        
         if (data && data.primary) {
           const loadedTheme: ThemeConfig = {
             primary: data.primary,
@@ -346,22 +340,12 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
     setTheme(newTheme)
     localStorage.setItem('theme-current', JSON.stringify(newTheme))
     
-    // Save to API and wait for confirmation
+    // Save to API
     try {
-      const res = await fetch('/api/theme', {
+      await fetch('/api/theme', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newTheme),
-      })
-      const data = await res.json()
-      console.log("Save theme response:", data)
-      
-      // After save, verify it was saved correctly
-      const verifyRes = await fetch(`/api/theme?t=${Date.now()}`)
-      const verifyData = await verifyRes.json()
-      console.log("Verify after save:", {
-        backgroundStyle: verifyData.backgroundStyle,
-        backgroundImage: verifyData.backgroundImage ? "has value" : "empty"
       })
     } catch (e) {
       console.error('Failed to save theme:', e)
