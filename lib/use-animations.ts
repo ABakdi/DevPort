@@ -12,8 +12,9 @@ export function useBackground() {
 
   const getBackgroundStyles = (): CSSProperties => {
     if (backgroundImage) {
+      const cacheBuster = `?t=${Date.now()}`
       return {
-        backgroundImage: `url(${backgroundImage})`,
+        backgroundImage: `url(${backgroundImage}${backgroundImage.includes('?') ? '&' : '?'}t=${Date.now()})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

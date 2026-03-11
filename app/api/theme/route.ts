@@ -52,11 +52,13 @@ export async function PUT(req: Request) {
         filteredBody.backgroundVideo = backgroundVideo
       }
       
+      console.log("Updating theme with:", filteredBody)
       theme = await Theme.findByIdAndUpdate(
         theme._id,
         { ...filteredBody, updatedAt: new Date() },
         { new: true, runValidators: true }
       )
+      console.log("Updated theme:", theme?.backgroundStyle, theme?.backgroundImage)
     } else {
       theme = await Theme.create({
         backgroundStyle: backgroundStyle || "gradient",
@@ -120,6 +122,11 @@ export async function GET() {
     }
 
     const themeObj = JSON.parse(JSON.stringify(theme))
+
+    console.log("Returning themeObj:", {
+      backgroundStyle: themeObj.backgroundStyle,
+      backgroundImage: themeObj.backgroundImage ? "has value" : "empty",
+    })
 
     return NextResponse.json(themeObj, {
       headers: {
