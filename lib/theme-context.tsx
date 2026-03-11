@@ -91,15 +91,14 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const loadTheme = async () => {
       try {
-        const stored = localStorage.getItem('theme-current')
-        let parsedStored = null
-        
-        if (stored) {
-          parsedStored = JSON.parse(stored)
-        }
-
         const res = await fetch('/api/theme')
         const data = await res.json()
+        
+        console.log("API theme data:", {
+          backgroundStyle: data.backgroundStyle,
+          backgroundImage: data.backgroundImage,
+          backgroundVideo: data.backgroundVideo
+        })
         
         if (data && data.primary) {
           const loadedTheme: ThemeConfig = {
@@ -136,24 +135,9 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
             cardGlow: data.cardGlow || 0,
             textGlow: data.textGlow || 0,
           }
-
-          let mergedTheme: ThemeConfig
           
-          if (parsedStored) {
-            mergedTheme = {
-              ...loadedTheme,
-              backgroundImage: data.backgroundImage || parsedStored.backgroundImage || "",
-              backgroundVideo: data.backgroundVideo || parsedStored.backgroundVideo || "",
-              backgroundStyle: data.backgroundImage ? 'custom-image' : data.backgroundVideo ? 'custom-video' : parsedStored.backgroundStyle || loadedTheme.backgroundStyle,
-            }
-          } else {
-            mergedTheme = loadedTheme
-          }
-          
-          setTheme(mergedTheme)
-          localStorage.setItem('theme-current', JSON.stringify(mergedTheme))
-        } else if (parsedStored) {
-          setTheme(parsedStored)
+          setTheme(loadedTheme)
+          localStorage.setItem('theme-current', JSON.stringify(loadedTheme))
         }
       } catch (e) {
         console.error('Failed to load theme:', e)
