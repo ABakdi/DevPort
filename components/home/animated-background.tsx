@@ -16,6 +16,8 @@ export function AnimatedBackground({ children }: AnimatedBackgroundProps) {
   const clickIdRef = useRef(0)
   const { backgroundStyles, backgroundStyle, backgroundImage, backgroundVideo } = useBackground()
 
+  const showAnimatedEffects = backgroundStyle === "gradient" || backgroundStyle === "none" || !backgroundStyle
+
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY)
@@ -82,52 +84,66 @@ export function AnimatedBackground({ children }: AnimatedBackgroundProps) {
           style={{ zIndex: -1 }}
         />
       )}
-      {/* Gradient orbs that follow mouse and scroll */}
-      <div 
-        className="fixed inset-0 pointer-events-none transition-transform duration-1000 ease-out"
-        style={{
-          transform: `translate(${mousePosition.x * 30}px, ${scrollY * 0.1 + mousePosition.y * 30}px)`,
-        }}
-      >
-        <div 
-          className="absolute top-1/4 -left-32 w-96 h-96 rounded-full opacity-30 blur-3xl"
-          style={{
-            background: 'radial-gradient(circle, var(--theme-primary) 0%, transparent 70%)',
-            transform: isHovering ? 'scale(1.2)' : 'scale(1)',
-            transition: 'transform 0.5s ease-out',
-          }}
-        />
-        <div 
-          className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full opacity-25 blur-3xl"
-          style={{
-            background: 'radial-gradient(circle, var(--theme-secondary) 0%, transparent 70%)',
-            transform: isHovering ? 'scale(1.3)' : 'scale(1)',
-            transition: 'transform 0.7s ease-out',
-          }}
-        />
-        <div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-15 blur-3xl"
-          style={{
-            background: 'radial-gradient(circle, var(--theme-accent) 0%, transparent 70%)',
-            transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * -20 + scrollY * 0.05}px)`,
-          }}
-        />
-      </div>
+      {/* Animated effects - only show for default/gradient backgrounds */}
+      {showAnimatedEffects && (
+        <>
+          {/* Gradient orbs that follow mouse and scroll */}
+          <div 
+            className="fixed inset-0 pointer-events-none transition-transform duration-1000 ease-out"
+            style={{
+              transform: `translate(${mousePosition.x * 30}px, ${scrollY * 0.1 + mousePosition.y * 30}px)`,
+            }}
+          >
+            <div 
+              className="absolute top-1/4 -left-32 w-96 h-96 rounded-full opacity-30 blur-3xl"
+              style={{
+                background: 'radial-gradient(circle, var(--theme-primary) 0%, transparent 70%)',
+                transform: isHovering ? 'scale(1.2)' : 'scale(1)',
+                transition: 'transform 0.5s ease-out',
+              }}
+            />
+            <div 
+              className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full opacity-25 blur-3xl"
+              style={{
+                background: 'radial-gradient(circle, var(--theme-secondary) 0%, transparent 70%)',
+                transform: isHovering ? 'scale(1.3)' : 'scale(1)',
+                transition: 'transform 0.7s ease-out',
+              }}
+            />
+            <div 
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-15 blur-3xl"
+              style={{
+                background: 'radial-gradient(circle, var(--theme-accent) 0%, transparent 70%)',
+                transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * -20 + scrollY * 0.05}px)`,
+              }}
+            />
+          </div>
 
-      {/* Grid pattern overlay */}
-      <div 
-        className="fixed inset-0 pointer-events-none opacity-5"
-        style={{
-          backgroundImage: `
-            linear-gradient(var(--theme-text) 1px, transparent 1px),
-            linear-gradient(90deg, var(--theme-text) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
-          transform: `perspective(500px) rotateX(60deg) translateY(-${scrollY * 0.2}px) scale(2)`,
-        }}
-      />
+          {/* Grid pattern overlay */}
+          <div 
+            className="fixed inset-0 pointer-events-none opacity-5"
+            style={{
+              backgroundImage: `
+                linear-gradient(var(--theme-text) 1px, transparent 1px),
+                linear-gradient(90deg, var(--theme-text) 1px, transparent 1px)
+              `,
+              backgroundSize: '50px 50px',
+              transform: `perspective(500px) rotateX(60deg) translateY(-${scrollY * 0.2}px) scale(2)`,
+            }}
+          />
 
-      {/* Click ripple effects */}
+          {/* Scanline effect */}
+          <div 
+            className="fixed inset-0 pointer-events-none opacity-3"
+            style={{
+              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, var(--theme-text) 2px, var(--theme-text) 4px)',
+              animation: 'scanline 8s linear infinite',
+            }}
+          />
+        </>
+      )}
+
+      {/* Click ripple effects - always show */}
       {clicks.map((click) => (
         <div
           key={click.id}
@@ -143,15 +159,6 @@ export function AnimatedBackground({ children }: AnimatedBackgroundProps) {
           }}
         />
       ))}
-
-      {/* Scanline effect */}
-      <div 
-        className="fixed inset-0 pointer-events-none opacity-3"
-        style={{
-          background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, var(--theme-text) 2px, var(--theme-text) 4px)',
-          animation: 'scanline 8s linear infinite',
-        }}
-      />
 
       {/* Content */}
       <div className="relative z-10">
