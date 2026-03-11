@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { AdminSidebar } from "@/components/admin/sidebar"
+import { useBackground } from "@/lib/use-animations"
 
 export default function AdminLayout({
   children,
@@ -9,12 +10,25 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   const [collapsed, setCollapsed] = useState(false)
+  const { backgroundStyles, backgroundVideo } = useBackground()
 
   return (
     <div 
       className="min-h-screen theme-component admin-bg"
-      style={{ backgroundColor: 'var(--theme-background)' }}
+      style={{ ...backgroundStyles }}
     >
+      {/* Video background */}
+      {backgroundVideo && (
+        <video
+          src={backgroundVideo}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="fixed inset-0 w-full h-full object-cover pointer-events-none"
+          style={{ zIndex: -1 }}
+        />
+      )}
       <AdminSidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <main
         className={`transition-all duration-300 ${
