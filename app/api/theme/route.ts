@@ -52,13 +52,15 @@ export async function PUT(req: Request) {
         filteredBody.backgroundVideo = backgroundVideo
       }
       
-      console.log("Updating theme with:", filteredBody)
+      console.log("PUT - updating theme with _id:", theme._id.toString())
+      console.log("PUT - backgroundImage being saved:", filteredBody.backgroundImage)
+      
       theme = await Theme.findByIdAndUpdate(
         theme._id,
         { ...filteredBody, updatedAt: new Date() },
         { returnDocument: 'after', runValidators: true }
       )
-      console.log("Updated theme:", theme?.backgroundStyle, theme?.backgroundImage)
+      console.log("PUT - after update, theme has:", theme?.backgroundStyle, theme?.backgroundImage ? "image" : "no image")
     } else {
       theme = await Theme.create({
         backgroundStyle: backgroundStyle || "gradient",
@@ -81,8 +83,16 @@ export async function GET() {
   try {
     await connectToDatabase()
     
+    // Debug: count total themes
+    const count = await Theme.countDocuments()
+    console.log("Total themes in DB:", count)
+    
     // Get the first theme or create a default one
     let theme = await Theme.findOne().sort({ createdAt: 1 })
+
+    console.log("GET - returning theme with _id:", theme?._id?.toString())
+    console.log("GET - backgroundStyle:", theme?.backgroundStyle)
+    console.log("GET - backgroundImage:", theme?.backgroundImage ? "has value" : "empty")
 
     if (!theme) {
       theme = await Theme.create({
