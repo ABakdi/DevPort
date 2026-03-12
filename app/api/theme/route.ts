@@ -21,6 +21,10 @@ export async function PUT(req: Request) {
     await connectToDatabase()
     let theme = await Theme.findOne()
 
+    console.log("=== PUT /api/theme ===")
+    console.log("PUT - body backgroundImage:", body.backgroundImage)
+    console.log("PUT - body backgroundStyle:", body.backgroundStyle)
+    
     if (theme) {
       const allowedFields = [
         "name", "primary", "secondary", "accent", "background", "surface", "text",
@@ -85,14 +89,14 @@ export async function GET() {
     
     // Debug: count total themes
     const count = await Theme.countDocuments()
-    console.log("Total themes in DB:", count)
+    console.log("=== GET /api/theme === Total themes in DB:", count)
     
-    // Get the first theme or create a default one
+    // Get ALL themes to see what's there
+    const allThemes = await Theme.find({}).sort({ createdAt: 1 }).limit(5)
+    console.log("All themes:", allThemes.map(t => ({ _id: t._id.toString(), backgroundImage: t.backgroundImage ? "has" : "empty", backgroundStyle: t.backgroundStyle })))
+    
+    // Get the first theme
     let theme = await Theme.findOne().sort({ createdAt: 1 })
-
-    console.log("GET - returning theme with _id:", theme?._id?.toString())
-    console.log("GET - backgroundStyle:", theme?.backgroundStyle)
-    console.log("GET - backgroundImage:", theme?.backgroundImage ? "has value" : "empty")
 
     if (!theme) {
       theme = await Theme.create({
