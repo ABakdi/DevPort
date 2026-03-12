@@ -16,7 +16,7 @@ export async function PUT(req: Request) {
 
     const body = await req.json()
 
-    const { backgroundStyle, backgroundImage, backgroundVideo, ...rest } = body
+    const { backgroundStyle, backgroundImage, backgroundVideo, animationStyle, textAnimationStyle, cardGlow, textGlow, ...rest } = body
 
     await connectToDatabase()
     let theme = await Theme.findOne()
@@ -24,40 +24,25 @@ export async function PUT(req: Request) {
     console.log("=== PUT /api/theme ===")
     console.log("PUT - body backgroundImage:", body.backgroundImage)
     console.log("PUT - body backgroundStyle:", body.backgroundStyle)
+    console.log("PUT - body animationStyle:", body.animationStyle)
+    console.log("PUT - body cardGlow:", body.cardGlow)
     
     if (theme) {
-      const allowedFields = [
-        "name", "primary", "secondary", "accent", "background", "surface", "text",
-        "lightPrimary", "lightSecondary", "lightAccent", "lightBackground", "lightSurface", "lightText",
-        "fontHeading", "fontBody", "fontSize", "borderRadius", "borderWidth",
-        "iconStyle", "layout", "animations", "darkMode", "logo", "favicon",
-        "pageStyle", "componentStyle", "cardStyle", "buttonStyle", "inputStyle", "shadowIntensity", "borderStyle",
-        "backgroundStyle", "backgroundImage", "backgroundVideo",
-        "animationStyle", "textAnimationStyle", "cardGlow", "textGlow",
-        "customPalettes", "customLayouts", "customStyles"
-      ]
-      
-      const filteredBody: Record<string, unknown> = {}
-      for (const key of allowedFields) {
-        if (rest[key] !== undefined) {
-          filteredBody[key] = rest[key]
-        }
-      }
+      const filteredBody: Record<string, unknown> = { ...rest }
 
-      if (backgroundStyle) {
-        filteredBody.backgroundStyle = backgroundStyle
-      }
-
-      if (backgroundImage !== undefined) {
-        filteredBody.backgroundImage = backgroundImage
-      }
-
-      if (backgroundVideo !== undefined) {
-        filteredBody.backgroundVideo = backgroundVideo
-      }
+      // Add extracted fields
+      if (backgroundStyle !== undefined) filteredBody.backgroundStyle = backgroundStyle
+      if (backgroundImage !== undefined) filteredBody.backgroundImage = backgroundImage
+      if (backgroundVideo !== undefined) filteredBody.backgroundVideo = backgroundVideo
+      if (animationStyle !== undefined) filteredBody.animationStyle = animationStyle
+      if (textAnimationStyle !== undefined) filteredBody.textAnimationStyle = textAnimationStyle
+      if (cardGlow !== undefined) filteredBody.cardGlow = cardGlow
+      if (textGlow !== undefined) filteredBody.textGlow = textGlow
       
       console.log("PUT - updating theme with _id:", theme._id.toString())
       console.log("PUT - backgroundImage being saved:", filteredBody.backgroundImage)
+      console.log("PUT - animationStyle being saved:", filteredBody.animationStyle)
+      console.log("PUT - full filteredBody:", filteredBody)
       
       theme = await Theme.findByIdAndUpdate(
         theme._id,
@@ -70,6 +55,10 @@ export async function PUT(req: Request) {
         backgroundStyle: backgroundStyle || "gradient",
         backgroundImage: backgroundImage || "",
         backgroundVideo: backgroundVideo || "",
+        animationStyle: animationStyle || "rattle",
+        textAnimationStyle: textAnimationStyle || "none",
+        cardGlow: cardGlow || 0,
+        textGlow: textGlow || 0,
         ...rest,
         updatedAt: new Date()
       })
