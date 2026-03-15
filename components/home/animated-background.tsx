@@ -14,9 +14,10 @@ export function AnimatedBackground({ children }: AnimatedBackgroundProps) {
   const [isHovering, setIsHovering] = useState(false)
   const [clicks, setClicks] = useState<{ x: number; y: number; id: number }[]>([])
   const clickIdRef = useRef(0)
-  const { backgroundStyles, backgroundStyle, backgroundImage, backgroundVideo } = useBackground()
+  const { backgroundStyles, backgroundStyle, backgroundImage, backgroundVideo, loading } = useBackground()
 
-  const showAnimatedEffects = backgroundStyle === "gradient" || backgroundStyle === "none" || !backgroundStyle
+  // Don't show animated effects while loading - wait for theme to load from DB
+  const showAnimatedEffects = !loading && (backgroundStyle === "gradient" || backgroundStyle === "none" || !backgroundStyle)
 
   useEffect(() => {
     const handleScroll = () => {

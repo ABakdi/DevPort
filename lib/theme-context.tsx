@@ -85,23 +85,49 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeContextProvider({ children }: { children: ReactNode }) {
+  console.log("ThemeContextProvider - RENDERED")
   const [theme, setTheme] = useState<ThemeConfig>(defaultTheme)
   const [loading, setLoading] = useState(true)
+  
+  // Test useEffect
+  useEffect(() => {
+    console.log("ThemeContextProvider - SIMPLE useEffect fired!")
+  }, [])
+
+  const fontNameToVariable: Record<string, string> = {
+    'Inter': 'var(--font-inter)',
+    'Poppins': 'var(--font-poppins)',
+    'Outfit': 'var(--font-outfit)',
+    'Sora': 'var(--font-sora)',
+    'Plus Jakarta Sans': 'var(--font-plus-jakarta-sans)',
+    'Manrope': 'var(--font-manrope)',
+    'JetBrains Mono': 'var(--font-jetbrains-mono)',
+    'Fira Code': 'var(--font-fira-code)',
+    'Source Code Pro': 'var(--font-source-code-pro)',
+    'Space Mono': 'var(--font-space-mono)',
+    'IBM Plex Mono': 'var(--font-ibm-plex-mono)',
+    'Playfair Display': 'var(--font-playfair-display)',
+    'Merriweather': 'var(--font-merriweather)',
+    'Lora': 'var(--font-lora)',
+  }
 
   useEffect(() => {
+    console.log("ThemeContext - loadTheme useEffect running")
     const loadTheme = async () => {
       try {
         const res = await fetch(`/api/theme?t=${Date.now()}`)
         const data = await res.json()
         
-        if (data && data.primary) {
+        console.log("ThemeContext - loaded theme data:", { fontHeading: data.fontHeading, fontBody: data.fontBody, fontSize: data.fontSize })
+        
+        if (data) {
           const loadedTheme: ThemeConfig = {
-            primary: data.primary,
-            secondary: data.secondary,
-            accent: data.accent,
-            background: data.background,
-            surface: data.surface,
-            text: data.text,
+            primary: data.primary || "#00E5FF",
+            secondary: data.secondary || "#8B5CF6",
+            accent: data.accent || "#F59E0B",
+            background: data.background || "#0D1117",
+            surface: data.surface || "#1F2937",
+            text: data.text || "#ffffff",
             lightPrimary: data.lightPrimary,
             lightSecondary: data.lightSecondary,
             lightAccent: data.lightAccent,
@@ -239,8 +265,15 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
       root.style.setProperty('--theme-background', background)
       root.style.setProperty('--theme-surface', surface)
       root.style.setProperty('--theme-text', text)
-      root.style.setProperty('--theme-font-heading', themeConfig.fontHeading || 'Inter')
-      root.style.setProperty('--theme-font-body', themeConfig.fontBody || 'Inter')
+      
+      // Apply fonts
+      const fontHeadingVar = fontNameToVariable[themeConfig.fontHeading || 'Inter'] || 'var(--font-inter)'
+      const fontBodyVar = fontNameToVariable[themeConfig.fontBody || 'Inter'] || 'var(--font-inter)'
+      console.log("applyThemeToDocument - fontHeading:", themeConfig.fontHeading, "->", fontHeadingVar)
+      console.log("applyThemeToDocument - fontBody:", themeConfig.fontBody, "->", fontBodyVar)
+      
+      root.style.setProperty('--theme-font-heading', fontHeadingVar)
+      root.style.setProperty('--theme-font-body', fontBodyVar)
       root.style.setProperty('--theme-font-size', `${themeConfig.fontSize || 16}px`)
       root.style.setProperty('--theme-border-radius', themeConfig.borderRadius || '0.75rem')
       root.style.setProperty('--theme-icon-style', themeConfig.iconStyle || 'rounded')
@@ -306,6 +339,7 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
     }
 
     if (!loading && theme) {
+      console.log("ThemeContext - applyThemeToDocument called with theme:", JSON.stringify({ fontHeading: theme.fontHeading, fontBody: theme.fontBody, fontSize: theme.fontSize }))
       applyThemeToDocument(theme)
     }
   }, [theme, loading])
@@ -337,8 +371,12 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
 
   const updateTheme = async (updates: Partial<ThemeConfig>) => {
     const newTheme = { ...theme, ...updates }
+    console.log("updateTheme - BEFORE save, theme object:", JSON.stringify({ fontHeading: theme.fontHeading, fontBody: theme.fontBody, fontSize: theme.fontSize }))
+    console.log("updateTheme - BEFORE save, updates object:", JSON.stringify({ fontHeading: updates.fontHeading, fontBody: updates.fontBody, fontSize: updates.fontSize }))
+    console.log("updateTheme - AFTER merge, newTheme object:", JSON.stringify({ fontHeading: newTheme.fontHeading, fontBody: newTheme.fontBody, fontSize: newTheme.fontSize }))
     setTheme(newTheme)
     localStorage.setItem('theme-current', JSON.stringify(newTheme))
+    console.log("updateTheme - saved to localStorage:", JSON.stringify({ fontHeading: newTheme.fontHeading, fontBody: newTheme.fontBody, fontSize: newTheme.fontSize }))
     
     // Save to API
     try {

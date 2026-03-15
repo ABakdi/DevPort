@@ -16,40 +16,46 @@ export async function PUT(req: Request) {
 
     const body = await req.json()
 
-    const { backgroundStyle, backgroundImage, backgroundVideo, animationStyle, textAnimationStyle, cardGlow, textGlow, ...rest } = body
-
-    await connectToDatabase()
-    let theme = await Theme.findOne()
+    // Extract font fields explicitly
+    const { fontHeading, fontBody, fontSize, backgroundStyle, backgroundImage, backgroundVideo, animationStyle, textAnimationStyle, cardGlow, textGlow, ...rest } = body
 
     console.log("=== PUT /api/theme ===")
+    console.log("PUT - body fontHeading:", fontHeading)
+    console.log("PUT - body fontBody:", fontBody)
+    console.log("PUT - body fontSize:", fontSize)
     console.log("PUT - body backgroundImage:", body.backgroundImage)
     console.log("PUT - body backgroundStyle:", body.backgroundStyle)
     console.log("PUT - body animationStyle:", body.animationStyle)
     console.log("PUT - body cardGlow:", body.cardGlow)
     
+    await connectToDatabase()
+    let theme = await Theme.findOne()
+    
     if (theme) {
-      const filteredBody: Record<string, unknown> = { ...rest }
+      // Build the update object with ALL fields explicitly including fonts
+      const updateData: Record<string, unknown> = {
+        ...rest,
+        fontHeading: fontHeading,
+        fontBody: fontBody,
+        fontSize: fontSize,
+        backgroundStyle: backgroundStyle,
+        backgroundImage: backgroundImage,
+        backgroundVideo: backgroundVideo,
+        animationStyle: animationStyle,
+        textAnimationStyle: textAnimationStyle,
+        cardGlow: cardGlow,
+        textGlow: textGlow,
+        updatedAt: new Date()
+      }
 
-      // Add extracted fields
-      if (backgroundStyle !== undefined) filteredBody.backgroundStyle = backgroundStyle
-      if (backgroundImage !== undefined) filteredBody.backgroundImage = backgroundImage
-      if (backgroundVideo !== undefined) filteredBody.backgroundVideo = backgroundVideo
-      if (animationStyle !== undefined) filteredBody.animationStyle = animationStyle
-      if (textAnimationStyle !== undefined) filteredBody.textAnimationStyle = textAnimationStyle
-      if (cardGlow !== undefined) filteredBody.cardGlow = cardGlow
-      if (textGlow !== undefined) filteredBody.textGlow = textGlow
-      
-      console.log("PUT - updating theme with _id:", theme._id.toString())
-      console.log("PUT - backgroundImage being saved:", filteredBody.backgroundImage)
-      console.log("PUT - animationStyle being saved:", filteredBody.animationStyle)
-      console.log("PUT - full filteredBody:", filteredBody)
+      console.log("PUT - updateData being sent to MongoDB:", JSON.stringify(updateData))
       
       theme = await Theme.findByIdAndUpdate(
         theme._id,
-        { ...filteredBody, updatedAt: new Date() },
+        updateData,
         { returnDocument: 'after', runValidators: true }
       )
-      console.log("PUT - after update, theme has:", theme?.backgroundStyle, theme?.backgroundImage ? "image" : "no image")
+      console.log("PUT - after update, theme has:", JSON.stringify({ backgroundStyle: theme?.backgroundStyle, animationStyle: theme?.animationStyle, cardGlow: theme?.cardGlow }))
     } else {
       theme = await Theme.create({
         backgroundStyle: backgroundStyle || "gradient",
@@ -86,6 +92,8 @@ export async function GET() {
     
     // Get the first theme
     let theme = await Theme.findOne().sort({ createdAt: 1 })
+
+    console.log("GET - theme from DB:", { fontHeading: theme?.fontHeading, fontBody: theme?.fontBody, fontSize: theme?.fontSize })
 
     if (!theme) {
       theme = await Theme.create({

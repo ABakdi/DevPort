@@ -73,6 +73,16 @@ const ProfileSchema = new Schema({
     },
     default: [],
   },
+  badges: {
+    type: [String],
+    validate: {
+      validator: function(v: string[]) {
+        return v.length <= 10 && v.every(s => s.length <= 50)
+      },
+      message: "Maximum 10 badges, each up to 50 characters"
+    },
+    default: [],
+  },
   techStack: {
     type: [String],
     validate: {

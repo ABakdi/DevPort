@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -224,7 +225,6 @@ input, textarea, select {
 /* Apply theme shadow to cards and containers - EXCEPT in sidebar and section-bar */
 .card:not(.admin-sidebar *):not(.section-bar *), 
 article:not(.admin-sidebar *):not(.section-bar *), 
-section:not(.admin-sidebar *):not(.section-bar *), 
 .card-box:not(.admin-sidebar *):not(.section-bar *), 
 .bg-card:not(.admin-sidebar *):not(.section-bar *) {
   box-shadow: var(--theme-shadow) !important;
@@ -234,9 +234,6 @@ section:not(.admin-sidebar *):not(.section-bar *),
 button:not(.admin-sidebar *):not(.section-bar *), 
 .btn:not(.sidebar-btn):not(.admin-sidebar *):not(.section-bar *) {
   box-shadow: var(--theme-shadow) !important;
-  border-width: var(--theme-border-width, 1px);
-  border-style: solid;
-  border-color: var(--theme-surface);
 }
 
 /* Apply to inputs - EXCEPT in sidebar and section-bar */
@@ -244,9 +241,6 @@ input:not(.admin-sidebar *):not(.section-bar *),
 textarea:not(.admin-sidebar *):not(.section-bar *), 
 select:not(.admin-sidebar *):not(.section-bar *) {
   box-shadow: var(--theme-shadow) !important;
-  border-width: var(--theme-border-width, 1px);
-  border-style: solid;
-  border-color: var(--theme-surface);
 }
 
 /* Override ALL Tailwind shadow utilities with theme shadow - EXCEPT sidebar/section-bar */

@@ -5,7 +5,18 @@ import { motion } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
 import { useCardAnimation, useTextAnimation } from "@/lib/use-animations"
 
-const articles = [
+interface Article {
+  title: string
+  date: string
+  readTime: string
+  slug: string
+}
+
+interface RecentArticlesProps {
+  articles?: Article[]
+}
+
+const defaultArticles = [
   {
     title: "Designing resilient Event-Driven systems",
     date: "OCT 12, 2024",
@@ -26,9 +37,18 @@ const articles = [
   },
 ]
 
-export function RecentArticles() {
+export function RecentArticles({ articles }: RecentArticlesProps) {
   const { hoverAnimation, glowHoverStyle, cardGlow } = useCardAnimation()
   const { textGlowStyle } = useTextAnimation()
+  
+  const displayArticles = articles && articles.length > 0 
+    ? articles.map(a => ({
+        title: a.title,
+        date: a.date.toUpperCase(),
+        readTime: a.readTime.toUpperCase(),
+        slug: a.slug
+      }))
+    : defaultArticles
 
   return (
     <motion.div
@@ -36,16 +56,16 @@ export function RecentArticles() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5 }}
       whileHover={hoverAnimation}
-      className="p-6 rounded-xl border theme-bg-background"
+      className="p-6 rounded-xl"
       style={{ 
-        borderColor: 'var(--theme-surface)',
+        backgroundColor: 'var(--theme-surface)',
         ...(cardGlow ? glowHoverStyle : {})
       }}
     >
-      <h3 className="text-lg font-black tracking-tighter mb-6 theme-text">RECENT ARTICLES</h3>
+      <h3 className="text-lg font-black tracking-tighter mb-6" style={{ color: 'var(--theme-text)' }}>RECENT ARTICLES</h3>
 
       <div className="space-y-4">
-        {articles.map((article, index) => (
+        {displayArticles.map((article, index) => (
           <motion.div
             key={article.slug}
             initial={{ opacity: 0, x: -10 }}
@@ -54,21 +74,24 @@ export function RecentArticles() {
           >
             <Link
               href={`/blog/${article.slug}`}
-              className="block p-4 rounded-lg border border-transparent transition-all group theme-bg-surface"
+              className="block p-4 rounded-lg transition-all group"
               style={{ 
-                borderColor: 'transparent',
+                backgroundColor: 'var(--theme-surface)',
               }}
             >
               <div className="flex justify-between items-start mb-1">
                 <h4 
-                  className="font-bold theme-text group-hover:theme-text-primary transition-colors"
-                  style={textGlowStyle}
+                  className="font-bold transition-colors"
+                  style={{ 
+                    color: 'var(--theme-text)',
+                    ...textGlowStyle
+                  }}
                 >
                   {article.title}
                 </h4>
-                <ArrowUpRight className="h-4 w-4 flex-shrink-0 theme-text" style={{ opacity: 0.5 }} />
+                <ArrowUpRight className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--theme-text)', opacity: 0.5 }} />
               </div>
-              <p className="text-[10px] font-bold uppercase tracking-widest theme-text" style={{ opacity: 0.5 }}>
+              <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>
                 {article.date} • {article.readTime}
               </p>
             </Link>

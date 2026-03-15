@@ -5,16 +5,22 @@ import { CSSProperties } from "react"
 import { Variants } from "framer-motion"
 
 export function useBackground() {
-  const { theme } = useThemeConfig()
+  const { theme, loading } = useThemeConfig()
   const backgroundStyle = theme.backgroundStyle || "none"
   const backgroundImage = theme.backgroundImage || ""
   const backgroundVideo = theme.backgroundVideo || ""
 
   const getBackgroundStyles = (): CSSProperties => {
-    if (backgroundImage) {
-      const cacheBuster = `?t=${Date.now()}`
+    // Don't show any animated effects while loading - wait for theme to load from DB
+    if (loading) {
       return {
-        backgroundImage: `url(${backgroundImage}${backgroundImage.includes('?') ? '&' : '?'}t=${Date.now()})`,
+        backgroundColor: '#0D1117', // Default dark background
+      }
+    }
+
+    if (backgroundImage) {
+      return {
+        backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -87,6 +93,7 @@ export function useBackground() {
   }
 
   return {
+    loading,
     backgroundStyle,
     backgroundImage,
     backgroundVideo,

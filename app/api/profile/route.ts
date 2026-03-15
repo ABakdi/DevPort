@@ -14,6 +14,7 @@ const defaultProfile = {
   phone: "",
   skills: [],
   achievements: [],
+  badges: [],
   techStack: [],
   socialLinks: [],
   siteVersion: "v2024.1.0-alpha",
@@ -106,7 +107,7 @@ export async function PUT(req: Request) {
       // Filter out invalid fields
       const allowedFields = [
         "name", "title", "bio", "location", "timezone", "email", "phone",
-        "skills", "achievements", "techStack", "socialLinks", "siteVersion",
+        "skills", "achievements", "badges", "techStack", "socialLinks", "siteVersion",
       ]
       
       const filteredBody: Record<string, unknown> = {}

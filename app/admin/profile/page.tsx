@@ -63,6 +63,7 @@ interface ProfileData {
   phone: string
   skills: string[]
   achievements: string[]
+  badges: string[]
   techStack: string[]
   socialLinks: SocialLink[]
   siteVersion: string
@@ -86,6 +87,7 @@ const defaultProfile: ProfileData = {
   phone: "",
   skills: [],
   achievements: [],
+  badges: [],
   techStack: [],
   socialLinks: [],
   siteVersion: "v2024.1.0-alpha",
@@ -111,6 +113,7 @@ interface ValidationErrors {
 const sections = [
   { id: "basic", label: "Basic Info", icon: User },
   { id: "bio", label: "Bio", icon: FileText },
+  { id: "badges", label: "Badges", icon: Award },
   { id: "social", label: "Social Links", icon: Globe },
   { id: "skills", label: "Skills", icon: Wrench },
   { id: "achievements", label: "Achievements", icon: Award },
@@ -126,6 +129,7 @@ export default function ProfileSettings() {
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [newSkill, setNewSkill] = useState("")
   const [newAchievement, setNewAchievement] = useState("")
+  const [newBadge, setNewBadge] = useState("")
   const [newTech, setNewTech] = useState("")
   const [timezoneSearch, setTimezoneSearch] = useState("")
   const [activeSection, setActiveSection] = useState("basic")
@@ -291,6 +295,19 @@ export default function ProfileSettings() {
 
   const removeAchievement = (achievement: string) => {
     setProfile({ ...profile, achievements: profile.achievements.filter((a) => a !== achievement) })
+  }
+
+  const addBadge = () => {
+    if (newBadge.trim() && profile.badges.length < 10 && newBadge.length <= 50) {
+      if (!profile.badges.includes(newBadge.trim())) {
+        setProfile({ ...profile, badges: [...profile.badges, newBadge.trim()] })
+      }
+      setNewBadge("")
+    }
+  }
+
+  const removeBadge = (badge: string) => {
+    setProfile({ ...profile, badges: profile.badges.filter((b) => b !== badge) })
   }
 
   const addTech = () => {
@@ -706,25 +723,98 @@ export default function ProfileSettings() {
                 <AlertTriangle className="h-3 w-3" /> {errors.bio}
               </motion.p>
             )}
-            <div className="mt-4 flex flex-wrap gap-2">
-              {["Open to work", "Freelance available", "Remote only", "Full-time"].map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => {
-                    if (!profile.bio.includes(tag)) {
-                      setProfile({ ...profile, bio: profile.bio + (profile.bio ? " " : "") + tag })
-                    }
-                  }}
-                  className="px-3 py-1.5 text-xs font-medium rounded-full transition-all"
+          </motion.div>
+
+          <motion.div 
+            id="badges"
+            ref={(el) => { sectionRefs.current["badges"] = el }}
+            className="rounded-2xl p-6 relative overflow-hidden border"
+            style={{ 
+              backgroundColor: 'var(--theme-background)',
+              borderColor: 'var(--theme-surface)',
+            }}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
+                  background: 'linear-gradient(135deg, color-mix(in srgb, var(--theme-primary) 20%, transparent), color-mix(in srgb, var(--theme-accent) 20%, transparent))' 
+                }}>
+                  <Award className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold" style={{ color: 'var(--theme-text)' }}>Badges</h2>
+                  <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Status badges to display ({profile.badges.length}/10)</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-4 min-h-[40px]">
+              {profile.badges.map((badge) => (
+                <motion.span
+                  key={badge}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm group transition-all"
                   style={{ 
                     backgroundColor: 'var(--theme-surface)',
                     color: 'var(--theme-text)',
-                    opacity: 0.6,
                   }}
                 >
-                  + {tag}
-                </button>
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'var(--theme-primary)' }} />
+                  {badge}
+                  <button onClick={() => removeBadge(badge)} className="ml-1 transition-colors hover:opacity-100" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>
+                    <X className="h-3 w-3" />
+                  </button>
+                </motion.span>
               ))}
+            </div>
+            <div className="flex gap-3">
+              <input
+                type="text"
+                value={newBadge}
+                onChange={(e) => setNewBadge(e.target.value.slice(0, 50))}
+                onKeyDown={(e) => e.key === "Enter" && addBadge()}
+                placeholder="Add a badge... (max 50 chars)"
+                disabled={profile.badges.length >= 10}
+                className="flex-1 h-12 px-4 rounded-xl border-2 border-transparent focus:border-[var(--theme-primary)] focus:outline-none transition-all disabled:opacity-50"
+                style={{ 
+                  backgroundColor: 'var(--theme-surface)',
+                  color: 'var(--theme-text)',
+                }}
+              />
+              <button
+                onClick={addBadge}
+                disabled={profile.badges.length >= 10 || !newBadge.trim()}
+                className="px-6 h-12 font-semibold rounded-xl transition-all disabled:opacity-50 flex items-center gap-2"
+                style={{ 
+                  backgroundColor: 'var(--theme-primary)',
+                  color: '#000',
+                }}
+              >
+                <Plus className="h-4 w-4" /> Add
+              </button>
+            </div>
+            <div className="mt-4 pt-4 border-t" style={{ borderColor: 'var(--theme-surface)' }}>
+              <p className="text-xs mb-3" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Quick add:</p>
+              <div className="flex flex-wrap gap-2">
+                {["Open to work", "Freelance available", "Remote only", "Full-time", "Contract", "Part-time"].map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => {
+                      if (!profile.badges.includes(tag) && profile.badges.length < 10) {
+                        setProfile({ ...profile, badges: [...profile.badges, tag] })
+                      }
+                    }}
+                    disabled={profile.badges.includes(tag) || profile.badges.length >= 10}
+                    className="px-3 py-1.5 text-xs font-medium rounded-full transition-all disabled:opacity-30"
+                    style={{ 
+                      backgroundColor: 'var(--theme-surface)',
+                      color: 'var(--theme-text)',
+                    }}
+                  >
+                    + {tag}
+                  </button>
+                ))}
+              </div>
             </div>
           </motion.div>
 

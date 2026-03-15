@@ -38,10 +38,10 @@ export function ProfileCard({ profile }: ProfileCardProps) {
     const updateTime = () => {
       try {
         const tz = profile.timezone || "Africa/Algiers"
-        const formatter = new Intl.DateTimeFormat("en-US", { timeZone: tz, hour: "2-digit", minute: "2-digit", hour12: false })
+        const formatter = new Intl.DateTimeFormat("en-US", { timeZone: tz, hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false })
         setCurrentTime(formatter.format(new Date()))
         setTzAbbr(getTimezoneAbbreviation(tz))
-      } catch { setCurrentTime("--:--"); setTzAbbr("UTC") }
+      } catch { setCurrentTime("--:--:--"); setTzAbbr("UTC") }
     }
     updateTime()
     const interval = setInterval(updateTime, 1000)
@@ -52,8 +52,8 @@ export function ProfileCard({ profile }: ProfileCardProps) {
 
   if (!mounted) {
     return (
-      <motion.div className="p-8 rounded-xl relative overflow-hidden theme-bg-surface theme-border-surface">
-        <div className="w-24 h-24 rounded-full border-2 theme-border" />
+      <motion.div className="p-8 rounded-xl relative overflow-hidden" style={{ backgroundColor: 'var(--theme-surface)' }}>
+        <div className="w-24 h-24 rounded-full" style={{ backgroundColor: 'var(--theme-primary)', opacity: 0.2 }} />
       </motion.div>
     )
   }
@@ -64,45 +64,44 @@ export function ProfileCard({ profile }: ProfileCardProps) {
       animate={{ opacity: 1, y: 0 }}
       whileHover={hoverAnimation}
       transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="p-8 rounded-xl relative overflow-hidden theme-bg-surface theme-border-surface"
-      style={cardGlow ? glowHoverStyle : {}}
+      className="p-8 rounded-xl relative overflow-hidden border"
+      style={{ 
+        backgroundColor: 'var(--theme-surface)',
+        borderColor: 'var(--theme-surface)',
+        ...(cardGlow ? glowHoverStyle : {})
+      }}
     >
-      <div className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1 rounded-full theme-bg-primary opacity-10">
-        <span className="w-2 h-2 rounded-full animate-pulse theme-bg-primary"></span>
-        <span className="text-[10px] font-bold uppercase tracking-widest theme-text-primary">Ready_For_Hire</span>
-      </div>
-
       <div className="mb-6 relative w-24 h-24">
-        <div className="absolute inset-0 rounded-full blur-lg opacity-20 animate-pulse theme-bg-primary"></div>
-        <div className="w-24 h-24 rounded-full border-2 relative z-10 flex items-center justify-center theme-border theme-bg-surface">
-          <span className="text-3xl font-bold theme-text opacity-60">{initials}</span>
+        <div className="absolute inset-0 rounded-full blur-lg opacity-20 animate-pulse" style={{ backgroundColor: 'var(--theme-primary)' }}></div>
+        <div className="w-24 h-24 rounded-full relative z-10 flex items-center justify-center" style={{ backgroundColor: 'var(--theme-surface)' }}>
+          <span className="text-3xl font-bold" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>{initials}</span>
         </div>
       </div>
 
       <div className="space-y-1 mb-6">
-        <p className="text-xs font-bold uppercase tracking-widest theme-text opacity-60">Hi, Welcome!</p>
-        <h1 className="text-3xl font-black leading-tight theme-text">{profile.name || "Your Name"}</h1>
-        <p className="font-bold theme-text-primary">{profile.title || "Your Title"}</p>
+        <p className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Hi, Welcome!</p>
+        <h1 className="text-3xl font-black leading-tight" style={{ color: 'var(--theme-text)' }}>{profile.name || "Your Name"}</h1>
+        <p className="font-bold" style={{ color: 'var(--theme-primary)' }}>{profile.title || "Your Title"}</p>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-8">
         {profile.skills?.map((skill) => (
-          <span key={skill} className="px-3 py-1 text-[10px] font-bold rounded-md theme-bg-background theme-text theme-border-surface border">
+          <span key={skill} className="px-3 py-1 text-[10px] font-bold rounded-md" style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}>
             {skill}
           </span>
         ))}
       </div>
 
-      <div className="flex items-center gap-4 text-xs font-medium mb-8 theme-text opacity-60">
+      <div className="flex items-center gap-4 text-xs font-medium mb-8" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>
         <div className="flex items-center gap-1"><MapPin className="h-4 w-4" />{profile.location || "Location"}</div>
         <div className="flex items-center gap-1"><Clock className="h-4 w-4" />{currentTime || "--:--"} {tzAbbr}</div>
       </div>
 
       <div className="flex items-center gap-3">
-        <Button className="flex-1 py-3 font-bold flex items-center justify-center gap-2 theme-bg-primary text-black">
+        <Button className="flex-1 py-3 font-bold flex items-center justify-center gap-2" style={{ backgroundColor: 'var(--theme-primary)', color: 'black' }}>
           <Mail className="h-4 w-4" />CONTACT ME
         </Button>
-        <Button variant="outline" size="icon" className="p-3 theme-bg-background theme-text border-theme-surface">
+        <Button variant="outline" size="icon" className="p-3" style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </div>
