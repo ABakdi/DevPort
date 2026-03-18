@@ -141,7 +141,7 @@ export default function ProfileSettings() {
       .then((res) => res.json())
       .then((data) => {
         if (data && data.name) {
-          const sectionFields = ['showHero', 'showProfileCard', 'showAbout', 'showTerminal', 'showToolbox', 'showFeaturedProjects', 'showRecentArticles', 'showFooter']
+          const sectionFields = ['showHero', 'showProfileCard', 'showAbout', 'showTerminal', 'showToolbox', 'showFeaturedProjects', 'showRecentArticles', 'showContact', 'showFooter']
           const processedData: Partial<ProfileData> = { ...data }
           
           sectionFields.forEach(field => {
@@ -1184,6 +1184,7 @@ export default function ProfileSettings() {
                 { key: "showToolbox", label: "Tech Toolbox", desc: "Technology icons grid with hover effects", icon: Code, color: "#FF2D55" },
                 { key: "showFeaturedProjects", label: "Featured Projects", desc: "Project cards with thumbnails & links", icon: FolderKanban, color: "#06B6D4" },
                 { key: "showRecentArticles", label: "Recent Articles", desc: "Latest blog posts with excerpts", icon: MessageSquare, color: "#8B5CF6" },
+                { key: "showContact", label: "Contact Section", desc: "Contact form for visitors to send messages", icon: Mail, color: "#EF4444" },
                 { key: "showFooter", label: "Footer", desc: "Social links & copyright info", icon: Globe, color: "#6B7280" },
               ].map((item) => {
                 const isActive = profile[item.key as keyof ProfileData] as boolean

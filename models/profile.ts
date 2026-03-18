@@ -115,7 +115,7 @@ const ProfileSchema = new Schema({
   showToolbox: { type: Boolean, default: true },
   showFeaturedProjects: { type: Boolean, default: true },
   showRecentArticles: { type: Boolean, default: true },
-  showFooter: { type: Boolean, default: true },
+  showContact: { type: Boolean, default: true },
   updatedAt: { type: Date, default: Date.now },
 })
 
