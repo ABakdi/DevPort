@@ -10,6 +10,7 @@ import {
   Toolbox,
   RecentArticles,
   Footer,
+  ContactSection,
 } from "@/components/home"
 import { AnimatedBackground } from "@/components/home/animated-background"
 import { HomeSkeleton } from "@/components/home/skeletons"
@@ -124,6 +125,13 @@ export default function Home() {
             <RecentArticles articles={p.articles} />
           </div>
         </motion.div>
+
+        {/* Contact Section */}
+        {p.showContact !== false && (
+          <motion.section variants={fadeInUp}>
+            <ContactSection />
+          </motion.section>
+        )}
       </motion.main>
 
       {/* Footer with social links */}

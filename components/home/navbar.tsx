@@ -6,9 +6,11 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, Download, LogIn, Sun, Moon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useThemeConfig } from "@/lib/theme-context"
+import { CVDownloadButton } from "./cv-download-button"
 
 const navLinks = [
   { href: "/", label: "Home" },
+  { href: "/cv", label: "CV" },
   { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
   { href: "/projects", label: "Work" },
@@ -95,12 +97,7 @@ export function Navbar() {
               Login
             </Link>
           </Button>
-          <Button className="gap-2 font-bold text-sm" style={{ backgroundColor: 'var(--theme-primary)', color: 'black' }}>
-            <Link href="/cv">
-              <Download className="h-4 w-4" />
-              CV
-            </Link>
-          </Button>
+          <CVDownloadButton />
         </div>
 
         <button
