@@ -1,73 +1,174 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
-  MessageSquare, Search, Filter, Mail, Phone, MapPin, Calendar, Send, Star, Trash2, Reply,
-  ChevronLeft, ChevronRight, Check, CheckCheck, MoreHorizontal, User, Clock, ArrowLeft
+  MessageSquare, Search, Mail, Star, Trash2, Reply,
+  ArrowLeft, Check, CheckCheck, Loader2, X, Send
 } from "lucide-react"
 
-const mockMessages = [
-  {
-    id: 1,
-    name: "John Smith",
-    email: "john.smith@techcorp.com",
-    subject: "Project Collaboration Inquiry",
-    message: "Hi there! I came across your portfolio and I'm impressed with your work. We're looking for a skilled developer to help build our next-generation platform. Would you be interested in discussing a potential collaboration?\n\nLooking forward to hearing from you!",
-    date: "2024-01-18T14:30:00",
-    read: false,
-    starred: true,
-    reply: true
-  },
-  {
-    id: 2,
-    name: "Sarah Johnson",
-    email: "sarah@startupio",
-    subject: "Freelance Opportunity - E-commerce Platform",
-    message: "Hello!\n\nWe're a growing startup looking for a full-stack developer to build our e-commerce platform. The project involves:\n\n- Next.js frontend\n- Node.js API\n- MongoDB database\n- Payment integration\n\nWould you have time for a call this week to discuss the details?",
-    date: "2024-01-17T09:15:00",
-    read: true,
-    starred: false,
-    reply: false
-  },
-  {
-    id: 3,
-    name: "Mike Williams",
-    email: "mike.w@designstudio.com",
-    subject: "Bug Report - Portfolio Contact Form",
-    message: "Hi!\n\nI noticed a small issue with the contact form on your portfolio - when I try to submit, I get an error message. Just wanted to let you know!\n\nOtherwise, your portfolio looks amazing!",
-    date: "2024-01-16T16:45:00",
-    read: true,
-    starred: false,
-    reply: true
-  },
-]
+interface Message {
+  _id: string
+  name: string
+  email: string
+  subject: string
+  message: string
+  read: boolean
+  starred: boolean
+  replied: boolean
+  replyText?: string
+  repliedAt?: string
+  createdAt: string
+}
+
+interface MessageStats {
+  total: number
+  unread: number
+  starred: number
+  replied: number
+}
 
 export default function AdminMessages() {
-  const [messages, setMessages] = useState(mockMessages)
-  const [selectedMessage, setSelectedMessage] = useState<typeof mockMessages[0] | null>(null)
+  const [messages, setMessages] = useState<Message[]>([])
+  const [stats, setStats] = useState<MessageStats>({ total: 0, unread: 0, starred: 0, replied: 0 })
+  const [loading, setLoading] = useState(true)
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
-  const [filter, setFilter] = useState<"all" | "unread" | "starred">("all")
+  const [filter, setFilter] = useState<"all" | "unread" | "starred" | "replied">("all")
+  const [showReplyModal, setShowReplyModal] = useState(false)
+  const [replyText, setReplyText] = useState("")
+  const [sendingReply, setSendingReply] = useState(false)
 
-  const filteredMessages = messages.filter(msg => {
-    const matchesSearch = msg.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      msg.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      msg.message.toLowerCase().includes(searchQuery.toLowerCase())
-    
-    if (filter === "unread") return matchesSearch && !msg.read
-    if (filter === "starred") return matchesSearch && msg.starred
-    return matchesSearch
-  })
-
-  const markAsRead = (id: number) => {
-    setMessages(messages.map(m => m.id === id ? { ...m, read: true } : m))
-    if (selectedMessage?.id === id) {
-      setSelectedMessage({ ...selectedMessage, read: true })
+  const fetchMessages = async () => {
+    try {
+      const params = new URLSearchParams()
+      if (filter !== "all") params.set('filter', filter)
+      if (searchQuery) params.set('search', searchQuery)
+      
+      const res = await fetch(`/api/messages?${params}`)
+      if (res.ok) {
+        const data = await res.json()
+        setMessages(data.messages)
+        setStats(data.stats)
+      }
+    } catch (error) {
+      console.error("Failed to fetch messages:", error)
+    } finally {
+      setLoading(false)
     }
   }
 
-  const toggleStar = (id: number) => {
-    setMessages(messages.map(m => m.id === id ? { ...m, starred: !m.starred } : m))
+  useEffect(() => {
+    fetchMessages()
+  }, [filter])
+
+  useEffect(() => {
+    const delaySearch = setTimeout(() => {
+      fetchMessages()
+    }, 300)
+    return () => clearTimeout(delaySearch)
+  }, [searchQuery])
+
+  const markAsRead = async (id: string) => {
+    try {
+      const res = await fetch(`/api/messages/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ read: true })
+      })
+      
+      if (!res.ok) throw new Error('Failed to mark as read')
+      
+      setMessages(messages.map(m => m._id === id ? { ...m, read: true } : m))
+      setStats({ ...stats, unread: Math.max(0, stats.unread - 1) })
+      if (selectedMessage?._id === id) {
+        setSelectedMessage({ ...selectedMessage, read: true })
+      }
+    } catch (error) {
+      console.error("Failed to mark as read:", error)
+    }
+  }
+
+  const toggleStar = async (id: string) => {
+    const message = messages.find(m => m._id === id)
+    if (!message) return
+    
+    const newStarred = !message.starred
+    
+    try {
+      const res = await fetch(`/api/messages/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ starred: newStarred })
+      })
+      
+      if (!res.ok) throw new Error('Failed to toggle star')
+      
+      setMessages(messages.map(m => m._id === id ? { ...m, starred: newStarred } : m))
+      setStats({
+        ...stats,
+        starred: newStarred ? stats.starred + 1 : stats.starred - 1
+      })
+      if (selectedMessage?._id === id) {
+        setSelectedMessage({ ...selectedMessage, starred: newStarred })
+      }
+    } catch (error) {
+      console.error("Failed to toggle star:", error)
+    }
+  }
+
+  const deleteMessage = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this message?")) return
+    
+    try {
+      const res = await fetch(`/api/messages/${id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Failed to delete')
+      
+      setMessages(messages.filter(m => m._id !== id))
+      if (selectedMessage?._id === id) {
+        setSelectedMessage(null)
+      }
+      fetchMessages()
+    } catch (error) {
+      console.error("Failed to delete message:", error)
+    }
+  }
+
+  const handleSendReply = async () => {
+    if (!selectedMessage || !replyText.trim()) return
+    
+    setSendingReply(true)
+    try {
+      await fetch(`/api/messages/${selectedMessage._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          replied: true, 
+          replyText: replyText,
+          sendEmail: true
+        })
+      })
+      
+      setMessages(messages.map(m => 
+        m._id === selectedMessage._id 
+          ? { ...m, replied: true, replyText, repliedAt: new Date().toISOString() }
+          : m
+      ))
+      setShowReplyModal(false)
+      setReplyText("")
+      fetchMessages()
+    } catch (error) {
+      console.error("Failed to send reply:", error)
+    } finally {
+      setSendingReply(false)
+    }
+  }
+
+  const handleSelectMessage = (message: Message) => {
+    setSelectedMessage(message)
+    if (!message.read) {
+      markAsRead(message._id)
+    }
   }
 
   const formatDate = (dateStr: string) => {
@@ -78,6 +179,14 @@ export default function AdminMessages() {
   const formatTime = (dateStr: string) => {
     const date = new Date(dateStr)
     return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--theme-primary)' }} />
+      </div>
+    )
   }
 
   return (
@@ -91,7 +200,27 @@ export default function AdminMessages() {
         <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Manage contact form submissions</p>
       </motion.div>
 
-      <div className="flex gap-6 h-[calc(100%-80px)]">
+      {/* Stats */}
+      <div className="grid grid-cols-4 gap-4 mb-6">
+        {[
+          { label: 'Total', value: stats.total, color: 'var(--theme-primary)' },
+          { label: 'Unread', value: stats.unread, color: 'var(--theme-secondary)' },
+          { label: 'Starred', value: stats.starred, color: 'var(--theme-accent)' },
+          { label: 'Replied', value: stats.replied, color: '#10B981' },
+        ].map((stat) => (
+          <div 
+            key={stat.label}
+            className="p-4 rounded-xl"
+            style={{ backgroundColor: 'var(--theme-surface)' }}
+          >
+            <p className="text-2xl font-bold" style={{ color: stat.color }}>{stat.value}</p>
+            <p className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>{stat.label}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex gap-6 h-[calc(100%-180px)]">
+        {/* Messages List */}
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -117,11 +246,11 @@ export default function AdminMessages() {
               />
             </div>
             <div className="flex gap-1 p-1 rounded-lg" style={{ backgroundColor: 'var(--theme-surface)' }}>
-              {(["all", "unread", "starred"] as const).map((f) => (
+              {(["all", "unread", "starred", "replied"] as const).map((f) => (
                 <button
                   key={f}
                   onClick={() => setFilter(f)}
-                  className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all`}
+                  className={`flex-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all`}
                   style={{
                     background: filter === f ? `linear-gradient(90deg, color-mix(in srgb, var(--theme-primary) 20%, transparent), transparent)` : 'transparent',
                     color: filter === f ? 'var(--theme-primary)' : 'var(--theme-text)',
@@ -136,7 +265,7 @@ export default function AdminMessages() {
 
           <div className="flex-1 overflow-y-auto">
             <AnimatePresence>
-              {filteredMessages.length === 0 ? (
+              {messages.length === 0 ? (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -146,54 +275,57 @@ export default function AdminMessages() {
                   <p style={{ color: 'var(--theme-text)', opacity: 0.6 }}>No messages found</p>
                 </motion.div>
               ) : (
-                filteredMessages.map((message, index) => (
+                messages.map((message, index) => (
                   <motion.div
-                    key={message.id}
+                    key={message._id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    onClick={() => {
-                      setSelectedMessage(message)
-                      markAsRead(message.id)
-                    }}
-                    className={`p-4 cursor-pointer transition-all border-b ${
-                      selectedMessage?.id === message.id
-                        ? "border-l-2"
-                        : "border-l-2"
-                    }`}
+                    onClick={() => handleSelectMessage(message)}
+                    className={`p-4 cursor-pointer transition-all border-b border-l-2`}
                     style={{ 
-                      backgroundColor: selectedMessage?.id === message.id 
+                      backgroundColor: selectedMessage?._id === message._id 
                         ? `linear-gradient(90deg, color-mix(in srgb, var(--theme-primary) 10%, transparent), transparent)` 
-                        : !message.read ? 'var(--theme-background)' : 'var(--theme-background)',
-                      borderColor: selectedMessage?.id === message.id ? 'var(--theme-primary)' : 'var(--theme-surface)',
-                      borderLeftColor: selectedMessage?.id === message.id ? 'var(--theme-primary)' : 'var(--theme-surface)',
+                        : 'var(--theme-background)',
+                      borderColor: selectedMessage?._id === message._id ? 'var(--theme-primary)' : 'var(--theme-surface)',
+                      borderLeftColor: selectedMessage?._id === message._id ? 'var(--theme-primary)' : 'var(--theme-surface)',
                     }}
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0 ${
-                        message.read 
-                          ? "" 
-                          : ""
-                      }`}
-                      style={{
-                        backgroundColor: message.read ? 'var(--theme-surface)' : `linear-gradient(90deg, color-mix(in srgb, var(--theme-primary) 20%, transparent), color-mix(in srgb, var(--theme-secondary) 20%, transparent))`,
-                        color: message.read ? 'var(--theme-text)' : 'var(--theme-primary)',
-                        opacity: message.read ? 0.6 : 1,
-                      }}>
+                      <div 
+                        className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold"
+                        style={{
+                          backgroundColor: message.read ? 'var(--theme-surface)' : `linear-gradient(135deg, color-mix(in srgb, var(--theme-primary) 20%, transparent), color-mix(in srgb, var(--theme-secondary) 20%, transparent))`,
+                          color: message.read ? 'var(--theme-text)' : 'var(--theme-primary)',
+                          opacity: message.read ? 0.6 : 1,
+                        }}
+                      >
                         {message.name.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2 mb-1">
-                          <h3 className={`text-sm font-semibold truncate`} style={{ color: message.read ? 'var(--theme-text)' : 'var(--theme-text)', opacity: message.read ? 0.6 : 1 }}>
+                          <h3 
+                            className="text-sm font-semibold truncate" 
+                            style={{ 
+                              color: 'var(--theme-text)',
+                              opacity: message.read ? 0.6 : 1 
+                            }}
+                          >
                             {message.subject}
                           </h3>
                           <div className="flex items-center gap-1 flex-shrink-0">
                             {message.starred && <Star className="h-3 w-3" style={{ color: 'var(--theme-accent)', fill: 'var(--theme-accent)' }} />}
+                            {message.replied && <CheckCheck className="h-3 w-3" style={{ color: '#10B981' }} />}
                             {!message.read && <span className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--theme-primary)' }} />}
                           </div>
                         </div>
-                        <p className="text-xs truncate mb-1" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>{message.name}</p>
-                        <p className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.3 }}>{formatDate(message.date)}</p>
+                        {message.replied && message.replyText && (
+                          <p className="text-xs truncate mb-1" style={{ color: '#10B981', opacity: 0.8 }}>
+                            ↳ {message.replyText.slice(0, 50)}...
+                          </p>
+                        )}
+                        <p className="text-xs truncate" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>{message.name}</p>
+                        <p className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.3 }}>{formatDate(message.createdAt)}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -203,6 +335,7 @@ export default function AdminMessages() {
           </div>
         </motion.div>
 
+        {/* Message Detail */}
         <motion.div 
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -223,7 +356,6 @@ export default function AdminMessages() {
                       style={{ 
                         backgroundColor: 'var(--theme-surface)', 
                         color: 'var(--theme-text)',
-                        opacity: 0.6,
                       }}
                     >
                       <ArrowLeft className="h-4 w-4" />
@@ -232,72 +364,103 @@ export default function AdminMessages() {
                   </div>
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => toggleStar(selectedMessage.id)}
-                      className={`p-2 rounded-lg transition-all`}
+                      onClick={() => toggleStar(selectedMessage._id)}
+                      className="p-2 rounded-lg transition-all"
                       style={{
                         backgroundColor: selectedMessage.starred ? 'var(--theme-accent)' : 'var(--theme-surface)',
                         color: selectedMessage.starred ? '#000' : 'var(--theme-text)',
-                        opacity: selectedMessage.starred ? 0.2 : 0.6,
                       }}
                     >
                       <Star className={`h-4 w-4 ${selectedMessage.starred ? "fill-current" : ""}`} />
                     </button>
-                    <button className="p-2 rounded-lg transition-all" style={{ 
-                      backgroundColor: 'var(--theme-surface)', 
-                      color: 'var(--theme-text)',
-                      opacity: 0.6,
-                    }}>
+                    <button 
+                      onClick={() => deleteMessage(selectedMessage._id)}
+                      className="p-2 rounded-lg transition-all"
+                      style={{ 
+                        backgroundColor: 'var(--theme-surface)', 
+                        color: '#EF4444',
+                      }}
+                    >
                       <Trash2 className="h-4 w-4" />
-                    </button>
-                    <button className="p-2 rounded-lg transition-all" style={{ 
-                      backgroundColor: 'var(--theme-surface)', 
-                      color: 'var(--theme-text)',
-                      opacity: 0.6,
-                    }}>
-                      <MoreHorizontal className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg" style={{ background: 'linear-gradient(90deg, color-mix(in srgb, var(--theme-primary) 20%, transparent), color-mix(in srgb, var(--theme-secondary) 20%, transparent))', color: 'var(--theme-primary)' }}>
+                  <div 
+                    className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg"
+                    style={{ 
+                      background: 'linear-gradient(135deg, var(--theme-primary), var(--theme-secondary))', 
+                      color: '#000' 
+                    }}
+                  >
                     {selectedMessage.name.charAt(0)}
                   </div>
                   <div>
                     <h3 className="font-semibold" style={{ color: 'var(--theme-text)' }}>{selectedMessage.name}</h3>
-                    <p className="text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>{selectedMessage.email}</p>
+                    <a 
+                      href={`mailto:${selectedMessage.email}`} 
+                      className="text-sm hover:underline"
+                      style={{ color: 'var(--theme-text)', opacity: 0.6 }}
+                    >
+                      {selectedMessage.email}
+                    </a>
                   </div>
-                  <div className="ml-auto flex items-center gap-2" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>
-                    <Calendar className="h-4 w-4" />
-                    <span className="text-sm">{formatDate(selectedMessage.date)}</span>
+                  <div className="ml-auto flex items-center gap-2 text-sm" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>
+                    <span>{formatDate(selectedMessage.createdAt)}</span>
                     <span>·</span>
-                    <Clock className="h-4 w-4" />
-                    <span className="text-sm">{formatTime(selectedMessage.date)}</span>
+                    <span>{formatTime(selectedMessage.createdAt)}</span>
                   </div>
                 </div>
               </div>
 
               <div className="flex-1 p-6 overflow-y-auto">
+                {selectedMessage.replyText && (
+                  <div className="mb-6 rounded-xl overflow-hidden" style={{ backgroundColor: '#10B98110', border: '1px solid #10B98130' }}>
+                    <div className="px-4 py-2 flex items-center gap-2" style={{ backgroundColor: '#10B98120' }}>
+                      <CheckCheck className="h-4 w-4" style={{ color: '#10B981' }} />
+                      <p className="text-xs font-semibold" style={{ color: '#10B981' }}>YOUR REPLY</p>
+                    </div>
+                    <div className="p-4">
+                      <p className="text-sm whitespace-pre-line" style={{ color: 'var(--theme-text)' }}>{selectedMessage.replyText}</p>
+                      <p className="text-xs mt-3 pt-3 border-t" style={{ color: 'var(--theme-text)', opacity: 0.5, borderColor: '#10B98130' }}>
+                        Sent {selectedMessage.repliedAt ? formatDate(selectedMessage.repliedAt) : ''}
+                      </p>
+                    </div>
+                  </div>
+                )}
                 <div className="prose prose-invert max-w-none">
                   <p className="whitespace-pre-line leading-relaxed" style={{ color: 'var(--theme-text)', opacity: 0.8 }}>{selectedMessage.message}</p>
                 </div>
               </div>
 
               <div className="p-6 border-t" style={{ borderColor: 'var(--theme-surface)' }}>
-                <div className="flex items-center gap-3">
-                  <button className="flex-1 py-3 font-semibold rounded-xl transition-opacity flex items-center justify-center gap-2" style={{ 
-                    background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))',
-                    color: '#000000',
-                  }}>
+                {selectedMessage.replied ? (
+                  <div className="flex items-center justify-center gap-2 py-3 rounded-xl" style={{ backgroundColor: '#10B98120' }}>
+                    <CheckCheck className="h-5 w-5" style={{ color: '#10B981' }} />
+                    <span className="font-semibold" style={{ color: '#10B981' }}>Reply Sent</span>
+                  </div>
+                ) : (
+                  <button 
+                    onClick={() => setShowReplyModal(true)}
+                    className="flex-1 py-3 font-semibold rounded-xl transition-opacity flex items-center justify-center gap-2" 
+                    style={{ 
+                      background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))',
+                      color: '#000000',
+                    }}
+                  >
                     <Reply className="h-4 w-4" />
                     Reply
                   </button>
-                </div>
+                )}
               </div>
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'var(--theme-surface)' }}>
+                <div 
+                  className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4" 
+                  style={{ backgroundColor: 'var(--theme-surface)' }}
+                >
                   <MessageSquare className="h-10 w-10" style={{ color: 'var(--theme-text)', opacity: 0.3 }} />
                 </div>
                 <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--theme-text)' }}>Select a message</h3>
@@ -307,6 +470,92 @@ export default function AdminMessages() {
           )}
         </motion.div>
       </div>
+
+      {/* Reply Modal */}
+      <AnimatePresence>
+        {showReplyModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowReplyModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-lg rounded-2xl overflow-hidden"
+              style={{ backgroundColor: 'var(--theme-background)' }}
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="p-6 border-b" style={{ borderColor: 'var(--theme-surface)' }}>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-bold" style={{ color: 'var(--theme-text)' }}>Reply to {selectedMessage?.name}</h2>
+                  <button
+                    onClick={() => setShowReplyModal(false)}
+                    className="p-2 rounded-lg"
+                    style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+                <p className="text-sm mt-1" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>
+                  Replying to: {selectedMessage?.email}
+                </p>
+              </div>
+              
+              <div className="p-6">
+                {selectedMessage?.message && (
+                  <div className="mb-4 p-3 rounded-lg" style={{ backgroundColor: 'var(--theme-surface)' }}>
+                    <p className="text-xs font-medium mb-1" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Original message:</p>
+                    <p className="text-sm line-clamp-3" style={{ color: 'var(--theme-text)' }}>{selectedMessage.message}</p>
+                  </div>
+                )}
+                <textarea
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  placeholder="Write your reply..."
+                  rows={6}
+                  className="w-full p-4 rounded-xl resize-none focus:outline-none"
+                  style={{ 
+                    backgroundColor: 'var(--theme-surface)',
+                    color: 'var(--theme-text)'
+                  }}
+                />
+              </div>
+
+              <div className="p-6 border-t flex gap-3" style={{ borderColor: 'var(--theme-surface)' }}>
+                <button
+                  onClick={() => setShowReplyModal(false)}
+                  className="flex-1 py-3 rounded-xl font-medium"
+                  style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSendReply}
+                  disabled={!replyText.trim() || sendingReply}
+                  className="flex-1 py-3 rounded-xl font-medium flex items-center justify-center gap-2 disabled:opacity-50"
+                  style={{ 
+                    background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))',
+                    color: '#000'
+                  }}
+                >
+                  {sendingReply ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4" />
+                      Send Reply
+                    </>
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
