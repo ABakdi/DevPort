@@ -19,6 +19,7 @@ interface CV {
   whatsapp: string
   website: string
   workExperience: { company: string; location: string; role: string; startDate: string; endDate: string; current: boolean; description: string; achievements: string[] }[]
+  projects: { name: string; company: string; role: string; startDate: string; endDate: string; current: boolean; description: string; highlights: string[] }[]
   education: { degree: string; institution: string; location: string; year: string }[]
   skills: { category: string; items: string[] }[]
   languages: { name: string; proficiency: string }[]
@@ -182,6 +183,8 @@ export function CVDownloadButton() {
   ${cv?.skills?.length ? `<h2>Skills</h2>` + cv.skills.map(s => `<p class="skill-category">${s.category}</p><div class="skills">${s.items.map(i => `<span class="skill-tag">${i}</span>`).join('')}</div>`).join('') : ''}
   
   ${cv?.workExperience?.length ? `<h2>Work Experience</h2>` + cv.workExperience.map(exp => `<div class="job-header"><span class="company">${exp.role} at ${exp.company}</span><span class="date">${exp.startDate} - ${exp.current ? 'Present' : exp.endDate}</span></div>${exp.location ? `<p style="color:#666;font-size:14px;">${exp.location}</p>` : ''}${exp.description ? `<p>${exp.description}</p>` : ''}${exp.achievements?.length ? `<ul>${exp.achievements.map(a => `<li>${a}</li>`).join('')}</ul>` : ''}`).join('') : ''}
+  
+  ${cv?.projects?.length ? `<h2>Projects</h2>` + cv.projects.map(proj => `<div class="job-header"><span class="company">${proj.name}</span><span class="date">${proj.startDate} - ${proj.current ? 'Present' : proj.endDate}</span></div>${proj.role || proj.company ? `<p style="color:#666;font-size:14px;">${proj.role}${proj.role && proj.company ? ' at ' : ''}${proj.company}</p>` : ''}${proj.description ? `<p>${proj.description}</p>` : ''}${proj.highlights?.length ? `<ul>${proj.highlights.map(h => `<li>${h}</li>`).join('')}</ul>` : ''}`).join('') : ''}
   
   ${cv?.education?.length ? `<h2>Education</h2>` + cv.education.map(edu => `<p><strong>${edu.degree}</strong> - ${edu.institution}, ${edu.year}</p>`).join('') : ''}
   

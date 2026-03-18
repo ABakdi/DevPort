@@ -20,6 +20,7 @@ export async function GET() {
         whatsapp: '',
         website: '',
         workExperience: [],
+        projects: [],
         education: [],
         skills: [],
         languages: [],
@@ -39,7 +40,7 @@ export async function GET() {
 function sanitizeCVBody(body: any) {
   const sanitized = { ...body }
   
-  const embeddedArrays = ['workExperience', 'education', 'skills', 'languages', 'certifications', 'customSections']
+  const embeddedArrays = ['workExperience', 'projects', 'education', 'skills', 'languages', 'certifications', 'customSections']
   
   for (const arr of embeddedArrays) {
     if (sanitized[arr] && Array.isArray(sanitized[arr])) {

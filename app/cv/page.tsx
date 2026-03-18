@@ -136,6 +136,44 @@ export default async function CVPage() {
           </section>
         )}
 
+        {/* Projects */}
+        {cv.projects && cv.projects.length > 0 && (
+          <section className="mb-8">
+            <h2 className="text-xl font-bold mb-4 pb-2 border-b" style={{ borderColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}>
+              Projects
+            </h2>
+            <div className="space-y-6">
+              {cv.projects.map((project: any, index: number) => (
+                <div key={index}>
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h3 className="font-bold text-lg" style={{ color: 'var(--theme-text)' }}>{project.name}</h3>
+                      {(project.company || project.role) && (
+                        <p style={{ color: 'var(--theme-primary)' }}>
+                          {project.role}{project.role && project.company && ' at '}{project.company}
+                        </p>
+                      )}
+                    </div>
+                    <div className="text-right text-sm" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>
+                      {project.startDate} - {project.current ? 'Present' : project.endDate}
+                    </div>
+                  </div>
+                  {project.description && (
+                    <p className="mb-2" style={{ color: 'var(--theme-text)', opacity: 0.8 }}>{project.description}</p>
+                  )}
+                  {project.highlights && project.highlights.length > 0 && (
+                    <ul className="list-disc list-inside space-y-1" style={{ color: 'var(--theme-text)', opacity: 0.7 }}>
+                      {project.highlights.map((highlight: string, i: number) => (
+                        <li key={i}>{highlight}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Education */}
         {cv.education && cv.education.length > 0 && (
           <section className="mb-8">

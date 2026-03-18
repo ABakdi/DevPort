@@ -20,6 +20,19 @@ interface WorkExperience {
   descriptionType: 'paragraph' | 'bullets'
 }
 
+interface CVProject {
+  _id: string
+  name: string
+  company: string
+  role: string
+  startDate: string
+  endDate: string
+  current: boolean
+  description: string
+  highlights: string[]
+  descriptionType: 'paragraph' | 'bullets'
+}
+
 interface Education {
   _id: string
   degree: string
@@ -58,6 +71,7 @@ interface CV {
   whatsapp: string
   website: string
   workExperience: WorkExperience[]
+  projects: CVProject[]
   education: Education[]
   skills: Skill[]
   languages: Language[]
@@ -80,6 +94,7 @@ const defaultCV: CV = {
   whatsapp: '',
   website: '',
   workExperience: [],
+  projects: [],
   education: [],
   skills: [],
   languages: [],
@@ -149,6 +164,10 @@ export default function CVBuilder() {
           ...exp,
           descriptionType: exp.descriptionType || 'bullets'
         }))
+        const projects = (data.projects || []).map((proj: any) => ({
+          ...proj,
+          descriptionType: proj.descriptionType || 'bullets'
+        }))
         setCV({
           displayName: data.displayName || '',
           summary: data.summary || '',
@@ -158,6 +177,7 @@ export default function CVBuilder() {
           whatsapp: data.whatsapp || '',
           website: data.website || '',
           workExperience,
+          projects,
           education: data.education || [],
           skills: data.skills || [],
           languages: data.languages || [],
@@ -265,6 +285,8 @@ export default function CVBuilder() {
     
     ${cv.workExperience.length ? `<div class="section"><h2>Experience</h2>` + cv.workExperience.map(exp => `<div style="margin-bottom: 8px;"><div class="job-header"><span class="company">${exp.company}</span><span>${exp.startDate} - ${exp.current ? 'Present' : exp.endDate}</span></div><div class="job-header"><span class="role">${exp.role}</span>${exp.location ? `<span>${exp.location}</span>` : ''}</div>${exp.descriptionType === 'paragraph' && exp.description ? `<p style="margin-top:4px;">${exp.description}</p>` : ''}${exp.descriptionType === 'bullets' && exp.achievements && exp.achievements.filter(a => a).length ? `<ul>${exp.achievements.filter(a => a).map(a => `<li>${a}</li>`).join('')}</ul>` : ''}</div>`).join('') + `</div>` : ''}
     
+    ${cv.projects.length ? `<div class="section"><h2>Projects</h2>` + cv.projects.map(proj => `<div style="margin-bottom: 8px;"><div class="job-header"><span class="company">${proj.name}</span><span>${proj.startDate} - ${proj.current ? 'Present' : proj.endDate}</span></div>${proj.role || proj.company ? `<div class="job-header"><span class="role">${proj.role}${proj.role && proj.company ? ' at ' : ''}${proj.company}</span></div>` : ''}${proj.descriptionType === 'paragraph' && proj.description ? `<p style="margin-top:4px;">${proj.description}</p>` : ''}${proj.descriptionType === 'bullets' && proj.highlights && proj.highlights.filter(h => h).length ? `<ul>${proj.highlights.filter(h => h).map(h => `<li>${h}</li>`).join('')}</ul>` : ''}</div>`).join('') + `</div>` : ''}
+    
     ${cv.skills.length ? `<div class="section"><h2>Technical Skills</h2>` + cv.skills.map(s => `<p><span class="skill-category">${s.category}:</span> ${s.items.filter(i => i).join(', ')}</p>`).join('') + `</div>` : ''}
     
     ${cv.certifications.length ? `<div class="section"><h2>Certifications</h2>` + cv.certifications.map(cert => `<p><span class="company">${cert.name}</span> - ${cert.issuer} (${cert.date})</p>`).join('') + `</div>` : ''}
@@ -335,6 +357,8 @@ export default function CVBuilder() {
     
     ${cv.workExperience.length ? `<div class="section"><h2>Experience</h2>` + cv.workExperience.map(exp => `<div style="margin-bottom: 8px;"><div class="job-header"><span class="company">${exp.company}</span><span>${exp.startDate} - ${exp.current ? 'Present' : exp.endDate}</span></div><div class="job-header"><span class="role">${exp.role}</span>${exp.location ? `<span>${exp.location}</span>` : ''}</div>${exp.descriptionType === 'paragraph' && exp.description ? `<p style="margin-top:4px;">${exp.description}</p>` : ''}${exp.descriptionType === 'bullets' && exp.achievements && exp.achievements.filter(a => a).length ? `<ul>${exp.achievements.filter(a => a).map(a => `<li>${a}</li>`).join('')}</ul>` : ''}</div>`).join('') + `</div>` : ''}
     
+    ${cv.projects.length ? `<div class="section"><h2>Projects</h2>` + cv.projects.map(proj => `<div style="margin-bottom: 8px;"><div class="job-header"><span class="company">${proj.name}</span><span>${proj.startDate} - ${proj.current ? 'Present' : proj.endDate}</span></div>${proj.role || proj.company ? `<div class="job-header"><span class="role">${proj.role}${proj.role && proj.company ? ' at ' : ''}${proj.company}</span></div>` : ''}${proj.descriptionType === 'paragraph' && proj.description ? `<p style="margin-top:4px;">${proj.description}</p>` : ''}${proj.descriptionType === 'bullets' && proj.highlights && proj.highlights.filter(h => h).length ? `<ul>${proj.highlights.filter(h => h).map(h => `<li>${h}</li>`).join('')}</ul>` : ''}</div>`).join('') + `</div>` : ''}
+    
     ${cv.skills.length ? `<div class="section"><h2>Technical Skills</h2>` + cv.skills.map(s => `<p><span class="skill-category">${s.category}:</span> ${s.items.filter(i => i).join(', ')}</p>`).join('') + `</div>` : ''}
     
     ${cv.certifications.length ? `<div class="section"><h2>Certifications</h2>` + cv.certifications.map(cert => `<p><span class="company">${cert.name}</span> - ${cert.issuer} (${cert.date})</p>`).join('') + `</div>` : ''}
@@ -386,6 +410,40 @@ export default function CVBuilder() {
     setCV(prev => ({
       ...prev,
       workExperience: prev.workExperience.filter((_, i) => i !== index)
+    }))
+  }
+
+  const addProject = () => {
+    setCV(prev => ({
+      ...prev,
+      projects: [...prev.projects, {
+        _id: Date.now().toString(),
+        name: '',
+        company: '',
+        role: '',
+        startDate: '',
+        endDate: '',
+        current: false,
+        description: '',
+        highlights: [''],
+        descriptionType: 'bullets'
+      }]
+    }))
+  }
+
+  const updateProject = (index: number, field: string, value: any) => {
+    setCV(prev => ({
+      ...prev,
+      projects: prev.projects.map((proj, i) => 
+        i === index ? { ...proj, [field]: value } : proj
+      )
+    }))
+  }
+
+  const removeProject = (index: number) => {
+    setCV(prev => ({
+      ...prev,
+      projects: prev.projects.filter((_, i) => i !== index)
     }))
   }
 
@@ -1059,6 +1117,178 @@ export default function CVBuilder() {
             {cv.workExperience.length === 0 && (
               <p className="text-center py-4" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>
                 No work experience added yet. Click "Add" to add one.
+              </p>
+            )}
+          </div>
+        </motion.section>
+
+        {/* Projects */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-6 rounded-2xl border"
+          style={{ backgroundColor: 'var(--theme-surface)', borderColor: 'var(--theme-surface)' }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold flex items-center gap-2" style={{ color: 'var(--theme-text)' }}>
+              <Code className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
+              Projects
+            </h2>
+            <button
+              onClick={addProject}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium"
+              style={{ backgroundColor: 'var(--theme-primary)', color: '#000' }}
+            >
+              <Plus className="h-4 w-4" /> Add
+            </button>
+          </div>
+          <div className="space-y-4">
+            {cv.projects.map((project, index) => (
+              <div key={project._id} className="p-4 rounded-xl" style={{ backgroundColor: 'var(--theme-background)' }}>
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      value={project.name}
+                      onChange={(e) => updateProject(index, 'name', e.target.value)}
+                      placeholder="Project name *"
+                      className="px-3 py-2 rounded-lg text-sm"
+                      style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}
+                    />
+                    <input
+                      type="text"
+                      value={project.company}
+                      onChange={(e) => updateProject(index, 'company', e.target.value)}
+                      placeholder="Company (optional)"
+                      className="px-3 py-2 rounded-lg text-sm"
+                      style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}
+                    />
+                    <input
+                      type="text"
+                      value={project.role}
+                      onChange={(e) => updateProject(index, 'role', e.target.value)}
+                      placeholder="Your role (optional)"
+                      className="px-3 py-2 rounded-lg text-sm"
+                      style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}
+                    />
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={project.startDate}
+                        onChange={(e) => updateProject(index, 'startDate', e.target.value)}
+                        placeholder="Start date"
+                        className="flex-1 px-3 py-2 rounded-lg text-sm"
+                        style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}
+                      />
+                      <input
+                        type="text"
+                        value={project.endDate}
+                        onChange={(e) => updateProject(index, 'endDate', e.target.value)}
+                        placeholder="End date"
+                        className="flex-1 px-3 py-2 rounded-lg text-sm"
+                        style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}
+                      />
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => removeProject(index)}
+                    className="p-2 rounded-lg ml-2"
+                    style={{ backgroundColor: 'var(--theme-surface)', color: '#EF4444' }}
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <label className="flex items-center gap-2 mb-3 cursor-pointer" style={{ color: 'var(--theme-text)' }}>
+                  <input
+                    type="checkbox"
+                    checked={project.current}
+                    onChange={(e) => updateProject(index, 'current', e.target.checked)}
+                    className="rounded"
+                  />
+                  <span className="text-sm">Currently working on this project</span>
+                </label>
+
+                <div className="mb-3">
+                  <p className="text-xs mb-2" style={{ color: 'var(--theme-text)', opacity: 0.6 }}>Description Format</p>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer" style={{ color: 'var(--theme-text)' }}>
+                      <input
+                        type="radio"
+                        name={`projectDescType-${project._id}`}
+                        checked={project.descriptionType === 'paragraph'}
+                        onChange={() => updateProject(index, 'descriptionType', 'paragraph')}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Paragraph</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer" style={{ color: 'var(--theme-text)' }}>
+                      <input
+                        type="radio"
+                        name={`projectDescType-${project._id}`}
+                        checked={project.descriptionType === 'bullets'}
+                        onChange={() => updateProject(index, 'descriptionType', 'bullets')}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Bullet Points</span>
+                    </label>
+                  </div>
+                </div>
+
+                {project.descriptionType === 'paragraph' ? (
+                  <textarea
+                    value={project.description}
+                    onChange={(e) => updateProject(index, 'description', e.target.value)}
+                    placeholder="Describe the project, your contributions, and outcomes..."
+                    rows={4}
+                    className="w-full p-3 rounded-lg resize-none"
+                    style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}
+                  />
+                ) : (
+                  <div className="space-y-2">
+                    {project.highlights.map((highlight, hlIndex) => (
+                      <div key={hlIndex} className="flex gap-2">
+                        <span className="text-sm pt-2" style={{ color: 'var(--theme-text)' }}>-</span>
+                        <input
+                          type="text"
+                          value={highlight}
+                          onChange={(e) => {
+                            const newHighlights = [...project.highlights]
+                            newHighlights[hlIndex] = e.target.value
+                            updateProject(index, 'highlights', newHighlights)
+                          }}
+                          placeholder="Key highlight or achievement..."
+                          className="flex-1 px-3 py-2 rounded-lg text-sm"
+                          style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}
+                        />
+                        {project.highlights.length > 1 && (
+                          <button
+                            onClick={() => {
+                              const newHighlights = project.highlights.filter((_, i) => i !== hlIndex)
+                              updateProject(index, 'highlights', newHighlights)
+                            }}
+                            className="p-2 rounded-lg"
+                            style={{ backgroundColor: 'var(--theme-surface)', color: '#EF4444' }}
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    <button
+                      onClick={() => updateProject(index, 'highlights', [...project.highlights, ''])}
+                      className="flex items-center gap-1 text-sm px-2 py-1 rounded"
+                      style={{ color: 'var(--theme-primary)' }}
+                    >
+                      <Plus className="h-3 w-3" /> Add highlight
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+            {cv.projects.length === 0 && (
+              <p className="text-center py-4" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>
+                No projects added yet. Click "Add" to add one.
               </p>
             )}
           </div>

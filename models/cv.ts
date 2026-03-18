@@ -1,5 +1,17 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
+export interface CVProject {
+  _id?: string
+  name: string
+  company?: string
+  role?: string
+  startDate: string
+  endDate: string
+  current: boolean
+  description: string
+  highlights: string[]
+}
+
 export interface WorkExperience {
   _id?: string
   company: string
@@ -50,6 +62,7 @@ export interface ICV extends Document {
   whatsapp: string
   website: string
   workExperience: WorkExperience[]
+  projects: CVProject[]
   education: Education[]
   skills: Skill[]
   languages: Language[]
@@ -73,6 +86,17 @@ const WorkExperienceSchema = new Schema({
   current: { type: Boolean, default: false },
   description: { type: String, default: '' },
   achievements: [{ type: String }]
+})
+
+const CVProjectSchema = new Schema({
+  name: { type: String, required: true },
+  company: { type: String, default: '' },
+  role: { type: String, default: '' },
+  startDate: { type: String, required: true },
+  endDate: { type: String, default: '' },
+  current: { type: Boolean, default: false },
+  description: { type: String, default: '' },
+  highlights: [{ type: String }]
 })
 
 const EducationSchema = new Schema({
@@ -118,6 +142,7 @@ const CVSchema = new Schema<ICV>({
   whatsapp: { type: String, default: '' },
   website: { type: String, default: '' },
   workExperience: [WorkExperienceSchema],
+  projects: [CVProjectSchema],
   education: [EducationSchema],
   skills: [SkillSchema],
   languages: [LanguageSchema],
