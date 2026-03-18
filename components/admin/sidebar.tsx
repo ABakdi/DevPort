@@ -17,12 +17,14 @@ import {
   ChevronRight,
   Sparkles,
   Zap,
+  FileTextIcon,
 } from "lucide-react"
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/content", label: "Content", icon: FileText },
   { href: "/admin/profile", label: "Profile", icon: User },
+  { href: "/admin/cv", label: "CV Builder", icon: FileTextIcon },
   { href: "/admin/theme", label: "Theme", icon: Palette },
   { href: "/admin/messages", label: "Messages", icon: MessageSquare },
   { href: "/admin/settings", label: "Settings", icon: Settings },

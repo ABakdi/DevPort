@@ -98,7 +98,13 @@ export function ProfileCard({ profile }: ProfileCardProps) {
       </div>
 
       <div className="flex items-center gap-3">
-        <Button className="flex-1 py-3 font-bold flex items-center justify-center gap-2" style={{ backgroundColor: 'var(--theme-primary)', color: 'black' }}>
+        <Button 
+          className="flex-1 py-3 font-bold flex items-center justify-center gap-2" 
+          style={{ backgroundColor: 'var(--theme-primary)', color: 'black' }}
+          onClick={() => {
+            document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' })
+          }}
+        >
           <Mail className="h-4 w-4" />CONTACT ME
         </Button>
         <Button variant="outline" size="icon" className="p-3" style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)' }}>
