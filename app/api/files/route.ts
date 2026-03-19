@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing file" }, { status: 400 })
     }
 
-    const allowedFolders = ["theme", "avatars", "projects", "posts", "general"]
+    const allowedFolders = ["theme", "avatars", "projects", "posts", "general", "cv"]
     const targetFolder = allowedFolders.includes(folder || "") ? folder! : "general"
 
     const allowedTypes = {
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       general: ["image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/webm", "application/pdf"],
     }
 
-    const fileType = targetFolder === "theme" || targetFolder === "avatars" || targetFolder === "projects" ? "image" : "general"
+    const fileType = targetFolder === "theme" || targetFolder === "avatars" || targetFolder === "projects" || targetFolder === "cv" ? "image" : "general"
     if (!allowedTypes[fileType as keyof typeof allowedTypes].includes(file.type)) {
       return NextResponse.json({ error: "Invalid file type" }, { status: 400 })
     }
@@ -81,7 +81,7 @@ export async function GET(req: Request) {
     const folder = searchParams.get("folder")
 
     const query: Record<string, unknown> = {}
-    if (folder && ["theme", "avatars", "projects", "posts", "general"].includes(folder)) {
+    if (folder && ["theme", "avatars", "projects", "posts", "general", "cv"].includes(folder)) {
       query.folder = folder
     }
 

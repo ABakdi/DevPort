@@ -21,7 +21,7 @@ const UploadedFileSchema = new Schema({
   folder: {
     type: String,
     required: true,
-    enum: ["theme", "avatars", "projects", "posts", "general"],
+    enum: ["theme", "avatars", "projects", "posts", "general", "cv"],
     default: "general",
   },
   gridFSId: {
