@@ -30,6 +30,8 @@ For detailed specifications, see: `docs/specs.md`
 - CV API route (GET/PUT) for resume data
 - Admin CV management page at `/admin/cv` with full resume editing interface
 - CV download button component for navbar
+- CV profile picture upload with size options (35x45mm or 51x51mm)
+- Picture display in CV preview and downloads (positioned on right of professional summary)
 
 **Contact Form & Messages**
 - Message model for storing contact form submissions in MongoDB
