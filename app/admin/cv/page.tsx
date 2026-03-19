@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { 
   Save, Plus, X, Loader2, Check, AlertCircle, 
-  Briefcase, GraduationCap, Languages, Award, Code, FileText, Eye, Edit3, Download
+  Briefcase, GraduationCap, Languages, Award, Code, FileText, Eye, Edit3, Download, Upload, Image, XCircle, Trash2
 } from "lucide-react"
 
 interface WorkExperience {
@@ -64,6 +64,8 @@ interface Certification {
 
 interface CV {
   displayName: string
+  picture: string
+  pictureSize: '35x45' | '51x51'
   summary: string
   phone: string
   address: string
@@ -87,6 +89,8 @@ interface CV {
 
 const defaultCV: CV = {
   displayName: '',
+  picture: '',
+  pictureSize: '35x45',
   summary: '',
   phone: '',
   address: '',
@@ -170,6 +174,8 @@ export default function CVBuilder() {
         }))
         setCV({
           displayName: data.displayName || '',
+          picture: data.picture || '',
+          pictureSize: data.pictureSize || '35x45',
           summary: data.summary || '',
           phone: data.phone || '',
           address: data.address || '',
@@ -270,6 +276,8 @@ export default function CVBuilder() {
     li { padding-left: 15px; }
     .section { margin-bottom: 8px; }
     .skill-category { font-weight: bold; }
+    .summary-image { float: left; margin-right: 12px; margin-bottom: 4px; width: ${cv.pictureSize === '35x45' ? '35mm' : '51mm'}; height: ${cv.pictureSize === '35x45' ? '45mm' : '51mm'}; }
+    .summary-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; display: block; }
   </style>
 </head>
 <body>
@@ -279,7 +287,7 @@ export default function CVBuilder() {
       <p class="contact">${contactHtml}</p>
     </div>
     
-    ${cv.summary ? `<div class="section"><h2>Professional Summary</h2><p style="white-space: pre-wrap;">${cv.summary}</p></div>` : ''}
+    ${cv.summary ? `<div class="section"><h2>Professional Summary</h2>` + (cv.picture ? `<div class="summary-image"><img src="${cv.picture}" alt="Profile" /></div><p style="white-space: pre-wrap; margin: 0;">${cv.summary}</p><div style="clear: both;"></div>` : `<p style="white-space: pre-wrap;">${cv.summary}</p>`) + `</div>` : ''}
     
     ${cv.education.length ? `<div class="section"><h2>Education</h2>` + cv.education.map(edu => `<div style="margin-bottom: 8px;"><div class="job-header"><span class="company">${edu.institution}</span><span>${edu.year}</span></div><div class="job-header"><span class="degree">${edu.degree}</span>${edu.location ? `<span>${edu.location}</span>` : ''}</div></div>`).join('') + `</div>` : ''}
     
@@ -330,6 +338,7 @@ export default function CVBuilder() {
   <title>${cv.displayName || 'Resume'}</title>
   <style>
     @page { size: A4; margin: 15mm; }
+    @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
     body { font-family: ${fontFamily}; width: ${pageWidth}; min-height: 297mm; margin: 0 auto; padding: 15mm; font-size: ${fontSize}; line-height: 1.3; }
     h1 { font-size: ${getFS(1.6)}; font-weight: bold; margin-bottom: 3px; }
     h2 { font-size: ${getFS(0.9)}; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 2px; margin-top: 10px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -342,6 +351,8 @@ export default function CVBuilder() {
     li { padding-left: 15px; }
     .section { margin-bottom: 8px; }
     .skill-category { font-weight: bold; }
+    .summary-image { float: left; margin-right: 12px; margin-bottom: 4px; width: ${cv.pictureSize === '35x45' ? '35mm' : '51mm'}; height: ${cv.pictureSize === '35x45' ? '45mm' : '51mm'}; }
+    .summary-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; display: block; }
   </style>
 </head>
 <body>
@@ -351,7 +362,7 @@ export default function CVBuilder() {
       <p class="contact">${contactHtml}</p>
     </div>
     
-    ${cv.summary ? `<div class="section"><h2>Professional Summary</h2><p style="white-space: pre-wrap;">${cv.summary}</p></div>` : ''}
+    ${cv.summary ? `<div class="section"><h2>Professional Summary</h2>` + (cv.picture ? `<div class="summary-image"><img src="${cv.picture}" alt="Profile" /></div><p style="white-space: pre-wrap; margin: 0;">${cv.summary}</p><div style="clear: both;"></div>` : `<p style="white-space: pre-wrap;">${cv.summary}</p>`) + `</div>` : ''}
     
     ${cv.education.length ? `<div class="section"><h2>Education</h2>` + cv.education.map(edu => `<div style="margin-bottom: 8px;"><div class="job-header"><span class="company">${edu.institution}</span><span>${edu.year}</span></div><div class="job-header"><span class="degree">${edu.degree}</span>${edu.location ? `<span>${edu.location}</span>` : ''}</div></div>`).join('') + `</div>` : ''}
     
@@ -368,15 +379,14 @@ export default function CVBuilder() {
 </body>
 </html>`
 
-    const blob = new Blob([html], { type: 'text/html' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${cv.displayName || 'resume'}-cv.pdf.html`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
+    const printWindow = window.open('', '_blank')
+    if (printWindow) {
+      printWindow.document.write(html)
+      printWindow.document.close()
+      printWindow.onload = () => {
+        printWindow.print()
+      }
+    }
   }
 
   const addWorkExperience = () => {
@@ -652,7 +662,27 @@ export default function CVBuilder() {
             {cv.summary && (
               <div className="mb-3">
                 <h2 style={{ fontSize: getFontSize(previewSettings.fontSize, 0.9), fontWeight: 'bold', borderBottom: '1px solid #000', marginBottom: '4px', textTransform: 'uppercase' }}>Professional Summary</h2>
-                <p style={{ fontSize: getFontSize(previewSettings.fontSize), whiteSpace: 'pre-wrap' }}>{cv.summary}</p>
+                {cv.picture ? (
+                  <>
+                    <div style={{ float: 'left', marginRight: '12px', marginBottom: '4px', width: cv.pictureSize === '35x45' ? '35mm' : '51mm', height: cv.pictureSize === '35x45' ? '45mm' : '51mm' }}>
+                      <img 
+                        src={cv.picture} 
+                        alt="Profile" 
+                        style={{ 
+                          width: '100%', 
+                          height: '100%',
+                          objectFit: 'cover',
+                          borderRadius: '4px',
+                          display: 'block'
+                        }} 
+                      />
+                    </div>
+                    <p style={{ fontSize: getFontSize(previewSettings.fontSize), whiteSpace: 'pre-wrap', margin: 0 }}>{cv.summary}</p>
+                    <div style={{ clear: 'both' }} />
+                  </>
+                ) : (
+                  <p style={{ fontSize: getFontSize(previewSettings.fontSize), whiteSpace: 'pre-wrap' }}>{cv.summary}</p>
+                )}
               </div>
             )}
             
@@ -746,28 +776,6 @@ export default function CVBuilder() {
             <div className="sticky top-4 p-4 rounded-xl space-y-4" style={{ backgroundColor: 'var(--theme-surface)' }}>
               <h3 className="font-bold text-sm" style={{ color: 'var(--theme-text)' }}>Preview Controls</h3>
               
-              {/* Template Selection */}
-              <div>
-                <label className="text-xs block mb-2" style={{ color: 'var(--theme-text)' }}>Template</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {templates.map(template => (
-                    <button
-                      key={template.id}
-                      onClick={() => setSelectedTemplate(template.id)}
-                      className="p-2 rounded-lg text-xs text-left transition-all"
-                      style={{ 
-                        backgroundColor: selectedTemplate === template.id ? 'var(--theme-primary)' : 'var(--theme-background)',
-                        color: selectedTemplate === template.id ? '#000' : 'var(--theme-text)',
-                        border: selectedTemplate === template.id ? 'none' : '1px solid var(--theme-surface)'
-                      }}
-                    >
-                      <div className="font-medium">{template.name}</div>
-                      <div style={{ opacity: 0.7, fontSize: '10px' }}>{template.description}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
               {/* Font Family */}
               <div>
                 <label className="text-xs block mb-2" style={{ color: 'var(--theme-text)' }}>Font Family</label>
@@ -822,23 +830,54 @@ export default function CVBuilder() {
                 </select>
               </div>
 
+              {/* Picture Size */}
+              {cv.picture && (
+                <div>
+                  <label className="text-xs block mb-2" style={{ color: 'var(--theme-text)' }}>Picture Size</label>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setCV(prev => ({ ...prev, pictureSize: '35x45' }))}
+                      className="flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all"
+                      style={{ 
+                        backgroundColor: cv.pictureSize === '35x45' ? 'var(--theme-primary)' : 'var(--theme-background)',
+                        color: cv.pictureSize === '35x45' ? '#000' : 'var(--theme-text)',
+                        border: cv.pictureSize === '35x45' ? 'none' : '1px solid var(--theme-surface)'
+                      }}
+                    >
+                      35×45 mm
+                    </button>
+                    <button
+                      onClick={() => setCV(prev => ({ ...prev, pictureSize: '51x51' }))}
+                      className="flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all"
+                      style={{ 
+                        backgroundColor: cv.pictureSize === '51x51' ? 'var(--theme-primary)' : 'var(--theme-background)',
+                        color: cv.pictureSize === '51x51' ? '#000' : 'var(--theme-text)',
+                        border: cv.pictureSize === '51x51' ? 'none' : '1px solid var(--theme-surface)'
+                      }}
+                    >
+                      51×51 mm
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* Download Buttons */}
               <div className="space-y-2">
                 <button
-                  onClick={downloadCV}
+                  onClick={downloadCVPDF}
                   className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium"
                   style={{ backgroundColor: 'var(--theme-primary)', color: '#000' }}
                 >
                   <Download className="h-4 w-4" />
-                  Download HTML
+                  Download PDF
                 </button>
                 <button
-                  onClick={downloadCVPDF}
+                  onClick={downloadCV}
                   className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium"
                   style={{ backgroundColor: 'var(--theme-surface)', color: 'var(--theme-text)', border: '1px solid var(--theme-surface)' }}
                 >
                   <Download className="h-4 w-4" />
-                  Download PDF (ATS)
+                  Download HTML
                 </button>
               </div>
             </div>
@@ -923,6 +962,72 @@ export default function CVBuilder() {
                 className="w-full px-4 py-3 rounded-xl"
                 style={{ backgroundColor: 'var(--theme-background)', color: 'var(--theme-text)' }}
               />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--theme-text)' }}>Profile Picture</label>
+              <div className="space-y-3">
+                <label htmlFor="cv-picture-upload" className="cursor-pointer block">
+                  <div className="border-2 border-dashed rounded-xl p-4 transition-colors hover:border-[var(--theme-primary)]"
+                    style={{ borderColor: 'var(--theme-surface)' }}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <Upload className="h-5 w-5" style={{ color: 'var(--theme-primary)' }} />
+                      <span className="text-sm font-medium" style={{ color: 'var(--theme-text)' }}>
+                        {cv.picture ? 'Change Picture' : 'Upload Picture'}
+                      </span>
+                    </div>
+                    <p className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Click to upload (JPG, PNG, max 2MB)</p>
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/gif,image/webp"
+                    className="hidden"
+                    id="cv-picture-upload"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0]
+                      if (file) {
+                        try {
+                          const formData = new FormData()
+                          formData.append('file', file)
+                          formData.append('folder', 'cv')
+                          
+                          const res = await fetch('/api/files', {
+                            method: 'POST',
+                            body: formData,
+                          })
+                          const data = await res.json()
+                          if (data.success) {
+                            setCV(prev => ({ ...prev, picture: data.url }))
+                          }
+                        } catch (error) {
+                          console.error('Failed to upload picture:', error)
+                        }
+                      }
+                    }}
+                  />
+                </label>
+                
+                {cv.picture && (
+                  <div className="flex items-center gap-3 p-3 rounded-xl" style={{ backgroundColor: 'var(--theme-background)' }}>
+                    <img 
+                      src={cv.picture} 
+                      alt="CV Profile" 
+                      className="w-16 h-16 rounded-lg object-cover"
+                    />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium" style={{ color: 'var(--theme-text)' }}>Picture uploaded</p>
+                      <p className="text-xs" style={{ color: 'var(--theme-text)', opacity: 0.5 }}>Will appear on CV preview</p>
+                    </div>
+                    <button
+                      onClick={() => setCV(prev => ({ ...prev, picture: '' }))}
+                      className="p-2 rounded-lg"
+                      style={{ backgroundColor: 'var(--theme-surface)', color: '#EF4444' }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </motion.section>
