@@ -55,6 +55,8 @@ export interface Certification {
 
 export interface ICV extends Document {
   displayName: string
+  picture: string
+  pictureSize: '35x45' | '51x51'
   summary: string
   phone: string
   address: string
@@ -131,6 +133,8 @@ const CustomSectionSchema = new Schema({
 
 const CVSchema = new Schema<ICV>({
   displayName: { type: String, default: '' },
+  picture: { type: String, default: '' },
+  pictureSize: { type: String, enum: ['35x45', '51x51'], default: '35x45' },
   summary: {
     type: String,
     default: '',
